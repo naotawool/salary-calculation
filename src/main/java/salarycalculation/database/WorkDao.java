@@ -36,6 +36,7 @@ public class WorkDao {
      * @param workYearMonth 稼動年月 (e.g. 201504)
      * @return 稼動情報
      */
+    // @UT
     public Work getByYearMonth(int employeeNo, int workYearMonth) {
         ResultSetHandler<Work> rsHandler = new BeanHandler<Work>(Work.class);
         QueryRunner runner = new QueryRunner();

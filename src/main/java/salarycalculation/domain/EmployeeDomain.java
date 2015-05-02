@@ -49,6 +49,7 @@ public class EmployeeDomain {
      *
      * @return 勤続年数
      */
+    // @UT
     public int getDurationYear() {
         Calendar joinDateCal = Calendar.getInstance();
         joinDateCal.setTime(entity.getJoinDate());
@@ -82,6 +83,7 @@ public class EmployeeDomain {
      *
      * @return 勤続月数
      */
+    // @UT
     public int getDurationMonth() {
         Calendar joinDateCal = Calendar.getInstance();
         joinDateCal.setTime(entity.getJoinDate());
@@ -110,6 +112,7 @@ public class EmployeeDomain {
      * @param workYearMonth 稼動年月 (e.g. 201504)
      * @return 給料の手取り額
      */
+    // @UT
     public int getTakeHomeAmount(int workYearMonth) {
         // 総支給額を求める
         int totalSalary = getTotalSalary(workYearMonth);
@@ -130,6 +133,7 @@ public class EmployeeDomain {
      * @param workYearMonth 稼動年月 (e.g. 201504)
      * @return 給料の総支給額
      */
+    // @UT
     public int getTotalSalary(int workYearMonth) {
         // 基本給を求める
         int base = role.getAmount() + capability.getAmount();
@@ -180,6 +184,7 @@ public class EmployeeDomain {
      * @param workYearMonth 稼動年月 (e.g. 201504)
      * @return 残業代
      */
+    // @UT
     public int getOvertimeAmount(int workYearMonth) {
 
         int overtimeAmount = 0;
@@ -230,6 +235,7 @@ public class EmployeeDomain {
      *
      * @return 想定年収
      */
+    // @UT
     public int getAnnualTotalSalaryPlan() {
         // 基本給を求める
         int base = role.getAmount() + capability.getAmount();

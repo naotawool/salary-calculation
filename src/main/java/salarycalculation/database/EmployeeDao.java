@@ -37,6 +37,7 @@ public class EmployeeDao {
      * @param no 社員番号
      * @return 社員情報
      */
+    // @UT
     public Employee get(String no) {
         ResultSetHandler<Employee> rsHandler = new BeanHandler<Employee>(Employee.class);
         QueryRunner runner = new QueryRunner();
@@ -56,6 +57,7 @@ public class EmployeeDao {
      *
      * @return 社員情報一覧
      */
+    // @UT
     public List<Employee> findAll() {
         ResultSetHandler<List<Employee>> rsHandler = new BeanListHandler<Employee>(Employee.class);
         QueryRunner runner = new QueryRunner();
@@ -75,6 +77,7 @@ public class EmployeeDao {
      * @param rank 取得対象の役割等級
      * @return 社員情報一覧
      */
+    // @UT
     public List<Employee> findByRole(String rank) {
         ResultSetHandler<List<Employee>> rsHandler = new BeanListHandler<Employee>(Employee.class);
         QueryRunner runner = new QueryRunner();
@@ -95,6 +98,7 @@ public class EmployeeDao {
      * @param rank 取得対象の能力等級
      * @return 社員情報一覧
      */
+    // @UT
     public List<Employee> findByCapability(String rank) {
         ResultSetHandler<List<Employee>> rsHandler = new BeanListHandler<Employee>(Employee.class);
         QueryRunner runner = new QueryRunner();

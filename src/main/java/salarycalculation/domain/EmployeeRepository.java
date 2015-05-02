@@ -35,6 +35,7 @@ public class EmployeeRepository {
      * @param no 社員番号
      * @return 社員情報
      */
+    // @UT
     public EmployeeDomain get(String no) {
         Employee employee = dao.get(no);
 
@@ -56,6 +57,7 @@ public class EmployeeRepository {
      *
      * @return 社員情報一覧
      */
+    // @UT
     public List<EmployeeDomain> findAll() {
         List<Employee> employees = dao.findAll();
 
@@ -84,6 +86,7 @@ public class EmployeeRepository {
      * @param ascending 想定年収の昇順（低い順）なら true
      * @return 社員情報一覧
      */
+    // @UT
     public List<EmployeeDomain> findAllOrderByAnnualSalary(boolean ascending) {
         List<Employee> employees = dao.findAll();
 
@@ -125,6 +128,7 @@ public class EmployeeRepository {
      * @param yearMonth 算出対象の年月 (e.g. 201504)
      * @return 全社員の総支給額合計
      */
+    // @UT
     public int getSumTotalSalary(int yearMonth) {
         List<EmployeeDomain> domains = findAll();
 
@@ -142,6 +146,7 @@ public class EmployeeRepository {
      * @param yearMonth 算出対象の年月 (e.g. 201504)
      * @return 全社員の手取り額平均
      */
+    // @UT
     public int getAverageTakeHome(int yearMonth) {
         List<EmployeeDomain> domains = findAll();
 
@@ -160,6 +165,7 @@ public class EmployeeRepository {
      * @param condition 視定額
      * @return 該当する社員数
      */
+    // @UT
     public int getCountByOverAnnualSalary(int condition) {
         List<EmployeeDomain> domains = findAll();
 
@@ -178,6 +184,7 @@ public class EmployeeRepository {
      * @param selectMax 最大を求める場合は true
      * @return 社員情報
      */
+    // @UT
     public EmployeeDomain getByDurationMonth(boolean selectMax) {
         List<EmployeeDomain> domains = findAll();
 
