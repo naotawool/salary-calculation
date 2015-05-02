@@ -21,7 +21,7 @@ public class WorkDao {
     private Connection connection;
 
     public WorkDao() {
-        String url = "jdbc:h2:~/test";
+        String url = "jdbc:h2:./sample/salary_calculation";
         try {
             this.connection = DriverManager.getConnection(url, "sa", "");
         } catch (SQLException e) {
