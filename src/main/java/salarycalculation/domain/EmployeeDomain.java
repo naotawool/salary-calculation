@@ -139,6 +139,27 @@ public class EmployeeDomain {
         int base = role.getAmount() + capability.getAmount();
 
         // 諸手当を求める
+        int allowance = getAllowance();
+
+        // 基準内給与を求める
+        int standardSalary = base + allowance;
+
+        // 基準外給与を求める
+        int unstandardSalary = getOvertimeAmount(workYearMonth);
+
+        // 総支給額を求める
+        int totalSalary = standardSalary + unstandardSalary;
+
+        return totalSalary;
+    }
+
+    /**
+     * 現在時点での諸手当を取得する。
+     *
+     * @return 諸手当
+     */
+    public int getAllowance() {
+        // 諸手当を求める
         int allowance = entity.getCommuteAmount() + entity.getRentAmount();
 
         // 能力等級が 'PL' or 'PM' の場合、別途手当が出る
@@ -151,31 +172,30 @@ public class EmployeeDomain {
         // 勤続年数が満 3年、5年、10年, 20年目の場合、別途手当が出る
         switch (getDurationYear()) {
         case 3:
-            allowance += 3000;
+            if ((getDurationMonth() % 12) == 0) {
+                allowance += 3000;
+            }
             break;
         case 5:
-            allowance += 5000;
+            if ((getDurationMonth() % 12) == 0) {
+                allowance += 5000;
+            }
             break;
         case 10:
-            allowance += 10000;
+            if ((getDurationMonth() % 12) == 0) {
+                allowance += 10000;
+            }
             break;
         case 20:
-            allowance += 20000;
+            if ((getDurationMonth() % 12) == 0) {
+                allowance += 20000;
+            }
             break;
         default:
             break;
         }
 
-        // 基準内給与を求める
-        int standardSalary = base + allowance;
-
-        // 基準外給与を求める
-        int unstandardSalary = getOvertimeAmount(workYearMonth);
-
-        // 総支給額を求める
-        int totalSalary = standardSalary + unstandardSalary;
-
-        return totalSalary;
+        return allowance;
     }
 
     /**
