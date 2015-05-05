@@ -21,7 +21,7 @@ public class CapabilityDao {
     private Connection connection;
 
     public CapabilityDao() {
-        String url = "jdbc:h2:./sample/salary_calculation";
+        String url = "jdbc:h2:./data/salary_calculation";
         try {
             this.connection = DriverManager.getConnection(url, "sa", "");
         } catch (SQLException e) {

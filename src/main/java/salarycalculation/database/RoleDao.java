@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.lang.StringUtils;
 
 import salarycalculation.entity.Role;
 import salarycalculation.exception.RuntimeSQLException;
@@ -21,7 +22,7 @@ public class RoleDao {
     private Connection connection;
 
     public RoleDao() {
-        String url = "jdbc:h2:./sample/salary_calculation";
+        String url = "jdbc:h2:./data/salary_calculation";
         try {
             this.connection = DriverManager.getConnection(url, "sa", "");
         } catch (SQLException e) {
@@ -36,6 +37,8 @@ public class RoleDao {
      * @return 役割等級
      */
     public Role get(String rank) {
+        verify(rank);
+
         ResultSetHandler<Role> rsHandler = new BeanHandler<Role>(Role.class);
         QueryRunner runner = new QueryRunner();
 
@@ -48,6 +51,16 @@ public class RoleDao {
         }
 
         return result;
+    }
+
+    private void verify(String rank) {
+        if (StringUtils.isBlank(rank)) {
+            throw new NullPointerException("等級は必須です");
+        }
+        if (StringUtils.length(rank) != 2) {
+            throw new IllegalArgumentException(String.format("等級は 2 桁で指定してください[%s]",
+                    StringUtils.length(rank)));
+        }
     }
 
     public void setConnection(Connection connection) {
