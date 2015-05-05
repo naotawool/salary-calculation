@@ -169,7 +169,7 @@ public class EmployeeDomain {
             allowance += 30000;
         }
 
-        // 勤続年数が満 3年、5年、10年, 20年目の場合、別途手当が出る
+        // 勤続年数が丸 3年目、5年目、10年目, 20年目の場合、別途手当が出る
         switch (getDurationYear()) {
         case 3:
             if ((getDurationMonth() % 12) == 0) {
