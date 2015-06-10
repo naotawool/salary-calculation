@@ -51,7 +51,7 @@ public class EmployeeDomainTest {
         testee.getEntity().setCapabilityRank("PL");
 
         // 諸手当
-        assertThat(testee.getAllowance(), is(13000));
+        assertThat(testee.getAllowance(), is(10000 + 3000));
     }
 
     @Test
@@ -60,7 +60,7 @@ public class EmployeeDomainTest {
         testee.getEntity().setCapabilityRank("PM");
 
         // 諸手当
-        assertThat(testee.getAllowance(), is(33000));
+        assertThat(testee.getAllowance(), is(30000 + 3000));
     }
 
     @Test
