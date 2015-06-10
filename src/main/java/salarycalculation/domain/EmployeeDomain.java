@@ -29,9 +29,13 @@ public class EmployeeDomain {
 
     private WorkDao workDao;
 
+    /** 業務日付ドメイン */
+    private BusinessDateDomain businessDateDomain;
+
     public EmployeeDomain(Employee entity) {
         this.entity = entity;
         this.workDao = new WorkDao();
+        this.businessDateDomain = new BusinessDateDomain();
     }
 
     /**
@@ -51,34 +55,24 @@ public class EmployeeDomain {
      */
     // @UT
     public int getDurationYear() {
-        Calendar joinDateCal = Calendar.getInstance();
-        joinDateCal.setTime(entity.getJoinDate());
-        joinDateCal = DateUtils.truncate(joinDateCal, Calendar.HOUR);
-
-        Calendar now = Calendar.getInstance();
-        now = DateUtils.truncate(now, Calendar.HOUR);
-
-        int count = 0;
-        while (now.after(joinDateCal) && !DateUtils.isSameDay(now, joinDateCal)) {
-            joinDateCal.add(Calendar.MONTH, 1);
-            count++;
-        }
-        return (count / 12);
+        int durationMonth = getDurationMonth();
+        return (durationMonth / 12);
     }
 
     /**
      * 入社年月日を基に勤続月数を取得する。<br />
+     * ここでいう勤続月数とは、現在日時点で勤続<b>何ヶ月目</b>かを表す。
      *
      * <pre>
      * 例えば
      * ・入社年月日: 2013/04/01
-     * ・現在日時: 2014/05/01
+     * ・現在日時: 2014/04/01
      *
-     * この場合、勤続月数は 13ヶ月となる。
+     * この場合、勤続月数は 13ヶ月目となる。
      *
-     * ・現在日時: 2014/04/30
+     * ・現在日時: 2014/03/01 や 2014/03/31
      *
-     * この場合、勤続月数は 12ヶ月となる。
+     * この場合、勤続月数は 12ヶ月目となる。
      * </pre>
      *
      * @return 勤続月数
@@ -89,15 +83,14 @@ public class EmployeeDomain {
         joinDateCal.setTime(entity.getJoinDate());
         joinDateCal = DateUtils.truncate(joinDateCal, Calendar.HOUR);
 
-        Calendar now = Calendar.getInstance();
+        Calendar now = businessDateDomain.getNowAsCalendar();
         now = DateUtils.truncate(now, Calendar.HOUR);
 
         int count = 0;
-        while (now.after(joinDateCal)) {
+        while (joinDateCal.before(now) || DateUtils.isSameDay(joinDateCal, now)) {
             joinDateCal.add(Calendar.MONTH, 1);
             count++;
         }
-        count--;
 
         if (count < 0) {
             count = 0;
@@ -305,5 +298,9 @@ public class EmployeeDomain {
 
     public void setCapability(Capability capability) {
         this.capability = capability;
+    }
+
+    public void setBusinessDateDomain(BusinessDateDomain businessDateDomain) {
+        this.businessDateDomain = businessDateDomain;
     }
 }
