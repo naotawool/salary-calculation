@@ -29,10 +29,25 @@ public class EmployeeDomainTest {
     public void setUp() {
         Employee entity = new Employee();
 
+        // 社員番号
+        entity.setNo(100);
+
         // 入社日
         Calendar joinDate = Calendar.getInstance();
         joinDate.set(2014, (4 - 1), 1);
         entity.setJoinDate(new Date(joinDate.getTime().getTime()));
+
+        // 役割等級
+        entity.setRoleRank("A1");
+
+        // 能力等級
+        entity.setCapabilityRank("AS");
+
+        // 通勤手当
+        entity.setCommuteAmount(0);
+
+        // 住宅手当
+        entity.setRentAmount(0);
 
         testee = new EmployeeDomain(entity);
     }
@@ -139,6 +154,16 @@ public class EmployeeDomainTest {
 
         // 諸手当
         assertThat(testee.getAllowance(), is(30000 + 20000));
+    }
+
+    @Test
+    public void 入社3年未満の場合_通常の手当を取得できること() {
+        setUpNowCalendar(2017, 2, 28);
+        testee.getEntity().setCommuteAmount(2500);
+        testee.getEntity().setRentAmount(20000);
+
+        // 通勤手当と住宅手当の合計だけ
+        assertThat(testee.getAllowance(), is((2500 + 20000)));
     }
 
     private void setUpNowCalendar(int year, int month, int day) {

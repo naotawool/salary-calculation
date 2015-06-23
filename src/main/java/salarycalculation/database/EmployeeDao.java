@@ -53,18 +53,23 @@ public class EmployeeDao {
     }
 
     /**
-     * 社員情報の一覧を取得する。
+     * 社員情報の一覧を取得する。<br />
+     * 一覧は社員番号の指定したソート順に並び替えられている。
      *
+     * @param ascending 社員番号の昇順かどうか
      * @return 社員情報一覧
      */
     // @UT
-    public List<Employee> findAll() {
+    public List<Employee> findAll(boolean ascending) {
         ResultSetHandler<List<Employee>> rsHandler = new BeanListHandler<Employee>(Employee.class);
         QueryRunner runner = new QueryRunner();
 
+        String ordering = (ascending ? "asc" : "desc");
+
         List<Employee> results = null;
         try {
-            results = runner.query(connection, "select * from employee order by no", rsHandler);
+            results = runner.query(connection, "select * from employee order by no " + ordering,
+                    rsHandler);
         } catch (SQLException e) {
             throw new RuntimeSQLException("Select Failure", e);
         }
