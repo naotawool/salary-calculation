@@ -59,7 +59,7 @@ public class EmployeeRepository {
      */
     // @UT
     public List<EmployeeDomain> findAll() {
-        List<Employee> employees = dao.findAll();
+        List<Employee> employees = dao.findAll(true);
 
         // Domain 一覧を準備
         List<EmployeeDomain> domains = new ArrayList<>(employees.size());
@@ -87,8 +87,8 @@ public class EmployeeRepository {
      * @return 社員情報一覧
      */
     // @UT
-    public List<EmployeeDomain> findAllOrderByAnnualSalary(boolean ascending) {
-        List<Employee> employees = dao.findAll();
+    public List<EmployeeDomain> findAllOrderByAnnualSalary(final boolean ascending) {
+        List<Employee> employees = dao.findAll(true);
 
         // Domain 一覧を準備
         List<EmployeeDomain> domains = new ArrayList<>(employees.size());

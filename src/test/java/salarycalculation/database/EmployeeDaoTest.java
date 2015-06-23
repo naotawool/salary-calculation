@@ -30,12 +30,23 @@ public class EmployeeDaoTest {
 
     @Test
     public void 社員一覧を社員番号の昇順で取得できること() {
-        List<Employee> actuals = testee.findAll();
+        List<Employee> actuals = testee.findAll(true);
 
         assertThat(actuals, hasSize(4));
         assertThat(actuals.get(0).getNo(), is(1));
         assertThat(actuals.get(1).getNo(), is(2));
         assertThat(actuals.get(2).getNo(), is(3));
         assertThat(actuals.get(3).getNo(), is(4));
+    }
+
+    @Test
+    public void 社員一覧を社員番号の降順で取得できること() {
+        List<Employee> actuals = testee.findAll(false);
+
+        assertThat(actuals, hasSize(4));
+        assertThat(actuals.get(0).getNo(), is(4));
+        assertThat(actuals.get(1).getNo(), is(3));
+        assertThat(actuals.get(2).getNo(), is(2));
+        assertThat(actuals.get(3).getNo(), is(1));
     }
 }
