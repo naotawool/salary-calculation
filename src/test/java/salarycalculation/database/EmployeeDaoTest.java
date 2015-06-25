@@ -1,12 +1,12 @@
 package salarycalculation.database;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static salarycalculation.matchers.OrderEmployee.orderNos;
 
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import salarycalculation.entity.Employee;
@@ -32,21 +32,21 @@ public class EmployeeDaoTest {
     public void 社員一覧を社員番号の昇順で取得できること() {
         List<Employee> actuals = testee.findAll(true);
 
-        assertThat(actuals, hasSize(4));
-        assertThat(actuals.get(0).getNo(), is(1));
-        assertThat(actuals.get(1).getNo(), is(2));
-        assertThat(actuals.get(2).getNo(), is(3));
-        assertThat(actuals.get(3).getNo(), is(4));
+        assertThat(actuals, orderNos(1, 2, 3, 4));
     }
 
     @Test
     public void 社員一覧を社員番号の降順で取得できること() {
         List<Employee> actuals = testee.findAll(false);
 
-        assertThat(actuals, hasSize(4));
-        assertThat(actuals.get(0).getNo(), is(4));
-        assertThat(actuals.get(1).getNo(), is(3));
-        assertThat(actuals.get(2).getNo(), is(2));
-        assertThat(actuals.get(3).getNo(), is(1));
+        assertThat(actuals, orderNos(4, 3, 2, 1));
+    }
+
+    @Ignore
+    @Test
+    public void OrderEmployee_orderNosが失敗するテスト() {
+        List<Employee> actuals = testee.findAll(false);
+
+        assertThat(actuals, orderNos(4, 3, 2));
     }
 }
