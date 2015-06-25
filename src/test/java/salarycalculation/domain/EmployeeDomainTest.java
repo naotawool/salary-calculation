@@ -8,6 +8,8 @@ import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.runners.Enclosed;
+import org.junit.runner.RunWith;
 
 import salarycalculation.entity.Employee;
 
@@ -16,17 +18,15 @@ import salarycalculation.entity.Employee;
  *
  * @author naotake
  */
+@RunWith(Enclosed.class)
 public class EmployeeDomainTest {
 
-    private EmployeeDomain testee;
-
-    private BusinessDateDomain businessDate;
+    private static EmployeeDomain testee;
 
     /**
      * 事前処理。
      */
-    @Before
-    public void setUp() {
+    public static void setUpTestee() {
         Employee entity = new Employee();
 
         // 社員番号
@@ -52,123 +52,178 @@ public class EmployeeDomainTest {
         testee = new EmployeeDomain(entity);
     }
 
-    @Test
-    public void 入社丸3年目の場合_諸手当を_3000_取得できること() {
-        setUpNowCalendar(2017, 3, 31);
+    public static class 入社3年未満の場合 {
 
-        // 諸手当
-        assertThat(testee.getAllowance(), is(3000));
+        /**
+         * 事前処理。
+         */
+        @Before
+        public void setUp() {
+            setUpTestee();
+        }
+
+        @Test
+        public void 通常の手当を取得できること() {
+            setUpNowCalendar(2017, 2, 28);
+            testee.getEntity().setCommuteAmount(2500);
+            testee.getEntity().setRentAmount(20000);
+
+            // 通勤手当と住宅手当の合計だけ
+            assertThat(testee.getAllowance(), is((2500 + 20000)));
+        }
     }
 
-    @Test
-    public void 入社丸3年目の_PL_の場合_諸手当を_13000_取得できること() {
-        setUpNowCalendar(2017, 3, 31);
-        testee.getEntity().setCapabilityRank("PL");
+    public static class 入社丸3年目の場合 {
 
-        // 諸手当
-        assertThat(testee.getAllowance(), is(10000 + 3000));
+        /**
+         * 事前処理。
+         */
+        @Before
+        public void setUp() {
+            setUpTestee();
+        }
+
+        @Test
+        public void 諸手当を_3000_取得できること() {
+            setUpNowCalendar(2017, 3, 31);
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(3000));
+        }
+
+        @Test
+        public void PL_の場合_諸手当を_13000_取得できること() {
+            setUpNowCalendar(2017, 3, 31);
+            testee.getEntity().setCapabilityRank("PL");
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(10000 + 3000));
+        }
+
+        @Test
+        public void PM_の場合_諸手当を_33000_取得できること() {
+            setUpNowCalendar(2017, 3, 31);
+            testee.getEntity().setCapabilityRank("PM");
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(30000 + 3000));
+        }
     }
 
-    @Test
-    public void 入社丸3年目の_PM_の場合_諸手当を_33000_取得できること() {
-        setUpNowCalendar(2017, 3, 31);
-        testee.getEntity().setCapabilityRank("PM");
+    public static class 入社丸5年目の場合 {
 
-        // 諸手当
-        assertThat(testee.getAllowance(), is(30000 + 3000));
+        /**
+         * 事前処理。
+         */
+        @Before
+        public void setUp() {
+            setUpTestee();
+        }
+
+        @Test
+        public void 諸手当を_5000_取得できること2() {
+            setUpNowCalendar(2019, 3, 31);
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(5000));
+        }
+
+        @Test
+        public void PL_の場合_諸手当を_15000_取得できること() {
+            setUpNowCalendar(2019, 3, 31);
+            testee.getEntity().setCapabilityRank("PL");
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(10000 + 5000));
+        }
+
+        @Test
+        public void PM_の場合_諸手当を_35000_取得できること() {
+            setUpNowCalendar(2019, 3, 31);
+            testee.getEntity().setCapabilityRank("PM");
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(30000 + 5000));
+        }
     }
 
-    @Test
-    public void 入社丸5年目の場合_諸手当を_5000_取得できること2() {
-        setUpNowCalendar(2019, 3, 31);
+    public static class 入社丸10年目の場合 {
 
-        // 諸手当
-        assertThat(testee.getAllowance(), is(5000));
+        /**
+         * 事前処理。
+         */
+        @Before
+        public void setUp() {
+            setUpTestee();
+        }
+
+        @Test
+        public void 諸手当を_10000_取得できること2() {
+            setUpNowCalendar(2024, 3, 31);
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(10000));
+        }
+
+        @Test
+        public void PL_の場合_諸手当を_20000_取得できること() {
+            setUpNowCalendar(2024, 3, 31);
+            testee.getEntity().setCapabilityRank("PL");
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(10000 + 10000));
+        }
+
+        @Test
+        public void PM_の場合_諸手当を_40000_取得できること() {
+            setUpNowCalendar(2024, 3, 31);
+            testee.getEntity().setCapabilityRank("PM");
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(30000 + 10000));
+        }
     }
 
-    @Test
-    public void 入社丸5年目の_PL_の場合_諸手当を_15000_取得できること() {
-        setUpNowCalendar(2019, 3, 31);
-        testee.getEntity().setCapabilityRank("PL");
+    public static class 入社丸20年目の場合 {
 
-        // 諸手当
-        assertThat(testee.getAllowance(), is(10000 + 5000));
+        /**
+         * 事前処理。
+         */
+        @Before
+        public void setUp() {
+            setUpTestee();
+        }
+
+        @Test
+        public void 諸手当を_20000_取得できること2() {
+            setUpNowCalendar(2034, 3, 31);
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(20000));
+        }
+
+        @Test
+        public void PL_の場合_諸手当を_30000_取得できること() {
+            setUpNowCalendar(2034, 3, 31);
+            testee.getEntity().setCapabilityRank("PL");
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(10000 + 20000));
+        }
+
+        @Test
+        public void PM_の場合_諸手当を_50000_取得できること() {
+            setUpNowCalendar(2034, 3, 31);
+            testee.getEntity().setCapabilityRank("PM");
+
+            // 諸手当
+            assertThat(testee.getAllowance(), is(30000 + 20000));
+        }
     }
 
-    @Test
-    public void 入社丸5年目の_PM_の場合_諸手当を_35000_取得できること() {
-        setUpNowCalendar(2019, 3, 31);
-        testee.getEntity().setCapabilityRank("PM");
-
-        // 諸手当
-        assertThat(testee.getAllowance(), is(30000 + 5000));
-    }
-
-    @Test
-    public void 入社丸10年目の場合_諸手当を_10000_取得できること2() {
-        setUpNowCalendar(2024, 3, 31);
-
-        // 諸手当
-        assertThat(testee.getAllowance(), is(10000));
-    }
-
-    @Test
-    public void 入社丸10年目の_PL_の場合_諸手当を_20000_取得できること() {
-        setUpNowCalendar(2024, 3, 31);
-        testee.getEntity().setCapabilityRank("PL");
-
-        // 諸手当
-        assertThat(testee.getAllowance(), is(10000 + 10000));
-    }
-
-    @Test
-    public void 入社丸10年目の_PM_の場合_諸手当を_40000_取得できること() {
-        setUpNowCalendar(2024, 3, 31);
-        testee.getEntity().setCapabilityRank("PM");
-
-        // 諸手当
-        assertThat(testee.getAllowance(), is(30000 + 10000));
-    }
-
-    @Test
-    public void 入社丸20年目の場合_諸手当を_20000_取得できること2() {
-        setUpNowCalendar(2034, 3, 31);
-
-        // 諸手当
-        assertThat(testee.getAllowance(), is(20000));
-    }
-
-    @Test
-    public void 入社丸20年目の_PL_の場合_諸手当を_30000_取得できること() {
-        setUpNowCalendar(2034, 3, 31);
-        testee.getEntity().setCapabilityRank("PL");
-
-        // 諸手当
-        assertThat(testee.getAllowance(), is(10000 + 20000));
-    }
-
-    @Test
-    public void 入社丸20年目の_PM_の場合_諸手当を_50000_取得できること() {
-        setUpNowCalendar(2034, 3, 31);
-        testee.getEntity().setCapabilityRank("PM");
-
-        // 諸手当
-        assertThat(testee.getAllowance(), is(30000 + 20000));
-    }
-
-    @Test
-    public void 入社3年未満の場合_通常の手当を取得できること() {
-        setUpNowCalendar(2017, 2, 28);
-        testee.getEntity().setCommuteAmount(2500);
-        testee.getEntity().setRentAmount(20000);
-
-        // 通勤手当と住宅手当の合計だけ
-        assertThat(testee.getAllowance(), is((2500 + 20000)));
-    }
-
-    private void setUpNowCalendar(int year, int month, int day) {
+    private static void setUpNowCalendar(int year, int month, int day) {
         // 現在日
-        businessDate = new BusinessDateDomain();
+        BusinessDateDomain businessDate = new BusinessDateDomain();
         Calendar now = Calendar.getInstance();
         now.set(year, (month - 1), day);
         businessDate.setCalendar(now);
