@@ -2,6 +2,7 @@ package salarycalculation.database;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static salarycalculation.matchers.EmployeeAssertion.isEqualToName;
 import static salarycalculation.matchers.EmployeeAssertion.isEqualToNo;
@@ -47,6 +48,14 @@ public class EmployeeDaoTest {
             List<Employee> actuals = testee.findAll(false);
 
             assertThat(actuals, orderNos(4, 3, 2));
+        }
+
+        @Test
+        public void 指定した組織に該当する社員数を取得できること() {
+            assertThat(testee.countByOrganization("ODG1"), is(2L));
+            assertThat(testee.countByOrganization("ODG2"), is(1L));
+            assertThat(testee.countByOrganization("ODG3"), is(1L));
+            assertThat(testee.countByOrganization("OD00"), is(0L));
         }
     }
 

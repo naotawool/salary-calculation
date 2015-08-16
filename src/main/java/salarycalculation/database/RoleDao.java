@@ -10,6 +10,7 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.lang.StringUtils;
 
 import salarycalculation.entity.Role;
+import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.exception.RuntimeSQLException;
 
 /**
@@ -48,6 +49,10 @@ public class RoleDao {
                     rsHandler);
         } catch (SQLException e) {
             throw new RuntimeSQLException("Select Failure", e);
+        }
+
+        if (result == null) {
+            throw new RecordNotFoundException(Role.class, rank);
         }
 
         return result;

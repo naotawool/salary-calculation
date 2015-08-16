@@ -9,8 +9,10 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import salarycalculation.entity.Employee;
+import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.exception.RuntimeSQLException;
 
 /**
@@ -47,6 +49,10 @@ public class EmployeeDao {
             result = runner.query(connection, "select * from employee where no = " + no, rsHandler);
         } catch (SQLException e) {
             throw new RuntimeSQLException("Select Failure", e);
+        }
+
+        if (result == null) {
+            throw new RecordNotFoundException(Employee.class, no);
         }
 
         return result;
@@ -116,6 +122,28 @@ public class EmployeeDao {
             throw new RuntimeSQLException("Select Failure", e);
         }
         return results;
+    }
+
+    /**
+     * 指定された組織コードに該当する社員数を取得する。
+     *
+     * @param organizationCode 組織コード
+     * @return 社員数
+     */
+    public long countByOrganization(String organizationCode) {
+        ScalarHandler<Long> scalarHandler = new ScalarHandler<Long>(1);
+        QueryRunner runner = new QueryRunner();
+
+        Long result = null;
+        try {
+            result = runner.query(connection,
+                    "select count(*) from employee where organization = ?", scalarHandler,
+                    organizationCode).longValue();
+        } catch (SQLException e) {
+            throw new RuntimeSQLException("Count Failure", e);
+        }
+
+        return result;
     }
 
     public void setConnection(Connection connection) {
