@@ -21,46 +21,7 @@ import salarycalculation.entity.Employee;
 @RunWith(Enclosed.class)
 public class EmployeeDomainTest {
 
-    private static EmployeeDomain testee;
-
-    /**
-     * 事前処理。
-     */
-    public static void setUpTestee() {
-        Employee entity = new Employee();
-
-        // 社員番号
-        entity.setNo(100);
-
-        // 入社日
-        Calendar joinDate = Calendar.getInstance();
-        joinDate.set(2014, (4 - 1), 1);
-        entity.setJoinDate(new Date(joinDate.getTime().getTime()));
-
-        // 役割等級
-        entity.setRoleRank("A1");
-
-        // 能力等級
-        entity.setCapabilityRank("AS");
-
-        // 通勤手当
-        entity.setCommuteAmount(0);
-
-        // 住宅手当
-        entity.setRentAmount(0);
-
-        testee = new EmployeeDomain(entity);
-    }
-
-    public static class 入社3年未満の場合 {
-
-        /**
-         * 事前処理。
-         */
-        @Before
-        public void setUp() {
-            setUpTestee();
-        }
+    public static class 入社3年未満の場合 extends EmployeeDomainTestBase {
 
         @Test
         public void 通常の手当を取得できること() {
@@ -73,15 +34,7 @@ public class EmployeeDomainTest {
         }
     }
 
-    public static class 入社丸3年目の場合 {
-
-        /**
-         * 事前処理。
-         */
-        @Before
-        public void setUp() {
-            setUpTestee();
-        }
+    public static class 入社丸3年目の場合 extends EmployeeDomainTestBase {
 
         @Test
         public void 諸手当を_3000_取得できること() {
@@ -110,15 +63,7 @@ public class EmployeeDomainTest {
         }
     }
 
-    public static class 入社丸5年目の場合 {
-
-        /**
-         * 事前処理。
-         */
-        @Before
-        public void setUp() {
-            setUpTestee();
-        }
+    public static class 入社丸5年目の場合 extends EmployeeDomainTestBase {
 
         @Test
         public void 諸手当を_5000_取得できること2() {
@@ -147,15 +92,7 @@ public class EmployeeDomainTest {
         }
     }
 
-    public static class 入社丸10年目の場合 {
-
-        /**
-         * 事前処理。
-         */
-        @Before
-        public void setUp() {
-            setUpTestee();
-        }
+    public static class 入社丸10年目の場合 extends EmployeeDomainTestBase {
 
         @Test
         public void 諸手当を_10000_取得できること2() {
@@ -184,15 +121,7 @@ public class EmployeeDomainTest {
         }
     }
 
-    public static class 入社丸20年目の場合 {
-
-        /**
-         * 事前処理。
-         */
-        @Before
-        public void setUp() {
-            setUpTestee();
-        }
+    public static class 入社丸20年目の場合 extends EmployeeDomainTestBase {
 
         @Test
         public void 諸手当を_20000_取得できること2() {
@@ -221,13 +150,56 @@ public class EmployeeDomainTest {
         }
     }
 
-    private static void setUpNowCalendar(int year, int month, int day) {
-        // 現在日
-        BusinessDateDomain businessDate = new BusinessDateDomain();
-        Calendar now = Calendar.getInstance();
-        now.set(year, (month - 1), day);
-        businessDate.setCalendar(now);
+    private static class EmployeeDomainTestBase {
 
-        testee.setBusinessDateDomain(businessDate);
+        protected EmployeeDomain testee;
+
+        /**
+         * 事前処理。
+         */
+        @Before
+        public void setUpTestee() {
+            Employee entity = new Employee();
+
+            // 社員番号
+            entity.setNo(100);
+
+            // 入社日
+            Calendar joinDate = Calendar.getInstance();
+            joinDate.set(2014, (4 - 1), 1);
+            entity.setJoinDate(new Date(joinDate.getTime().getTime()));
+
+            // 役割等級
+            entity.setRoleRank("A1");
+
+            // 能力等級
+            entity.setCapabilityRank("AS");
+
+            // 通勤手当
+            entity.setCommuteAmount(0);
+
+            // 住宅手当
+            entity.setRentAmount(0);
+
+            testee = new EmployeeDomain(entity);
+        }
+
+        /**
+         * {@link BusinessDateDomain}経由で現在日時を特定日に設定する。
+         *
+         * @param year 年
+         * @param month 月
+         * @param day 日
+         */
+        public void setUpNowCalendar(int year, int month, int day) {
+            // 現在日
+            BusinessDateDomain businessDate = new BusinessDateDomain();
+            Calendar now = Calendar.getInstance();
+            now.set(year, (month - 1), day);
+            businessDate.setCalendar(now);
+
+            testee.setBusinessDateDomain(businessDate);
+        }
     }
+
 }
