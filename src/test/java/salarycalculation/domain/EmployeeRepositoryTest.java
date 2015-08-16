@@ -4,16 +4,29 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.experimental.theories.DataPoint;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.runner.RunWith;
 
 /**
  * {@link EmployeeRepository}に対するテストクラス。
  *
  * @author naotake
  */
+@RunWith(Theories.class)
 public class EmployeeRepositoryTest {
 
     private EmployeeRepository testee;
+
+    @DataPoint
+    public static Fixture fixture1 = new Fixture("1", 1, "愛媛 蜜柑", "A3");
+    @DataPoint
+    public static Fixture fixture2 = new Fixture("2", 2, "大阪 太郎", "C4");
+    @DataPoint
+    public static Fixture fixture3 = new Fixture("3", 3, "埼玉 花子", "M2");
+    @DataPoint
+    public static Fixture fixture4 = new Fixture("4", 4, "東京 次郎", "A1");
 
     /**
      * 事前処理。
@@ -23,35 +36,30 @@ public class EmployeeRepositoryTest {
         testee = new EmployeeRepository();
     }
 
-    @Test
-    public void 社員番号_1_の情報を取得できること() {
-        EmployeeDomain actual = testee.get("1");
-        assertThat(actual.getNo(), is(1));
-        assertThat(actual.getEntity().getName(), is("愛媛 蜜柑"));
-        assertThat(actual.getEntity().getRoleRank(), is("A3"));
+    @Theory
+    public void 社員番号を基に情報を取得できること(Fixture fixture) {
+        EmployeeDomain actual = testee.get(fixture.no);
+        assertThat(actual.getNo(), is(fixture.expectedNo));
+        assertThat(actual.getEntity().getName(), is(fixture.expectedName));
+        assertThat(actual.getEntity().getRoleRank(), is(fixture.expectedRoleRank));
     }
 
-    @Test
-    public void 社員番号_2_の情報を取得できること() {
-        EmployeeDomain actual = testee.get("2");
-        assertThat(actual.getNo(), is(2));
-        assertThat(actual.getEntity().getName(), is("大阪 太郎"));
-        assertThat(actual.getEntity().getRoleRank(), is("C4"));
-    }
+    static class Fixture {
 
-    @Test
-    public void 社員番号_3_の情報を取得できること() {
-        EmployeeDomain actual = testee.get("3");
-        assertThat(actual.getNo(), is(3));
-        assertThat(actual.getEntity().getName(), is("埼玉 花子"));
-        assertThat(actual.getEntity().getRoleRank(), is("M2"));
-    }
+        /** 取得対象の社員番号 */
+        String no;
+        /** 期待する社員番号 */
+        int expectedNo;
+        /** 期待する社員名 */
+        String expectedName;
+        /** 期待する役割等級 */
+        String expectedRoleRank;
 
-    @Test
-    public void 社員番号_4_の情報を取得できること() {
-        EmployeeDomain actual = testee.get("4");
-        assertThat(actual.getNo(), is(4));
-        assertThat(actual.getEntity().getName(), is("東京 次郎"));
-        assertThat(actual.getEntity().getRoleRank(), is("A1"));
+        public Fixture(String no, int expectedNo, String expectedName, String expectedRoleRank) {
+            this.no = no;
+            this.expectedNo = expectedNo;
+            this.expectedName = expectedName;
+            this.expectedRoleRank = expectedRoleRank;
+        }
     }
 }
