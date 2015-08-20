@@ -7,9 +7,11 @@ import java.util.List;
 
 import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.EmployeeDao;
+import salarycalculation.database.OrganizationDao;
 import salarycalculation.database.RoleDao;
 import salarycalculation.entity.Capability;
 import salarycalculation.entity.Employee;
+import salarycalculation.entity.Organization;
 import salarycalculation.entity.Role;
 
 /**
@@ -20,11 +22,13 @@ import salarycalculation.entity.Role;
 public class EmployeeRepository {
 
     private EmployeeDao dao;
+    private OrganizationDao organizationDao;
     private RoleDao roleDao;
     private CapabilityDao capabilityDao;
 
     public EmployeeRepository() {
         this.dao = new EmployeeDao();
+        this.organizationDao = new OrganizationDao();
         this.roleDao = new RoleDao();
         this.capabilityDao = new CapabilityDao();
     }
@@ -39,12 +43,16 @@ public class EmployeeRepository {
     public EmployeeDomain get(String no) {
         Employee employee = dao.get(no);
 
+        // 所属する組織情報を取得
+        Organization organization = organizationDao.get(employee.getOrganization());
+
         // 各等級情報を取得
         Role role = roleDao.get(employee.getRoleRank());
         Capability capability = capabilityDao.get(employee.getCapabilityRank());
 
         // Domain を準備
         EmployeeDomain domain = new EmployeeDomain(employee);
+        domain.setOrganization(organization);
         domain.setRole(role);
         domain.setCapability(capability);
 
@@ -65,12 +73,16 @@ public class EmployeeRepository {
         List<EmployeeDomain> domains = new ArrayList<>(employees.size());
         for (Employee employee : employees) {
 
+            // 所属する組織情報を取得
+            Organization organization = organizationDao.get(employee.getOrganization());
+
             // 各等級情報を取得
             Role role = roleDao.get(employee.getRoleRank());
             Capability capability = capabilityDao.get(employee.getCapabilityRank());
 
             // Domain を準備
             EmployeeDomain domain = new EmployeeDomain(employee);
+            domain.setOrganization(organization);
             domain.setRole(role);
             domain.setCapability(capability);
 
@@ -94,12 +106,16 @@ public class EmployeeRepository {
         List<EmployeeDomain> domains = new ArrayList<>(employees.size());
         for (Employee employee : employees) {
 
+            // 所属する組織情報を取得
+            Organization organization = organizationDao.get(employee.getOrganization());
+
             // 各等級情報を取得
             Role role = roleDao.get(employee.getRoleRank());
             Capability capability = capabilityDao.get(employee.getCapabilityRank());
 
             // Domain を準備
             EmployeeDomain domain = new EmployeeDomain(employee);
+            domain.setOrganization(organization);
             domain.setRole(role);
             domain.setCapability(capability);
 
@@ -213,8 +229,22 @@ public class EmployeeRepository {
         return result;
     }
 
+    /**
+     * 指定された組織コードに所属する社員数を取得する。
+     *
+     * @param organizationCode 組織コード
+     * @return 所属する社員数
+     */
+    public long countByOrganization(String organizationCode) {
+        return dao.countByOrganization(organizationCode);
+    }
+
     public void setDao(EmployeeDao dao) {
         this.dao = dao;
+    }
+
+    public void setOrganizationDao(OrganizationDao organizationDao) {
+        this.organizationDao = organizationDao;
     }
 
     public void setRoleDao(RoleDao roleDao) {

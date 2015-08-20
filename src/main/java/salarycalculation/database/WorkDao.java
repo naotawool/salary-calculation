@@ -8,7 +8,9 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
+import salarycalculation.entity.Role;
 import salarycalculation.entity.Work;
+import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.exception.RuntimeSQLException;
 
 /**
@@ -47,6 +49,10 @@ public class WorkDao {
                     + " and workYearMonth = " + workYearMonth, rsHandler);
         } catch (SQLException e) {
             throw new RuntimeSQLException("Select Failure", e);
+        }
+
+        if (result == null) {
+            throw new RecordNotFoundException(Role.class, employeeNo, workYearMonth);
         }
 
         return result;

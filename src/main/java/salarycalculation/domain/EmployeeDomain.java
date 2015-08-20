@@ -9,6 +9,7 @@ import org.apache.commons.lang.time.DateUtils;
 import salarycalculation.database.WorkDao;
 import salarycalculation.entity.Capability;
 import salarycalculation.entity.Employee;
+import salarycalculation.entity.Organization;
 import salarycalculation.entity.Role;
 import salarycalculation.entity.Work;
 
@@ -22,6 +23,8 @@ public class EmployeeDomain {
     /** 社員情報 */
     private Employee entity;
 
+    /** 組織情報 */
+    private Organization organization;
     /** 役割等級 */
     private Role role;
     /** 能力等級 */
@@ -282,6 +285,14 @@ public class EmployeeDomain {
 
     public void setEntity(Employee entity) {
         this.entity = entity;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 
     public Role getRole() {

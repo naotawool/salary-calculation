@@ -18,6 +18,9 @@ public class Employee {
     /** 社員名 */
     private String name;
 
+    /** 組織コード */
+    private String organization;
+
     /** 生年月日 */
     private Date birthday;
 
@@ -85,6 +88,24 @@ public class Employee {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * 組織コードを取得する。
+     *
+     * @return 組織コード
+     */
+    public String getOrganization() {
+        return organization;
+    }
+
+    /**
+     * 組織コードを設定する。
+     *
+     * @param organization 組織コード
+     */
+    public void setOrganization(String organization) {
+        this.organization = organization;
     }
 
     /**
@@ -288,9 +309,9 @@ public class Employee {
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append(no).append(name)
-                .append(birthday).append(joinDate).append(roleRank).append(capabilityRank)
-                .append(commuteAmount).append(rentAmount).append(healthInsuranceAmount)
-                .append(employeePensionAmount).append(incomeTaxAmount).append(inhabitantTaxAmount)
-                .toString();
+                .append(organization).append(birthday).append(joinDate).append(roleRank)
+                .append(capabilityRank).append(commuteAmount).append(rentAmount)
+                .append(healthInsuranceAmount).append(employeePensionAmount)
+                .append(incomeTaxAmount).append(inhabitantTaxAmount).toString();
     }
 }
