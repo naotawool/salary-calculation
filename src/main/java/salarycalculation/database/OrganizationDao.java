@@ -8,20 +8,20 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
-import salarycalculation.entity.Capability;
+import salarycalculation.entity.Organization;
 import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.exception.RuntimeSQLException;
 
 /**
- * 能力等級 Dao。
+ * 組織 Dao。
  *
  * @author naotake
  */
-public class CapabilityDao {
+public class OrganizationDao {
 
     private Connection connection;
 
-    public CapabilityDao() {
+    public OrganizationDao() {
         String url = "jdbc:h2:./data/salary_calculation";
         try {
             this.connection = DriverManager.getConnection(url, "sa", "");
@@ -31,25 +31,25 @@ public class CapabilityDao {
     }
 
     /**
-     * 等級を基に能力等級を取得する。
+     * 組織コードを基に組織情報を取得する。
      *
-     * @param rank 等級
-     * @return 能力等力
+     * @param code 組織コード
+     * @return 組織情報
      */
-    public Capability get(String rank) {
-        ResultSetHandler<Capability> rsHandler = new BeanHandler<Capability>(Capability.class);
+    public Organization get(String code) {
+        ResultSetHandler<Organization> rsHandler = new BeanHandler<Organization>(Organization.class);
         QueryRunner runner = new QueryRunner();
 
-        Capability result = null;
+        Organization result = null;
         try {
-            result = runner.query(connection, "select * from capability where rank = '" + rank
-                    + "'", rsHandler);
+            result = runner.query(connection, "select * from organization where code = ?",
+                    rsHandler, code);
         } catch (SQLException e) {
             throw new RuntimeSQLException("Select Failure", e);
         }
 
         if (result == null) {
-            throw new RecordNotFoundException(Capability.class, rank);
+            throw new RecordNotFoundException(Organization.class, code);
         }
 
         return result;
