@@ -13,6 +13,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import salarycalculation.database.EmployeeDao;
+import salarycalculation.exception.RecordNotFoundException;
 
 /**
  * {@link EmployeeRepository}に対する EasyMock を使ったテストクラス。
@@ -114,5 +115,9 @@ public class EmployeeRepositoryTest_EasyMock {
 
         // 検証
         verify(mockDao);
+    }
+
+    private RecordNotFoundException createException(Class<?> clazz, String key) {
+        return new RecordNotFoundException(clazz, key);
     }
 }
