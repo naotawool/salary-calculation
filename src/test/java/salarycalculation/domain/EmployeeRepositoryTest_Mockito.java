@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import salarycalculation.database.EmployeeDao;
+import salarycalculation.exception.RecordNotFoundException;
 
 /**
  * {@link EmployeeRepository}に対する Mockito を使ったテストクラス。
@@ -100,5 +101,9 @@ public class EmployeeRepositoryTest_Mockito {
 
         // 検証
         verify(mockDao, times(3)).countByOrganization(code);
+    }
+
+    private RecordNotFoundException createException(Class<?> clazz, String key) {
+        return new RecordNotFoundException(clazz, key);
     }
 }
