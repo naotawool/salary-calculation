@@ -136,6 +136,29 @@ public class EmployeeRepositoryTest_Mockito {
     }
 
     @Test
+    public void 社員と組織の情報を取得できること() {
+        String no = "101";
+        String organization = "ORGANIZATION2";
+
+        this.entity = createEntity(no, organization, null, null);
+
+        // 振る舞いを定義
+        when(mockDao.get(no)).thenReturn(this.entity);
+        when(mockOrganizationDao.get(organization)).thenReturn(this.organization);
+
+        // 実行
+        EmployeeDomain actual = testee.getSimple(no);
+
+        // 検証
+        assertThat(actual.getEntity(), sameInstance(this.entity));
+        assertThat(actual.getOrganization(), sameInstance(this.organization));
+
+        // 振る舞いの検証
+        verify(mockDao).get(no);
+        verify(mockOrganizationDao).get(organization);
+    }
+
+    @Test
     public void 社員と関連する情報も合わせて取得できること() {
         String no = "101";
         String organization = "ORGANIZATION2";
