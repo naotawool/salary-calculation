@@ -18,10 +18,12 @@ public class RecordNotFoundExceptionMatcher extends TypeSafeMatcher<RecordNotFou
 
     private Class<?> expectEntityClass;
     private Object expectKey;
+    private Object[] expectKeys;
 
-    RecordNotFoundExceptionMatcher(Class<?> expectEntityClass, Object expectKey) {
+    RecordNotFoundExceptionMatcher(Class<?> expectEntityClass, Object expectKey, Object[] expectKeys) {
         this.expectEntityClass = expectEntityClass;
         this.expectKey = expectKey;
+        this.expectKeys = expectKeys;
     }
 
     @Override
@@ -33,6 +35,7 @@ public class RecordNotFoundExceptionMatcher extends TypeSafeMatcher<RecordNotFou
     protected boolean matchesSafely(RecordNotFoundException actual) {
         assertTargetClass(actual);
         assertKey(actual);
+        assertKeys(actual);
         return true;
     }
 
@@ -49,6 +52,13 @@ public class RecordNotFoundExceptionMatcher extends TypeSafeMatcher<RecordNotFou
         }
     }
 
+    private void assertKeys(RecordNotFoundException actual) {
+        if (expectKeys != null) {
+            assertThat(actual.getKey().length, is(expectKeys.length));
+            assertThat(actual.getKey(), is(expectKeys));
+        }
+    }
+
     /**
      * {@link RecordNotFoundException}にセットされた検索対象のエンティティ型を検証する Matcher を生成する。
      *
@@ -56,7 +66,7 @@ public class RecordNotFoundExceptionMatcher extends TypeSafeMatcher<RecordNotFou
      * @return {@link RecordNotFoundExceptionMatcher}
      */
     public static RecordNotFoundExceptionMatcher isClass(Class<?> expectEntityClass) {
-        return new RecordNotFoundExceptionMatcher(expectEntityClass, null);
+        return new RecordNotFoundExceptionMatcher(expectEntityClass, null, null);
     }
 
     /**
@@ -67,6 +77,17 @@ public class RecordNotFoundExceptionMatcher extends TypeSafeMatcher<RecordNotFou
      * @return {@link RecordNotFoundExceptionMatcher}
      */
     public static RecordNotFoundExceptionMatcher isKey(Object expectKey) {
-        return new RecordNotFoundExceptionMatcher(null, expectKey);
+        return new RecordNotFoundExceptionMatcher(null, expectKey, null);
+    }
+
+    /**
+     * {@link RecordNotFoundException}にセットされた検索時の主キー一覧を検証する Matcher を生成する。<br />
+     * ここでは主キーが複数であることを前提とした検証を行う。
+     *
+     * @param expectKeys 期待する検索キー一覧
+     * @return {@link RecordNotFoundExceptionMatcher}
+     */
+    public static RecordNotFoundExceptionMatcher isKeys(Object... expectKeys) {
+        return new RecordNotFoundExceptionMatcher(null, null, expectKeys);
     }
 }
