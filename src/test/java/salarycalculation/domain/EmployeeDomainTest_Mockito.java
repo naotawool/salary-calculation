@@ -9,12 +9,16 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import salarycalculation.database.WorkDao;
 import salarycalculation.entity.Capability;
 import salarycalculation.entity.Employee;
 import salarycalculation.entity.Role;
+import salarycalculation.entity.Work;
 
 /**
  * {@link EmployeeDomain}に対する Mockito を使ったテストクラス。
@@ -107,6 +111,41 @@ public class EmployeeDomainTest_Mockito {
         // 検証
         verify(testee).getAllowance();
         verify(testee).getOvertimeAmount(201504);
+    }
+
+    @Test
+    public void 社員の残業代を取得できること() {
+        // 時間外手当を設定
+        Employee entity = new Employee();
+        entity.setWorkOverTime1hAmount(10);
+        entity.setNo(101);
+        entity.setCapabilityRank("AS");
+
+        setUpSpy(entity);
+
+        // Work 情報を設定
+        Work work = new Work();
+        work.setWorkOverTime(BigDecimal.valueOf(10L));
+        work.setLateNightOverTime(BigDecimal.valueOf(20L));
+        work.setHolidayWorkTime(BigDecimal.valueOf(30L));
+        work.setHolidayLateNightOverTime(BigDecimal.valueOf(40L));
+
+        // WorkDao の振る舞いを定義
+        WorkDao mockWorkDao = mock(WorkDao.class);
+        when(mockWorkDao.getByYearMonth(101, 201504)).thenReturn(work);
+        testee.setWorkDao(mockWorkDao);
+
+        // 期待値を求める
+        int expected = (10) * 10;
+        expected += (10 * 1.1) * 20;
+        expected += (10 * 1.2) * 30;
+        expected += (10 * 1.3) * 40;
+
+        // 実行
+        assertThat(testee.getOvertimeAmount(201504), is(expected));
+
+        // 検証
+        verify(mockWorkDao).getByYearMonth(101, 201504);
     }
 
     private void setUpSpy() {
