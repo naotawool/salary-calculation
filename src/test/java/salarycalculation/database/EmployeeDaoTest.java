@@ -7,16 +7,21 @@ import static org.junit.Assert.assertThat;
 import static salarycalculation.matchers.EmployeeAssertion.isEqualToName;
 import static salarycalculation.matchers.EmployeeAssertion.isEqualToNo;
 import static salarycalculation.matchers.OrderEmployee.orderNos;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKey;
 
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 import salarycalculation.entity.Employee;
+import salarycalculation.exception.RecordNotFoundException;
 
 /**
  * {@link EmployeeDao}に対するテストクラス。
@@ -25,6 +30,28 @@ import salarycalculation.entity.Employee;
  */
 @RunWith(Enclosed.class)
 public class EmployeeDaoTest {
+
+    public static class 社員情報を1件取得する場合 extends EmployeeDaoTestBase {
+
+        @Rule
+        public ExpectedException expect = ExpectedException.none();
+
+        @Test
+        public void 社員情報を取得できること() {
+            Employee actual = testee.get("1");
+            assertThat(actual, isEqualToNo(1));
+            assertThat(actual, isEqualToName("愛媛 蜜柑"));
+        }
+
+        @Test
+        public void testtestName() {
+            expect.expect(RecordNotFoundException.class);
+            expect.expect(isClass(Employee.class));
+            expect.expect(isKey("9999"));
+
+            testee.get("9999");
+        }
+    }
 
     public static class 社員一覧を取得する場合 extends EmployeeDaoTestBase {
 

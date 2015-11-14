@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class Work {
 
     /** 社員番号 */
-    private int no;
+    private int employeeNo;
 
     /** 稼動年月 */
     private int workYearMonth;
@@ -32,17 +32,17 @@ public class Work {
      *
      * @return 社員番号
      */
-    public int getNo() {
-        return no;
+    public int getEmployeeNo() {
+        return employeeNo;
     }
 
     /**
      * 社員番号を設定する。
      *
-     * @param no 社員番号
+     * @param employeeNo 社員番号
      */
-    public void setNo(int no) {
-        this.no = no;
+    public void setEmployeeNo(int employeeNo) {
+        this.employeeNo = employeeNo;
     }
 
     /**
