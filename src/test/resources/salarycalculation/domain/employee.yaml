@@ -1,0 +1,12 @@
+!!seq [
+!!salarycalculation.domain.EmployeeDomainTest$Fixture
+  { joinDate: 2013-04-01, expected: 2},
+!!salarycalculation.domain.EmployeeDomainTest$Fixture
+  { joinDate: 2013-05-01, expected: 2},
+!!salarycalculation.domain.EmployeeDomainTest$Fixture
+  { joinDate: 2013-06-01, expected: 2},
+!!salarycalculation.domain.EmployeeDomainTest$Fixture
+  { joinDate: 2005-05-01, expected: 10, capabilityRank: PL, allowance: 20000},
+!!salarycalculation.domain.EmployeeDomainTest$Fixture
+  { joinDate: 2005-04-01, expected: 10, capabilityRank: PM, allowance: 30000},
+]
