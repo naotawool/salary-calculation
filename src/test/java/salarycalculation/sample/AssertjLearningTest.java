@@ -1,5 +1,6 @@
 package salarycalculation.sample;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -43,6 +44,10 @@ public class AssertjLearningTest {
         assertThat(actual.age, is(28));
         assertThat(actual.name, is(notNullValue()));
         assertThat(actual.name, is("愛媛 太郎"));
+
+        // AssertJ style
+        assertThat(actual.age).isEqualTo(28);
+        assertThat(actual.name).isNotNull().isEqualTo("愛媛 太郎");
     }
 
     @Test
@@ -53,6 +58,11 @@ public class AssertjLearningTest {
         assertThat(actual1, sameInstance(actual1));
         assertThat(actual1, is(not(actual2)));
         assertThat(actual1, is(comparesEqualTo(actual2)));
+
+        // AssertJ style
+        assertThat(actual1).isSameAs(actual1)
+                           .isNotSameAs(actual2).isNotEqualTo(actual2)
+                           .isEqualByComparingTo(actual2);
     }
 
     @Test
@@ -62,13 +72,22 @@ public class AssertjLearningTest {
         assertThat(actual, startsWith("愛媛"));
         assertThat(actual, endsWith("蜜柑"));
 
+        // AssertJ style
+        assertThat(actual).startsWith("愛媛").endsWith("蜜柑");
+
         // 空文字比較
         actual = "";
         assertThat(actual, isEmptyString());
 
+        // AssertJ style
+        assertThat(actual).isEmpty();
+
         // toString 比較
         Learning fixture = fixture();
         assertThat(fixture, hasToString("Person(28)[愛媛 太郎]"));
+
+        // AssertJ style
+        assertThat(fixture).hasToString("Person(28)[愛媛 太郎]");
     }
 
     @Test
@@ -78,6 +97,10 @@ public class AssertjLearningTest {
         assertThat(actual.age.doubleValue(), is(closeTo(20.0, 29.0)));
         assertThat(actual.age, greaterThanOrEqualTo(20));
         assertThat(actual.age, lessThan(30));
+
+        // AssertJ style
+        assertThat(actual.age).isBetween(20, 29)
+                              .isGreaterThanOrEqualTo(20).isLessThan(30);
     }
 
     @Test
@@ -86,6 +109,10 @@ public class AssertjLearningTest {
 
         String actualAsStr = FastDateFormat.getInstance("yyyy-MM-dd").format(actual.birthday);
         assertThat(actualAsStr, is("1987-07-18"));
+
+        // AssertJ style
+        assertThat(actual.birthday).hasYear(1987).hasMonth(7).hasDayOfMonth(18)
+                                   .hasSameTimeAs("1987-07-18");
     }
 
     @Test
@@ -95,6 +122,11 @@ public class AssertjLearningTest {
         assertThat(actuals, is(allOf(hasSize(3), not(empty()))));
         assertThat(actuals, hasItems("大阪府", "沖縄県"));
         assertThat(actuals, not(hasItem("東京都")));
+
+        // AssertJ style
+        assertThat(actuals).hasSize(3).isNotEmpty()
+                           .contains("大阪府", "沖縄県")
+                           .doesNotContain("東京都");
     }
 
     private static Learning fixture() {
@@ -109,11 +141,8 @@ public class AssertjLearningTest {
 
     private static class Learning implements Comparable<Learning> {
 
-        /** 年齢 */
         Integer age;
-        /** 名前 */
         String name;
-        /** 誕生日 */
         Date birthday;
 
         @Override
