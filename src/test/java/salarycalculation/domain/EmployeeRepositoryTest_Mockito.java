@@ -1,17 +1,32 @@
 package salarycalculation.domain;
 
+import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKey;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.EmployeeDao;
+import salarycalculation.database.OrganizationDao;
+import salarycalculation.database.RoleDao;
+import salarycalculation.entity.Capability;
+import salarycalculation.entity.Employee;
+import salarycalculation.entity.Organization;
+import salarycalculation.entity.Role;
+import salarycalculation.exception.RecordNotFoundException;
 
 /**
  * {@link EmployeeRepository}に対する Mockito を使ったテストクラス。
@@ -20,17 +35,35 @@ import salarycalculation.database.EmployeeDao;
  */
 public class EmployeeRepositoryTest_Mockito {
 
+    @Rule
+    public ExpectedException expected = ExpectedException.none();
+
+    @InjectMocks
     private EmployeeRepository testee;
+    @Mock
     private EmployeeDao mockDao;
+    @Mock
+    private OrganizationDao mockOrganizationDao;
+    @Mock
+    private RoleDao mockRoleDao;
+    @Mock
+    private CapabilityDao mockCapabilityDao;
+
+    private Employee entity;
+    private Organization organization;
+    private Role role;
+    private Capability capability;
 
     /**
      * 事前処理。
      */
     @Before
     public void setUp() {
-        mockDao = mock(EmployeeDao.class);
-        testee = new EmployeeRepository();
-        testee.setDao(mockDao);
+        MockitoAnnotations.initMocks(this);
+
+        organization = new Organization();
+        role = new Role();
+        capability = new Capability();
     }
 
     @Test
@@ -100,5 +133,98 @@ public class EmployeeRepositoryTest_Mockito {
 
         // 検証
         verify(mockDao, times(3)).countByOrganization(code);
+    }
+
+    @Test
+    public void 社員と組織の情報を取得できること() {
+        String no = "101";
+        String organization = "ORGANIZATION2";
+
+        this.entity = createEntity(no, organization, null, null);
+
+        // 振る舞いを定義
+        when(mockDao.get(no)).thenReturn(this.entity);
+        when(mockOrganizationDao.get(organization)).thenReturn(this.organization);
+
+        // 実行
+        EmployeeDomain actual = testee.getSimple(no);
+
+        // 検証
+        assertThat(actual.getEntity(), sameInstance(this.entity));
+        assertThat(actual.getOrganization(), sameInstance(this.organization));
+
+        // 振る舞いの検証
+        verify(mockDao).get(no);
+        verify(mockOrganizationDao).get(organization);
+    }
+
+    @Test
+    public void 社員と関連する情報も合わせて取得できること() {
+        String no = "101";
+        String organization = "ORGANIZATION2";
+        String role = "ROLE3";
+        String capability = "CAPABILITY4";
+
+        this.entity = createEntity(no, organization, role, capability);
+
+        // 振る舞いを定義
+        when(mockDao.get(no)).thenReturn(this.entity);
+        when(mockOrganizationDao.get(organization)).thenReturn(this.organization);
+        when(mockRoleDao.get(role)).thenReturn(this.role);
+        when(mockCapabilityDao.get(capability)).thenReturn(this.capability);
+
+        // 実行
+        EmployeeDomain actual = testee.get(no);
+
+        // 検証
+        assertThat(actual.getEntity(), sameInstance(this.entity));
+        assertThat(actual.getOrganization(), sameInstance(this.organization));
+        assertThat(actual.getRole(), sameInstance(this.role));
+        assertThat(actual.getCapability(), sameInstance(this.capability));
+
+        // 振る舞いの検証
+        verify(mockDao).get(no);
+        verify(mockOrganizationDao).get(organization);
+        verify(mockRoleDao).get(role);
+        verify(mockCapabilityDao).get(capability);
+    }
+
+    @Test
+    public void 社員に紐付く組織情報取得時に例外を発生させるテスト() {
+        String no = "101";
+        String organization = "ORGANIZATION2";
+
+        this.entity = createEntity(no, organization, "", "");
+        RecordNotFoundException expectException = createException(Organization.class, organization);
+
+        // 振る舞いを定義
+        when(mockDao.get(no)).thenReturn(this.entity);
+        when(mockOrganizationDao.get(organization)).thenThrow(expectException);
+
+        // 期待する例外内容
+        expected.expect(RecordNotFoundException.class);
+        expected.expect(isClass(Organization.class));
+        expected.expect(isKey(organization));
+
+        // 実行
+        try {
+            testee.get(no);
+        } finally {
+            verify(mockDao).get(no);
+            verify(mockOrganizationDao).get(organization);
+        }
+    }
+
+    private Employee createEntity(String no, String organization, String role, String capability) {
+        Employee entity = new Employee();
+        entity.setNo(Integer.valueOf(no));
+        entity.setOrganization(organization);
+        entity.setRoleRank(role);
+        entity.setCapabilityRank(capability);
+        return entity;
+    }
+
+    private RecordNotFoundException createException(Class<?> clazz, String key) {
+        return new RecordNotFoundException(clazz, key);
     }
 }

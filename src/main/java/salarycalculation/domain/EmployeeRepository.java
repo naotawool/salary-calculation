@@ -34,7 +34,7 @@ public class EmployeeRepository {
     }
 
     /**
-     * 社員番号を基に社員情報を取得する。
+     * 社員番号を基に社員情報を全て取得する。
      *
      * @param no 社員番号
      * @return 社員情報
@@ -55,6 +55,25 @@ public class EmployeeRepository {
         domain.setOrganization(organization);
         domain.setRole(role);
         domain.setCapability(capability);
+
+        return domain;
+    }
+
+    /**
+     * 社員番号を基に組織と社員情報を取得する。
+     *
+     * @param no 社員番号
+     * @return 社員情報
+     */
+    public EmployeeDomain getSimple(String no) {
+        Employee employee = dao.get(no);
+
+        // 所属する組織情報を取得
+        Organization organization = organizationDao.get(employee.getOrganization());
+
+        // Domain を準備
+        EmployeeDomain domain = new EmployeeDomain(employee);
+        domain.setOrganization(organization);
 
         return domain;
     }

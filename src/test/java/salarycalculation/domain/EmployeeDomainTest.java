@@ -1,7 +1,7 @@
 package salarycalculation.domain;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.sql.Date;
 import java.util.Calendar;
@@ -11,7 +11,9 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
+import salarycalculation.entity.Capability;
 import salarycalculation.entity.Employee;
+import salarycalculation.entity.Role;
 
 /**
  * {@link EmployeeDomain}に対するテストクラス。
@@ -150,6 +152,52 @@ public class EmployeeDomainTest {
         }
     }
 
+    public static class PLの場合 extends EmployeeDomainTestBase {
+
+        /**
+         * 事前処理。
+         */
+        @Before
+        @Override
+        public void setUp() {
+            super.setUp();
+            testee.getEntity().setCapabilityRank("PL");
+        }
+
+        @Test
+        public void 残業代を0で取得できること() {
+            assertThat(testee.getOvertimeAmount(201504), is(0));
+        }
+
+        @Test
+        public void 想定年収を取得できること() {
+            assertThat(testee.getAnnualTotalSalaryPlan(), is(10000 * 12));
+        }
+    }
+
+    public static class PMの場合 extends EmployeeDomainTestBase {
+
+        /**
+         * 事前処理。
+         */
+        @Before
+        @Override
+        public void setUp() {
+            super.setUp();
+            testee.getEntity().setCapabilityRank("PM");
+        }
+
+        @Test
+        public void 残業代を0で取得できること() {
+            assertThat(testee.getOvertimeAmount(201504), is(0));
+        }
+
+        @Test
+        public void 想定年収を取得できること() {
+            assertThat(testee.getAnnualTotalSalaryPlan(), is(30000 * 12));
+        }
+    }
+
     private static class EmployeeDomainTestBase {
 
         protected EmployeeDomain testee;
@@ -158,7 +206,7 @@ public class EmployeeDomainTest {
          * 事前処理。
          */
         @Before
-        public void setUpTestee() {
+        public void setUp() {
             Employee entity = new Employee();
 
             // 社員番号
@@ -182,6 +230,8 @@ public class EmployeeDomainTest {
             entity.setRentAmount(0);
 
             testee = new EmployeeDomain(entity);
+            testee.setRole(new Role());
+            testee.setCapability(new Capability());
         }
 
         /**
