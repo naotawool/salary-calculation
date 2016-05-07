@@ -115,7 +115,7 @@ public class EmployeeDomain {
 
         // 控除額を求める
         int deduction = entity.getHealthInsuranceAmount() + entity.getEmployeePensionAmount()
-                + entity.getIncomeTaxAmount() + entity.getInhabitantTaxAmount();
+                        + entity.getIncomeTaxAmount() + entity.getInhabitantTaxAmount();
 
         // 差引給与額を求める
         int takeHome = totalSalary - deduction;
@@ -206,35 +206,37 @@ public class EmployeeDomain {
         int overtimeAmount = 0;
 
         // 能力等級が 'PL' or 'PM' の場合、残業代は出ない
-        if (StringUtils.equals(entity.getCapabilityRank(), "PL")
-                || StringUtils.equals(entity.getCapabilityRank(), "PM")) {
+        if (StringUtils.equals(entity.getCapabilityRank(), "PL")) {
+            overtimeAmount = 0;
+        } else if (StringUtils.equals(entity.getCapabilityRank(), "PM")) {
             overtimeAmount = 0;
         } else {
             // 稼動情報を取得
             Work work = workDao.getByYearMonth(entity.getNo(), workYearMonth);
 
             // 時間外手当を求める
-            int workOverTimeAllowance = BigDecimal.valueOf(entity.getWorkOverTime1hAmount())
-                    .multiply(work.getWorkOverTime()).intValue();
+            int workOverTimeAllowance =
+                    BigDecimal.valueOf(entity.getWorkOverTime1hAmount())
+                              .multiply(work.getWorkOverTime()).intValue();
 
             // 深夜手当を求める
-            int lateNightOverTimeAllowance = BigDecimal
-                    .valueOf(entity.getWorkOverTime1hAmount() * 1.1)
-                    .multiply(work.getLateNightOverTime()).intValue();
+            int lateNightOverTimeAllowance =
+                    BigDecimal.valueOf(entity.getWorkOverTime1hAmount() * 1.1)
+                              .multiply(work.getLateNightOverTime()).intValue();
 
             // 休日手当を求める
-            int holidayWorkTimeAllowance = BigDecimal
-                    .valueOf(entity.getWorkOverTime1hAmount() * 1.2)
-                    .multiply(work.getHolidayWorkTime()).intValue();
+            int holidayWorkTimeAllowance =
+                    BigDecimal.valueOf(entity.getWorkOverTime1hAmount() * 1.2)
+                              .multiply(work.getHolidayWorkTime()).intValue();
 
             // 休日深夜手当を求める
-            int holidayLateNightOverTimeAllowance = BigDecimal
-                    .valueOf(entity.getWorkOverTime1hAmount() * 1.3)
-                    .multiply(work.getHolidayLateNightOverTime()).intValue();
+            int holidayLateNightOverTimeAllowance =
+                    BigDecimal.valueOf(entity.getWorkOverTime1hAmount() * 1.3)
+                              .multiply(work.getHolidayLateNightOverTime()).intValue();
 
             // 残業代を求める
             overtimeAmount = workOverTimeAllowance + lateNightOverTimeAllowance
-                    + holidayWorkTimeAllowance + holidayLateNightOverTimeAllowance;
+                             + holidayWorkTimeAllowance + holidayLateNightOverTimeAllowance;
         }
 
         return overtimeAmount;
