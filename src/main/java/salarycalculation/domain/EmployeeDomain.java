@@ -124,29 +124,21 @@ public class EmployeeDomain {
     }
 
     /**
-     * 指定年月の給料の総支給額を取得する。
+     * 指定年月の給料の総支給額を取得する。<br />
+     * 総支給額の内訳は下記の通り。
+     * <p />
+     * 総支給額 = 基準内給与 (基本給 + 諸手当) + 基準外給与
      *
      * @param workYearMonth 稼動年月 (e.g. 201504)
      * @return 給料の総支給額
      */
     // @UT
     public int getTotalSalary(int workYearMonth) {
-        // 基本給を求める
-        int base = role.getAmount() + capability.getAmount();
-
-        // 諸手当を求める
-        int allowance = getAllowance();
-
-        // 基準内給与を求める
-        int standardSalary = base + allowance;
-
-        // 基準外給与を求める
-        int unstandardSalary = getOvertimeAmount(workYearMonth);
-
-        // 総支給額を求める
-        int totalSalary = standardSalary + unstandardSalary;
-
-        return totalSalary;
+        int tmp = role.getAmount();
+        tmp += capability.getAmount();
+        tmp += getAllowance();
+        tmp += getOvertimeAmount(workYearMonth);
+        return tmp;
     }
 
     /**
@@ -205,38 +197,38 @@ public class EmployeeDomain {
 
         int overtimeAmount = 0;
 
+        // 稼動情報を取得
+        Work work = workDao.getByYearMonth(entity.getNo(), workYearMonth);
+
+        // 時間外手当を求める
+        BigDecimal workOverTime1hAmount = BigDecimal.valueOf(entity.getWorkOverTime1hAmount());
+        BigDecimal amount = workOverTime1hAmount.multiply(work.getWorkOverTime());
+        int workOverTimeAllowance = amount.intValue();
+        overtimeAmount += workOverTimeAllowance;
+
+        // 深夜手当を求める
+        workOverTime1hAmount = BigDecimal.valueOf(entity.getWorkOverTime1hAmount() * 1.1);
+        amount = workOverTime1hAmount.multiply(work.getLateNightOverTime());
+        int lateNightOverTimeAllowance = amount.intValue();
+        overtimeAmount += lateNightOverTimeAllowance;
+
+        // 休日手当を求める
+        workOverTime1hAmount = BigDecimal.valueOf(entity.getWorkOverTime1hAmount() * 1.2);
+        amount = workOverTime1hAmount.multiply(work.getHolidayWorkTime());
+        int holidayWorkTimeAllowance = amount.intValue();
+        overtimeAmount += holidayWorkTimeAllowance;
+
+        // 休日深夜手当を求める
+        workOverTime1hAmount = BigDecimal.valueOf(entity.getWorkOverTime1hAmount() * 1.3);
+        amount = workOverTime1hAmount.multiply(work.getHolidayLateNightOverTime());
+        int holidayLateNightOverTimeAllowance = amount.intValue();
+        overtimeAmount += holidayLateNightOverTimeAllowance;
+
         // 能力等級が 'PL' or 'PM' の場合、残業代は出ない
         if (StringUtils.equals(entity.getCapabilityRank(), "PL")) {
             overtimeAmount = 0;
         } else if (StringUtils.equals(entity.getCapabilityRank(), "PM")) {
             overtimeAmount = 0;
-        } else {
-            // 稼動情報を取得
-            Work work = workDao.getByYearMonth(entity.getNo(), workYearMonth);
-
-            // 時間外手当を求める
-            int workOverTimeAllowance =
-                    BigDecimal.valueOf(entity.getWorkOverTime1hAmount())
-                              .multiply(work.getWorkOverTime()).intValue();
-
-            // 深夜手当を求める
-            int lateNightOverTimeAllowance =
-                    BigDecimal.valueOf(entity.getWorkOverTime1hAmount() * 1.1)
-                              .multiply(work.getLateNightOverTime()).intValue();
-
-            // 休日手当を求める
-            int holidayWorkTimeAllowance =
-                    BigDecimal.valueOf(entity.getWorkOverTime1hAmount() * 1.2)
-                              .multiply(work.getHolidayWorkTime()).intValue();
-
-            // 休日深夜手当を求める
-            int holidayLateNightOverTimeAllowance =
-                    BigDecimal.valueOf(entity.getWorkOverTime1hAmount() * 1.3)
-                              .multiply(work.getHolidayLateNightOverTime()).intValue();
-
-            // 残業代を求める
-            overtimeAmount = workOverTimeAllowance + lateNightOverTimeAllowance
-                             + holidayWorkTimeAllowance + holidayLateNightOverTimeAllowance;
         }
 
         return overtimeAmount;
@@ -244,6 +236,10 @@ public class EmployeeDomain {
 
     /**
      * 現在の各等級を基に想定年収を取得する。<br />
+     * 想定年収の内訳は下記の通り。
+     * <p />
+     * 想定年収 = 基準内給与 (基本給 + 諸手当) * 12
+     * <p />
      * ただし、以下の諸手当は年収には含まれない。
      * <ul>
      * <li>通勤手当</li>
@@ -256,23 +252,17 @@ public class EmployeeDomain {
     // @UT
     public int getAnnualTotalSalaryPlan() {
         // 基本給を求める
-        int base = role.getAmount() + capability.getAmount();
-
-        // 能力等級の諸手当を求める
-        int allowance = 0;
+        int tmp = role.getAmount() + capability.getAmount();
 
         // 能力等級が 'PL' or 'PM' の場合、別途手当が出る
         if (StringUtils.equals(entity.getCapabilityRank(), "PL")) {
-            allowance += 10000;
+            tmp += 10000;
         } else if (StringUtils.equals(entity.getCapabilityRank(), "PM")) {
-            allowance += 30000;
+            tmp += 30000;
         }
 
-        // 基準内給与(諸手当除く) を求める
-        int standardSalary = base + allowance;
-
         // 想定年収を求める
-        int annualTotalSalaryPlan = standardSalary * 12;
+        int annualTotalSalaryPlan = tmp * 12;
 
         return annualTotalSalaryPlan;
     }

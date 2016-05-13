@@ -210,7 +210,7 @@ public class EmployeeDomainTest {
             Employee entity = new Employee();
 
             // 社員番号
-            entity.setNo(100);
+            entity.setNo(1);
 
             // 入社日
             Calendar joinDate = Calendar.getInstance();
