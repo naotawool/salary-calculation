@@ -21,11 +21,10 @@ public class EmployeeDomainTest_EasyMock {
     @Test
     public void 入社年数を取得できること() {
         // パーシャルモックを用意
-        testee = createMockBuilder(EmployeeDomain.class).addMockedMethod("getDurationMonth")
-                .createMock();
+        testee = createMockBuilder(EmployeeDomain.class).addMockedMethod("calculateAttendanceMonth").createMock();
 
         // 振る舞いを定義
-        expect(testee.getDurationMonth()).andReturn(12).andReturn(24).andReturn(36);
+        expect(testee.calculateAttendanceMonth()).andReturn(12).andReturn(24).andReturn(36);
 
         // 再生
         replay(testee);

@@ -233,14 +233,14 @@ public class EmployeeRepository {
 
         for (EmployeeDomain domain : domains) {
             if (selectMax) {
-                if (condition < domain.getDurationMonth()) {
+                if (condition < domain.calculateAttendanceMonth()) {
                     result = domain;
-                    condition = domain.getDurationMonth();
+                    condition = domain.calculateAttendanceMonth();
                 }
             } else {
-                if (condition > domain.getDurationMonth()) {
+                if (condition > domain.calculateAttendanceMonth()) {
                     result = domain;
-                    condition = domain.getDurationMonth();
+                    condition = domain.calculateAttendanceMonth();
                 }
             }
         }

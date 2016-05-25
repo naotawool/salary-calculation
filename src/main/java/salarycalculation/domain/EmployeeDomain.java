@@ -1,10 +1,6 @@
 package salarycalculation.domain;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
 
 import salarycalculation.database.WorkDao;
 import salarycalculation.entity.Capability;
@@ -22,7 +18,6 @@ public class EmployeeDomain {
 
     /** 社員情報 */
     private Employee entity;
-
     /** 組織情報 */
     private Organization organization;
     /** 役割等級 */
@@ -33,12 +28,12 @@ public class EmployeeDomain {
     private WorkDao workDao;
 
     /** 業務日付ドメイン */
-    private BusinessDateDomain businessDateDomain;
+    private BusinessDateDomain nowBusinessDate;
 
     public EmployeeDomain(Employee entity) {
         this.entity = entity;
         this.workDao = new WorkDao();
-        this.businessDateDomain = new BusinessDateDomain();
+        this.nowBusinessDate = BusinessDateDomain.now();
     }
 
     /**
@@ -58,7 +53,7 @@ public class EmployeeDomain {
      */
     // @UT
     public int getDurationYear() {
-        int durationMonth = getDurationMonth();
+        int durationMonth = calculateAttendanceMonth();
         return (durationMonth / 12);
     }
 
@@ -81,25 +76,11 @@ public class EmployeeDomain {
      * @return 勤続月数
      */
     // @UT
-    public int getDurationMonth() {
-        Calendar joinDateCal = Calendar.getInstance();
-        joinDateCal.setTime(entity.getJoinDate());
-        joinDateCal = DateUtils.truncate(joinDateCal, Calendar.HOUR);
-
-        Calendar now = businessDateDomain.getNowAsCalendar();
-        now = DateUtils.truncate(now, Calendar.HOUR);
-
-        int count = 0;
-        while (joinDateCal.before(now) || DateUtils.isSameDay(joinDateCal, now)) {
-            joinDateCal.add(Calendar.MONTH, 1);
-            count++;
-        }
-
-        if (count < 0) {
-            count = 0;
-        }
-
-        return count;
+    public int calculateAttendanceMonth() {
+        BusinessDateDomain joinBusinessDate = BusinessDateDomain.of(entity.getJoinDate());
+        int periodByMonth = joinBusinessDate.calculatePeriodByMonth(nowBusinessDate);
+        // 勤続月数は二つの業務日付の差から１を足したもの
+        return periodByMonth + 1;
     }
 
     /**
@@ -115,7 +96,7 @@ public class EmployeeDomain {
 
         // 控除額を求める
         int deduction = entity.getHealthInsuranceAmount() + entity.getEmployeePensionAmount()
-                        + entity.getIncomeTaxAmount() + entity.getInhabitantTaxAmount();
+                + entity.getIncomeTaxAmount() + entity.getInhabitantTaxAmount();
 
         // 差引給与額を求める
         int takeHome = totalSalary - deduction;
@@ -147,35 +128,32 @@ public class EmployeeDomain {
      * @return 諸手当
      */
     public int getAllowance() {
+        //TODO お金の計算はBigDecimal
         // 諸手当を求める
         int allowance = entity.getCommuteAmount() + entity.getRentAmount();
+        BigDecimal separateAllowance = separateAllowance();
 
-        // 能力等級が 'PL' or 'PM' の場合、別途手当が出る
-        if (StringUtils.equals(entity.getCapabilityRank(), "PL")) {
-            allowance += 10000;
-        } else if (StringUtils.equals(entity.getCapabilityRank(), "PM")) {
-            allowance += 30000;
-        }
+        allowance += separateAllowance.intValue();
 
         // 勤続年数が丸 3年目、5年目、10年目, 20年目の場合、別途手当が出る
         switch (getDurationYear()) {
         case 3:
-            if ((getDurationMonth() % 12) == 0) {
+            if ((calculateAttendanceMonth() % 12) == 0) {
                 allowance += 3000;
             }
             break;
         case 5:
-            if ((getDurationMonth() % 12) == 0) {
+            if ((calculateAttendanceMonth() % 12) == 0) {
                 allowance += 5000;
             }
             break;
         case 10:
-            if ((getDurationMonth() % 12) == 0) {
+            if ((calculateAttendanceMonth() % 12) == 0) {
                 allowance += 10000;
             }
             break;
         case 20:
-            if ((getDurationMonth() % 12) == 0) {
+            if ((calculateAttendanceMonth() % 12) == 0) {
                 allowance += 20000;
             }
             break;
@@ -194,6 +172,10 @@ public class EmployeeDomain {
      */
     // @UT
     public int getOvertimeAmount(int workYearMonth) {
+
+        if (isManager()) {
+            return 0;
+        }
 
         int overtimeAmount = 0;
 
@@ -224,14 +206,15 @@ public class EmployeeDomain {
         int holidayLateNightOverTimeAllowance = amount.intValue();
         overtimeAmount += holidayLateNightOverTimeAllowance;
 
-        // 能力等級が 'PL' or 'PM' の場合、残業代は出ない
-        if (StringUtils.equals(entity.getCapabilityRank(), "PL")) {
-            overtimeAmount = 0;
-        } else if (StringUtils.equals(entity.getCapabilityRank(), "PM")) {
-            overtimeAmount = 0;
-        }
-
         return overtimeAmount;
+    }
+
+    /**
+     * マネージャ職かどうかを判定する
+     * @return
+     */
+    public boolean isManager() {
+        return ManagerCapability.isManager(this.getEntity().getCapabilityRank());
     }
 
     /**
@@ -251,20 +234,21 @@ public class EmployeeDomain {
      */
     // @UT
     public int getAnnualTotalSalaryPlan() {
-        // 基本給を求める
-        int tmp = role.getAmount() + capability.getAmount();
-
-        // 能力等級が 'PL' or 'PM' の場合、別途手当が出る
-        if (StringUtils.equals(entity.getCapabilityRank(), "PL")) {
-            tmp += 10000;
-        } else if (StringUtils.equals(entity.getCapabilityRank(), "PM")) {
-            tmp += 30000;
-        }
-
         // 想定年収を求める
-        int annualTotalSalaryPlan = tmp * 12;
+        return calculateSaralyPerMonth() * 12;
+    }
 
-        return annualTotalSalaryPlan;
+    private int calculateSaralyPerMonth() {
+        // 基本給を求める
+        BigDecimal roleAmount = BigDecimal.valueOf(role.getAmount());
+        BigDecimal capabilityAmount = BigDecimal.valueOf(capability.getAmount());
+        // 能力等級が 'PL' or 'PM' の場合、別途手当が出る
+        BigDecimal separateAllowance = separateAllowance();
+        return roleAmount.add(capabilityAmount).add(separateAllowance).intValue();
+    }
+
+    private BigDecimal separateAllowance() {
+        return ManagerCapability.allowance(entity.getCapabilityRank()).orElse(BigDecimal.ZERO);
     }
 
     public void setWorkDao(WorkDao workDao) {
@@ -304,6 +288,6 @@ public class EmployeeDomain {
     }
 
     public void setBusinessDateDomain(BusinessDateDomain businessDateDomain) {
-        this.businessDateDomain = businessDateDomain;
+        this.nowBusinessDate = businessDateDomain;
     }
 }

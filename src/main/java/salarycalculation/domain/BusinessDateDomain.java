@@ -1,7 +1,12 @@
 package salarycalculation.domain;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
+
+import salarycalculation.utils.LocalDates;
 
 /**
  * 業務日付を扱うドメイン。
@@ -10,21 +15,54 @@ import java.util.Date;
  */
 public class BusinessDateDomain {
 
-    private Calendar calendar;
+    private final LocalDate calendar;
 
-    public BusinessDateDomain() {
-        this.calendar = Calendar.getInstance();
+    /**
+     * コンストラクタ.
+     */
+    private BusinessDateDomain(LocalDate date) {
+        this.calendar = Objects.requireNonNull(date);
     }
 
-    public Calendar getNowAsCalendar() {
+    public Calendar getAsCalendar() {
+        Calendar now = Calendar.getInstance();
+        now.setTime(getAsDate());
+        return now;
+    }
+
+    public Date getAsDate() {
+        return LocalDates.toDate(calendar);
+    }
+
+    public LocalDate getAsLocalDate() {
         return calendar;
     }
 
-    public Date getNowAsDate() {
-        return getNowAsCalendar().getTime();
+    public int calculatePeriodByMonth(BusinessDateDomain anotherDate) {
+        Objects.requireNonNull(anotherDate);
+        Period period = anotherDate.getAsLocalDate().until(this.getAsLocalDate());
+        return Math.abs(period.getMonths() + (period.getYears() * 12));
     }
 
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
+    /**
+     * ファクトリメソッド.
+     *
+     * @return 生成した時点の業務日付
+     */
+    public static BusinessDateDomain now() {
+        return of(LocalDate.now());
     }
+
+    public static BusinessDateDomain of(Date date) {
+        return of(LocalDates.toLocalDate(date));
+    }
+
+    public static BusinessDateDomain of(Calendar now) {
+        return of(new Date(now.getTimeInMillis()));
+    }
+
+    public static BusinessDateDomain of(LocalDate date) {
+        return new BusinessDateDomain(date);
+    }
+
 }

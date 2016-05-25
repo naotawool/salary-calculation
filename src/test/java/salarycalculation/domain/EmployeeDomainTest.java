@@ -243,10 +243,9 @@ public class EmployeeDomainTest {
          */
         public void setUpNowCalendar(int year, int month, int day) {
             // 現在日
-            BusinessDateDomain businessDate = new BusinessDateDomain();
             Calendar now = Calendar.getInstance();
             now.set(year, (month - 1), day);
-            businessDate.setCalendar(now);
+            BusinessDateDomain businessDate = BusinessDateDomain.of(now);
 
             testee.setBusinessDateDomain(businessDate);
         }

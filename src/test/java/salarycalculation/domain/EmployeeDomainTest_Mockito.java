@@ -40,7 +40,7 @@ public class EmployeeDomainTest_Mockito {
     @Test
     public void 入社年数を取得できること() {
         // 振る舞いを定義
-        when(testee.getDurationMonth()).thenReturn(12, 24, 36);
+        when(testee.calculateAttendanceMonth()).thenReturn(12, 24, 36);
         when(testee.getDurationYear()).thenCallRealMethod();
 
         // 実行
@@ -49,7 +49,7 @@ public class EmployeeDomainTest_Mockito {
         assertThat(testee.getDurationYear(), is(3)); // Month: 36
 
         // 検証
-        verify(testee, times(3)).getDurationMonth();
+        verify(testee, times(3)).calculateAttendanceMonth();
     }
 
     @Test
@@ -57,7 +57,7 @@ public class EmployeeDomainTest_Mockito {
         setUpSpy();
 
         // 振る舞いを定義
-        doReturn(12).doReturn(24).doReturn(36).when(testee).getDurationMonth();
+        doReturn(12).doReturn(24).doReturn(36).when(testee).calculateAttendanceMonth();
 
         // 実行
         assertThat(testee.getDurationYear(), is(1)); // Month: 12
@@ -65,7 +65,7 @@ public class EmployeeDomainTest_Mockito {
         assertThat(testee.getDurationYear(), is(3)); // Month: 36
 
         // 検証
-        verify(testee, times(3)).getDurationMonth();
+        verify(testee, times(3)).calculateAttendanceMonth();
     }
 
     @Test
