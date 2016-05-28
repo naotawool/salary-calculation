@@ -262,9 +262,9 @@ public class EmployeeDomain {
         }
 
         // 想定年収を求める
-        int annualTotalSalaryPlan = tmp * 12;
+        tmp *= 12;
 
-        return annualTotalSalaryPlan;
+        return tmp;
     }
 
     public void setWorkDao(WorkDao workDao) {
