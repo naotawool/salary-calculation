@@ -34,6 +34,7 @@ public class Money extends BaseValueObject {
     }
 
     public Money minus(Money money) {
+
         return Money.from(amount.subtract(money.amount));
     }
 

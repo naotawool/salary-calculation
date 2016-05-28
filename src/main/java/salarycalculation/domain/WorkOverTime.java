@@ -28,7 +28,7 @@ public class WorkOverTime extends BaseValueObject {
         }
 
         public Builder workOverTime(BigDecimal lateNightOverTime) {
-            this.workOverTime = new WorkingOverUnit(lateNightOverTime, WorkingTimeType.LATE_NIGHT_OVER);
+            this.workOverTime = new WorkingOverUnit(lateNightOverTime, WorkingTimeType.WORK_OVER);
             return this;
         }
 

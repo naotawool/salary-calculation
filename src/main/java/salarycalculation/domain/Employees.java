@@ -28,7 +28,6 @@ public class Employees {
 
         return (int) employees.stream()
                 .mapToInt(e -> e.getTakeHomeAmount(yearMonth).getAmount().intValue())
-                .peek(System.out::println)
                 .average()
                 .getAsDouble();
     }

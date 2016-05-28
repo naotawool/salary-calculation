@@ -192,16 +192,9 @@ public class Employee extends BaseEntity<Integer> {
 
         Money totalAllowance = commuteAmount
                 .add(rentAmount)
-                .add(capability.getSeparatedAllowance());
-
-        // 勤続手当がもらえるかどうかの判定
-        Optional<LongServiceAllowance> longServiceAllowanceOpt = LongServiceAllowance
-                .determineTargetAsOpt(calculateAttendanceMonth());
-
-        // 取得できたら足す
-        if (longServiceAllowanceOpt.isPresent()) {
-            totalAllowance = totalAllowance.add(longServiceAllowanceOpt.get().allowance());
-        }
+                .add(capability.getSeparatedAllowance())
+                // 勤続手当の取得
+                .add(LongServiceAllowance.targetAllowanance(calculateAttendanceMonth()).allowance());
 
         return totalAllowance;
 
