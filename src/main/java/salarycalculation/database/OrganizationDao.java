@@ -8,7 +8,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
-import salarycalculation.entity.Organization;
+import salarycalculation.entity.OrganizationRecord;
 import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.exception.RuntimeSQLException;
 
@@ -36,11 +36,11 @@ public class OrganizationDao {
      * @param code 組織コード
      * @return 組織情報
      */
-    public Organization get(String code) {
-        ResultSetHandler<Organization> rsHandler = new BeanHandler<Organization>(Organization.class);
+    public OrganizationRecord get(String code) {
+        ResultSetHandler<OrganizationRecord> rsHandler = new BeanHandler<OrganizationRecord>(OrganizationRecord.class);
         QueryRunner runner = new QueryRunner();
 
-        Organization result = null;
+        OrganizationRecord result = null;
         try {
             result = runner.query(connection, "select * from organization where code = ?",
                     rsHandler, code);
@@ -49,7 +49,7 @@ public class OrganizationDao {
         }
 
         if (result == null) {
-            throw new RecordNotFoundException(Organization.class, code);
+            throw new RecordNotFoundException(OrganizationRecord.class, code);
         }
 
         return result;

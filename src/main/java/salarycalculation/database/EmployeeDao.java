@@ -11,7 +11,7 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
 
-import salarycalculation.entity.Employee;
+import salarycalculation.entity.EmployeeRecord;
 import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.exception.RuntimeSQLException;
 
@@ -40,11 +40,11 @@ public class EmployeeDao {
      * @return 社員情報
      */
     // @UT
-    public Employee get(String no) {
-        ResultSetHandler<Employee> rsHandler = new BeanHandler<Employee>(Employee.class);
+    public EmployeeRecord get(String no) {
+        ResultSetHandler<EmployeeRecord> rsHandler = new BeanHandler<EmployeeRecord>(EmployeeRecord.class);
         QueryRunner runner = new QueryRunner();
 
-        Employee result = null;
+        EmployeeRecord result = null;
         try {
             result = runner.query(connection, "select * from employee where no = " + no, rsHandler);
         } catch (SQLException e) {
@@ -52,7 +52,7 @@ public class EmployeeDao {
         }
 
         if (result == null) {
-            throw new RecordNotFoundException(Employee.class, no);
+            throw new RecordNotFoundException(EmployeeRecord.class, no);
         }
 
         return result;
@@ -66,13 +66,13 @@ public class EmployeeDao {
      * @return 社員情報一覧
      */
     // @UT
-    public List<Employee> findAll(boolean ascending) {
-        ResultSetHandler<List<Employee>> rsHandler = new BeanListHandler<Employee>(Employee.class);
+    public List<EmployeeRecord> findAll(boolean ascending) {
+        ResultSetHandler<List<EmployeeRecord>> rsHandler = new BeanListHandler<EmployeeRecord>(EmployeeRecord.class);
         QueryRunner runner = new QueryRunner();
 
         String ordering = (ascending ? "asc" : "desc");
 
-        List<Employee> results = null;
+        List<EmployeeRecord> results = null;
         try {
             results = runner.query(connection, "select * from employee order by no " + ordering,
                     rsHandler);
@@ -89,11 +89,11 @@ public class EmployeeDao {
      * @return 社員情報一覧
      */
     // @UT
-    public List<Employee> findByRole(String rank) {
-        ResultSetHandler<List<Employee>> rsHandler = new BeanListHandler<Employee>(Employee.class);
+    public List<EmployeeRecord> findByRole(String rank) {
+        ResultSetHandler<List<EmployeeRecord>> rsHandler = new BeanListHandler<EmployeeRecord>(EmployeeRecord.class);
         QueryRunner runner = new QueryRunner();
 
-        List<Employee> results = null;
+        List<EmployeeRecord> results = null;
         try {
             results = runner.query(connection, "select * from employee where roleRank = '" + rank
                     + "' order by no", rsHandler);
@@ -110,11 +110,11 @@ public class EmployeeDao {
      * @return 社員情報一覧
      */
     // @UT
-    public List<Employee> findByCapability(String rank) {
-        ResultSetHandler<List<Employee>> rsHandler = new BeanListHandler<Employee>(Employee.class);
+    public List<EmployeeRecord> findByCapability(String rank) {
+        ResultSetHandler<List<EmployeeRecord>> rsHandler = new BeanListHandler<EmployeeRecord>(EmployeeRecord.class);
         QueryRunner runner = new QueryRunner();
 
-        List<Employee> results = null;
+        List<EmployeeRecord> results = null;
         try {
             results = runner.query(connection, "select * from employee where capabilityRank = '"
                     + rank + "' order by no", rsHandler);

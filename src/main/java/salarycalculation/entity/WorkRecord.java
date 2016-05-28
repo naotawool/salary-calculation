@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  *
  * @author naotake
  */
-public class Work {
+public class WorkRecord {
 
     /** 社員番号 */
     private int employeeNo;

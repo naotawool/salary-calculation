@@ -10,18 +10,18 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 
 /**
- * {@link EmployeeDomain}に対する EasyMock を使ったテストクラス。
+ * {@link Employee}に対する EasyMock を使ったテストクラス。
  *
  * @author naotake
  */
 public class EmployeeDomainTest_EasyMock {
 
-    private EmployeeDomain testee;
+    private Employee testee;
 
     @Test
     public void 入社年数を取得できること() {
         // パーシャルモックを用意
-        testee = createMockBuilder(EmployeeDomain.class).addMockedMethod("calculateAttendanceMonth").createMock();
+        testee = createMockBuilder(Employee.class).addMockedMethod("calculateAttendanceMonth").createMock();
 
         // 振る舞いを定義
         expect(testee.calculateAttendanceMonth()).andReturn(12).andReturn(24).andReturn(36);

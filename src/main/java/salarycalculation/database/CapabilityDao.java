@@ -8,7 +8,7 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
-import salarycalculation.entity.Capability;
+import salarycalculation.entity.CapabilityRecord;
 import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.exception.RuntimeSQLException;
 
@@ -36,11 +36,11 @@ public class CapabilityDao {
      * @param rank 等級
      * @return 能力等力
      */
-    public Capability get(String rank) {
-        ResultSetHandler<Capability> rsHandler = new BeanHandler<Capability>(Capability.class);
+    public CapabilityRecord get(String rank) {
+        ResultSetHandler<CapabilityRecord> rsHandler = new BeanHandler<CapabilityRecord>(CapabilityRecord.class);
         QueryRunner runner = new QueryRunner();
 
-        Capability result = null;
+        CapabilityRecord result = null;
         try {
             result = runner.query(connection, "select * from capability where rank = '" + rank
                     + "'", rsHandler);
@@ -49,7 +49,7 @@ public class CapabilityDao {
         }
 
         if (result == null) {
-            throw new RecordNotFoundException(Capability.class, rank);
+            throw new RecordNotFoundException(CapabilityRecord.class, rank);
         }
 
         return result;

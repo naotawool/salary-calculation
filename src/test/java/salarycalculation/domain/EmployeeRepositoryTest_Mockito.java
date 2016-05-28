@@ -1,6 +1,7 @@
 package salarycalculation.domain;
 
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.never;
@@ -22,10 +23,10 @@ import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.EmployeeDao;
 import salarycalculation.database.OrganizationDao;
 import salarycalculation.database.RoleDao;
-import salarycalculation.entity.Capability;
-import salarycalculation.entity.Employee;
-import salarycalculation.entity.Organization;
-import salarycalculation.entity.Role;
+import salarycalculation.entity.CapabilityRecord;
+import salarycalculation.entity.EmployeeRecord;
+import salarycalculation.entity.OrganizationRecord;
+import salarycalculation.entity.RoleRecord;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**
@@ -49,10 +50,10 @@ public class EmployeeRepositoryTest_Mockito {
     @Mock
     private CapabilityDao mockCapabilityDao;
 
-    private Employee entity;
-    private Organization organization;
-    private Role role;
-    private Capability capability;
+    private EmployeeRecord entity;
+    private OrganizationRecord organization;
+    private RoleRecord role;
+    private CapabilityRecord capability;
 
     /**
      * 事前処理。
@@ -61,9 +62,9 @@ public class EmployeeRepositoryTest_Mockito {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        organization = new Organization();
-        role = new Role();
-        capability = new Capability();
+        organization = new OrganizationRecord();
+        role = new RoleRecord();
+        capability = new CapabilityRecord();
     }
 
     @Test
@@ -147,10 +148,10 @@ public class EmployeeRepositoryTest_Mockito {
         when(mockOrganizationDao.get(organization)).thenReturn(this.organization);
 
         // 実行
-        EmployeeDomain actual = testee.getSimple(no);
+        Employee actual = testee.getSimple(no);
 
         // 検証
-        assertThat(actual.getEntity(), sameInstance(this.entity));
+        assertThat(actual.getName().getFullName(), is(equalTo(this.entity.getName())));
         assertThat(actual.getOrganization(), sameInstance(this.organization));
 
         // 振る舞いの検証
@@ -174,10 +175,10 @@ public class EmployeeRepositoryTest_Mockito {
         when(mockCapabilityDao.get(capability)).thenReturn(this.capability);
 
         // 実行
-        EmployeeDomain actual = testee.get(no);
+        Employee actual = testee.get(no);
 
         // 検証
-        assertThat(actual.getEntity(), sameInstance(this.entity));
+        assertThat(actual.getName().getFullName(), is(equalTo(this.entity.getName())));
         assertThat(actual.getOrganization(), sameInstance(this.organization));
         assertThat(actual.getRole(), sameInstance(this.role));
         assertThat(actual.getCapability(), sameInstance(this.capability));
@@ -195,7 +196,7 @@ public class EmployeeRepositoryTest_Mockito {
         String organization = "ORGANIZATION2";
 
         this.entity = createEntity(no, organization, "", "");
-        RecordNotFoundException expectException = createException(Organization.class, organization);
+        RecordNotFoundException expectException = createException(OrganizationRecord.class, organization);
 
         // 振る舞いを定義
         when(mockDao.get(no)).thenReturn(this.entity);
@@ -203,7 +204,7 @@ public class EmployeeRepositoryTest_Mockito {
 
         // 期待する例外内容
         expected.expect(RecordNotFoundException.class);
-        expected.expect(isClass(Organization.class));
+        expected.expect(isClass(OrganizationRecord.class));
         expected.expect(isKey(organization));
 
         // 実行
@@ -215,8 +216,8 @@ public class EmployeeRepositoryTest_Mockito {
         }
     }
 
-    private Employee createEntity(String no, String organization, String role, String capability) {
-        Employee entity = new Employee();
+    private EmployeeRecord createEntity(String no, String organization, String role, String capability) {
+        EmployeeRecord entity = new EmployeeRecord();
         entity.setNo(Integer.valueOf(no));
         entity.setOrganization(organization);
         entity.setRoleRank(role);

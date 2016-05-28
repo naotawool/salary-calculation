@@ -2,7 +2,7 @@ package salarycalculation.assertions;
 
 import org.assertj.core.api.Assertions;
 
-import salarycalculation.domain.EmployeeDomain;
+import salarycalculation.domain.Employee;
 
 public class MyProjectAssertions extends Assertions {
 
@@ -12,7 +12,7 @@ public class MyProjectAssertions extends Assertions {
      * @param actual 検証する値
      * @return {@link EmployeeDomainAssert}
      */
-    public static EmployeeDomainAssert assertThat(EmployeeDomain actual) {
+    public static EmployeeDomainAssert assertThat(Employee actual) {
         return new EmployeeDomainAssert(actual);
     }
 }

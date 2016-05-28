@@ -13,14 +13,14 @@ import salarycalculation.utils.LocalDates;
  *
  * @author naotake
  */
-public class BusinessDateDomain {
+public class BusinessDate {
 
     private final LocalDate calendar;
 
     /**
      * コンストラクタ.
      */
-    private BusinessDateDomain(LocalDate date) {
+    private BusinessDate(LocalDate date) {
         this.calendar = Objects.requireNonNull(date);
     }
 
@@ -38,7 +38,7 @@ public class BusinessDateDomain {
         return calendar;
     }
 
-    public int calculatePeriodByMonth(BusinessDateDomain anotherDate) {
+    public int calculatePeriodByMonth(BusinessDate anotherDate) {
         Objects.requireNonNull(anotherDate);
         Period period = anotherDate.getAsLocalDate().until(this.getAsLocalDate());
         return Math.abs(period.getMonths() + (period.getYears() * 12));
@@ -49,20 +49,24 @@ public class BusinessDateDomain {
      *
      * @return 生成した時点の業務日付
      */
-    public static BusinessDateDomain now() {
+    public static BusinessDate now() {
         return of(LocalDate.now());
     }
 
-    public static BusinessDateDomain of(Date date) {
+    public static BusinessDate of(Date date) {
         return of(LocalDates.toLocalDate(date));
     }
 
-    public static BusinessDateDomain of(Calendar now) {
+    public static BusinessDate of(Calendar now) {
         return of(new Date(now.getTimeInMillis()));
     }
 
-    public static BusinessDateDomain of(LocalDate date) {
-        return new BusinessDateDomain(date);
+    public static BusinessDate of(LocalDate date) {
+        return new BusinessDate(date);
+    }
+
+    public static BusinessDate of(int year, int month, int dayOfMonth) {
+        return of(LocalDate.of(year, month, dayOfMonth));
     }
 
 }

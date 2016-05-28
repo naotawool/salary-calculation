@@ -10,7 +10,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
  *
  * @author naotake
  */
-public class Employee {
+public class EmployeeRecord {
 
     /** 社員番号 */
     private int no;
@@ -314,4 +314,5 @@ public class Employee {
                 .append(healthInsuranceAmount).append(employeePensionAmount)
                 .append(incomeTaxAmount).append(inhabitantTaxAmount).toString();
     }
+
 }

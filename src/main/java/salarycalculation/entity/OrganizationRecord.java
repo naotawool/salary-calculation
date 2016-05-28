@@ -5,7 +5,7 @@ package salarycalculation.entity;
  *
  * @author naotake
  */
-public class Organization {
+public class OrganizationRecord {
 
     /** 組織コード */
     private String code;

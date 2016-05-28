@@ -5,7 +5,7 @@ package salarycalculation.entity;
  *
  * @author naotake
  */
-public class Role {
+public class RoleRecord {
 
     /** 等級 */
     private String rank;

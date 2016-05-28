@@ -12,13 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * {@link BusinessDateDomain}に対するテストクラス。
+ * {@link BusinessDate}に対するテストクラス。
  *
  * @author naotake
  */
 public class BusinessDateDomainTest {
 
-    private BusinessDateDomain testee;
+    private BusinessDate testee;
     private LocalDate calendar;
 
     /**
@@ -28,7 +28,7 @@ public class BusinessDateDomainTest {
     public void setUp() {
 
         calendar = LocalDate.of(2014, 3, 1);
-        testee = BusinessDateDomain.of(calendar);
+        testee = BusinessDate.of(calendar);
     }
 
     @Test

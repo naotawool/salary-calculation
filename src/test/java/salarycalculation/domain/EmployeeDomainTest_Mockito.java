@@ -1,13 +1,8 @@
 package salarycalculation.domain;
 
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 
@@ -15,26 +10,26 @@ import org.junit.Before;
 import org.junit.Test;
 
 import salarycalculation.database.WorkDao;
-import salarycalculation.entity.Capability;
-import salarycalculation.entity.Employee;
-import salarycalculation.entity.Role;
-import salarycalculation.entity.Work;
+import salarycalculation.entity.EmployeeRecord;
+import salarycalculation.entity.RoleRecord;
+import salarycalculation.entity.WorkRecord;
+import salarycalculation.utils.Money;
 
 /**
- * {@link EmployeeDomain}に対する Mockito を使ったテストクラス。
+ * {@link EmployeeRecord}に対する Mockito を使ったテストクラス。
  *
  * @author naotake
  */
 public class EmployeeDomainTest_Mockito {
 
-    private EmployeeDomain testee;
+    private Employee testee;
 
     /**
      * 事前処理。
      */
     @Before
     public void setUp() {
-        testee = mock(EmployeeDomain.class);
+        testee = mock(Employee.class);
     }
 
     @Test
@@ -71,19 +66,19 @@ public class EmployeeDomainTest_Mockito {
     @Test
     public void 総支給額と控除額を使って手取り額を取得できること() {
         // 控除額を設定
-        Employee entity = new Employee();
-        entity.setHealthInsuranceAmount(1);
-        entity.setEmployeePensionAmount(2);
-        entity.setIncomeTaxAmount(3);
-        entity.setInhabitantTaxAmount(4);
+        Employee entity = new Employee(1);
+        entity.setHealthInsuranceAmount(Money.from(1));
+        entity.setEmployeePensionAmount(Money.from(2));
+        entity.setIncomeTaxAmount(Money.from(3));
+        entity.setInhabitantTaxAmount(Money.from(4));
 
         setUpSpy(entity);
 
         // 総支給額取得の振る舞いを定義
-        doReturn(100).when(testee).getTotalSalary(201504);
+        doReturn(Money.from(100)).when(testee).getTotalSalary(201504);
 
         // 実行
-        assertThat(testee.getTakeHomeAmount(201504), is((100 - 10)));
+        assertThat(testee.getTakeHomeAmount(201504), is((Money.from(100 - 10))));
 
         // 検証
         verify(testee).getTotalSalary(201504);
@@ -116,24 +111,18 @@ public class EmployeeDomainTest_Mockito {
     @Test
     public void 社員の残業代を取得できること() {
         // 時間外手当を設定
-        Employee entity = new Employee();
-        entity.setWorkOverTime1hAmount(10);
-        entity.setNo(101);
-        entity.setCapabilityRank("AS");
+        Employee entity = new Employee(101);
+        entity.setWorkOverTime1hAmount(Money.from(10));
+        entity.setCapability(Capability.normal(CapabilityRank.AS, Money.ZERO));
 
         setUpSpy(entity);
 
         // Work 情報を設定
-        Work work = new Work();
+        WorkRecord work = new WorkRecord();
         work.setWorkOverTime(BigDecimal.valueOf(10L));
         work.setLateNightOverTime(BigDecimal.valueOf(20L));
         work.setHolidayWorkTime(BigDecimal.valueOf(30L));
         work.setHolidayLateNightOverTime(BigDecimal.valueOf(40L));
-
-        // WorkDao の振る舞いを定義
-        WorkDao mockWorkDao = mock(WorkDao.class);
-        when(mockWorkDao.getByYearMonth(101, 201504)).thenReturn(work);
-        testee.setWorkDao(mockWorkDao);
 
         // 期待値を求める
         int expected = (10) * 10;
@@ -142,29 +131,26 @@ public class EmployeeDomainTest_Mockito {
         expected += (10 * 1.3) * 40;
 
         // 実行
-        assertThat(testee.getOvertimeAmount(201504), is(expected));
+        assertThat(testee.getOvertimeAmount(201504), is(Money.from(expected)));
 
         // 検証
-        verify(mockWorkDao).getByYearMonth(101, 201504);
+        // TODO
+        //verify(mockWorkDao).getByYearMonth(101, 201504);
     }
 
     private void setUpSpy() {
-        setUpSpy(new Employee());
+        setUpSpy(new Employee(1));
     }
 
     private void setUpSpy(Employee entity) {
-        testee = spy(new EmployeeDomain(entity));
+        testee = spy(entity);
     }
 
     private Role createRole(int amount) {
-        Role role = new Role();
-        role.setAmount(amount);
-        return role;
+        return new Role("dummy", Money.from(amount));
     }
 
     private Capability createCapability(int amount) {
-        Capability capability = new Capability();
-        capability.setAmount(amount);
-        return capability;
+        return Capability.normal(CapabilityRank.AS, Money.from(amount));
     }
 }

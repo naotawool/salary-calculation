@@ -20,7 +20,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
-import salarycalculation.entity.Employee;
+import salarycalculation.entity.EmployeeRecord;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**
@@ -38,7 +38,7 @@ public class EmployeeDaoTest {
 
         @Test
         public void 社員情報を取得できること() {
-            Employee actual = testee.get("1");
+            EmployeeRecord actual = testee.get("1");
             assertThat(actual, isEqualToNo(1));
             assertThat(actual, isEqualToName("愛媛 蜜柑"));
         }
@@ -46,7 +46,7 @@ public class EmployeeDaoTest {
         @Test
         public void testtestName() {
             expect.expect(RecordNotFoundException.class);
-            expect.expect(isClass(Employee.class));
+            expect.expect(isClass(EmployeeRecord.class));
             expect.expect(isKey("9999"));
 
             testee.get("9999");
@@ -57,14 +57,14 @@ public class EmployeeDaoTest {
 
         @Test
         public void 社員番号の昇順で取得できること() {
-            List<Employee> actuals = testee.findAll(true);
+            List<EmployeeRecord> actuals = testee.findAll(true);
 
             assertThat(actuals, orderNos(1, 2, 3, 4));
         }
 
         @Test
         public void 社員番号の降順で取得できること() {
-            List<Employee> actuals = testee.findAll(false);
+            List<EmployeeRecord> actuals = testee.findAll(false);
 
             assertThat(actuals, orderNos(4, 3, 2, 1));
         }
@@ -72,7 +72,7 @@ public class EmployeeDaoTest {
         @Ignore
         @Test
         public void OrderEmployee_orderNosが失敗するテスト() {
-            List<Employee> actuals = testee.findAll(false);
+            List<EmployeeRecord> actuals = testee.findAll(false);
 
             assertThat(actuals, orderNos(4, 3, 2));
         }
@@ -90,7 +90,7 @@ public class EmployeeDaoTest {
 
         @Test
         public void A3ランクの社員一覧を取得できること() {
-            List<Employee> actuals = testee.findByRole("A3");
+            List<EmployeeRecord> actuals = testee.findByRole("A3");
 
             assertThat(actuals, hasSize(1));
             assertThat(actuals.get(0), isEqualToNo(1));
@@ -99,7 +99,7 @@ public class EmployeeDaoTest {
 
         @Test
         public void M3ランクの社員一覧を取得できること() {
-            List<Employee> actuals = testee.findByRole("M3");
+            List<EmployeeRecord> actuals = testee.findByRole("M3");
 
             assertThat(actuals, empty());
         }
@@ -109,7 +109,7 @@ public class EmployeeDaoTest {
 
         @Test
         public void SEランクの社員一覧を取得できること() {
-            List<Employee> actuals = testee.findByCapability("SE");
+            List<EmployeeRecord> actuals = testee.findByCapability("SE");
 
             assertThat(actuals, hasSize(1));
             assertThat(actuals.get(0), isEqualToNo(1));
@@ -118,7 +118,7 @@ public class EmployeeDaoTest {
 
         @Test
         public void PGランクの社員一覧を取得できること() {
-            List<Employee> actuals = testee.findByCapability("PG");
+            List<EmployeeRecord> actuals = testee.findByCapability("PG");
 
             assertThat(actuals, empty());
         }

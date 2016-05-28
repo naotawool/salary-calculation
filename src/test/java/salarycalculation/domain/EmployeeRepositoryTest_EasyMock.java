@@ -1,16 +1,15 @@
 package salarycalculation.domain;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKey;
+import static org.junit.Assert.*;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.*;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -22,11 +21,15 @@ import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.EmployeeDao;
 import salarycalculation.database.OrganizationDao;
 import salarycalculation.database.RoleDao;
-import salarycalculation.entity.Capability;
-import salarycalculation.entity.Employee;
-import salarycalculation.entity.Organization;
-import salarycalculation.entity.Role;
+import salarycalculation.database.WorkDao;
+import salarycalculation.database.repository.EmployeeRepositoryDao;
+import salarycalculation.database.repository.EmployeeTransformer;
+import salarycalculation.entity.CapabilityRecord;
+import salarycalculation.entity.EmployeeRecord;
+import salarycalculation.entity.OrganizationRecord;
+import salarycalculation.entity.RoleRecord;
 import salarycalculation.exception.RecordNotFoundException;
+import salarycalculation.utils.PersonName;
 
 /**
  * {@link EmployeeRepository}に対する EasyMock を使ったテストクラス。
@@ -38,16 +41,17 @@ public class EmployeeRepositoryTest_EasyMock {
     @Rule
     public ExpectedException expected = ExpectedException.none();
 
-    private EmployeeRepository testee;
+    private EmployeeRepositoryDao testee;
     private EmployeeDao mockDao;
     private OrganizationDao mockOrganizationDao;
     private RoleDao mockRoleDao;
     private CapabilityDao mockCapabilityDao;
+    private WorkDao mockWorkDao;
 
-    private Employee entity;
-    private Organization organization;
-    private Role role;
-    private Capability capability;
+    private EmployeeRecord entity;
+    private OrganizationRecord organization;
+    private RoleRecord role;
+    private CapabilityRecord capability;
 
     /**
      * 事前処理。
@@ -58,12 +62,19 @@ public class EmployeeRepositoryTest_EasyMock {
         mockOrganizationDao = createMock(OrganizationDao.class);
         mockRoleDao = createMock(RoleDao.class);
         mockCapabilityDao = createMock(CapabilityDao.class);
+        mockWorkDao = createMock(WorkDao.class);
 
-        testee = new EmployeeRepository();
+        EmployeeTransformer transformer = new EmployeeTransformer();
+
+        transformer.setRoleDao(mockRoleDao);
+        transformer.setCapabilityDao(mockCapabilityDao);
+        transformer.setOrganizationDao(mockOrganizationDao);
+        transformer.setWorkDao(mockWorkDao);
+
+        testee = new EmployeeRepositoryDao();
         testee.setDao(mockDao);
         testee.setOrganizationDao(mockOrganizationDao);
-        testee.setRoleDao(mockRoleDao);
-        testee.setCapabilityDao(mockCapabilityDao);
+        testee.setTransFormer(transformer);
     }
 
     @Test
@@ -112,7 +123,7 @@ public class EmployeeRepositoryTest_EasyMock {
         String code = "TEST1";
 
         // ゆるいモックを用意
-        testee = createNiceMock(EmployeeRepository.class);
+        testee = createNiceMock(EmployeeRepositoryDao.class);
 
         // 振る舞いを定義
         expect(mockDao.countByOrganization(code)).andReturn(5L);
@@ -159,24 +170,36 @@ public class EmployeeRepositoryTest_EasyMock {
         String capability = "CAPABILITY4";
 
         this.entity = createEntity(no, organization, role, capability);
+        this.organization = new OrganizationRecord();
+        this.organization.setCode("organizationCode");
+        this.organization.setName("organizationName");
+
+        this.role = new RoleRecord();
+        this.role.setAmount(100);
+        this.role.setRank("roleRank");
+
+        this.capability = new CapabilityRecord();
+        this.capability.setRank("AS");
 
         // 振る舞いを定義
         expect(mockDao.get(no)).andReturn(this.entity);
         expect(mockOrganizationDao.get(organization)).andReturn(this.organization);
         expect(mockRoleDao.get(role)).andReturn(this.role);
         expect(mockCapabilityDao.get(capability)).andReturn(this.capability);
+        expect(mockWorkDao.findAll(Integer.valueOf(no))).andReturn(Collections.emptyList());
 
         // 再生モードへ
-        replay(mockDao, mockOrganizationDao, mockRoleDao, mockCapabilityDao);
+        replay(mockDao, mockOrganizationDao, mockRoleDao, mockCapabilityDao, mockWorkDao);
 
         // 実行
-        EmployeeDomain actual = testee.get(no);
+        Employee actual = testee.get(no);
 
         // 検証
-        assertThat(actual.getEntity(), sameInstance(this.entity));
-        assertThat(actual.getOrganization(), sameInstance(this.organization));
-        assertThat(actual.getRole(), sameInstance(this.role));
-        assertThat(actual.getCapability(), sameInstance(this.capability));
+        assertThat(actual.getName(), is(equalTo(new PersonName(this.entity.getName()))));
+        assertThat(actual.getOrganization(), is(equalTo(new Organization("organizationCode", "organizationName"))));
+        assertThat(actual.getRole().getRank(), is(equalTo("roleRank")));
+        assertThat(actual.getCapability().getRank(), sameInstance(CapabilityRank.AS));
+        assertThat(actual.getWorkTimes().getWorkOverTime(1234).isPresent(), is(false));
 
         // 振る舞いの検証
         verify(mockDao, mockOrganizationDao, mockRoleDao, mockCapabilityDao);
@@ -188,7 +211,7 @@ public class EmployeeRepositoryTest_EasyMock {
         String organization = "ORGANIZATION2";
 
         this.entity = createEntity(no, organization, "", "");
-        RecordNotFoundException expectException = createException(Organization.class, organization);
+        RecordNotFoundException expectException = createException(OrganizationRecord.class, organization);
 
         // 振る舞いを定義
         expect(mockDao.get(no)).andReturn(this.entity);
@@ -199,7 +222,7 @@ public class EmployeeRepositoryTest_EasyMock {
 
         // 期待する例外内容
         expected.expect(RecordNotFoundException.class);
-        expected.expect(isClass(Organization.class));
+        expected.expect(isClass(OrganizationRecord.class));
         expected.expect(isKey(organization));
 
         // 実行
@@ -246,31 +269,46 @@ public class EmployeeRepositoryTest_EasyMock {
 
         this.entity = createEntity(no, organization, role, capability);
 
+        this.organization = new OrganizationRecord();
+        this.organization.setCode("organizationCode");
+        this.organization.setName("organizationName");
+
+        this.role = new RoleRecord();
+        this.role.setAmount(100);
+        this.role.setRank("roleRank");
+
+        this.capability = new CapabilityRecord();
+        this.capability.setRank("AS");
+
         // 振る舞いを定義
         expect(mockDao.get(no)).andReturn(this.entity);
         expect(mockOrganizationDao.get(organization)).andReturn(this.organization);
         expect(mockRoleDao.get(role)).andReturn(this.role);
         expect(mockCapabilityDao.get(capability)).andReturn(this.capability);
+        expect(mockWorkDao.findAll(Integer.valueOf(no))).andReturn(Collections.emptyList());
 
         // 再生モードへ
-        replay(mockDao, mockOrganizationDao, mockRoleDao, mockCapabilityDao);
+        replay(mockDao, mockOrganizationDao, mockRoleDao, mockCapabilityDao, mockWorkDao);
 
         // 実行
-        EmployeeDomain actual = testee.get(no);
+        Employee actual = testee.get(no);
 
         // 検証
-        assertThat(actual.getEntity(), sameInstance(this.entity));
-        assertThat(actual.getOrganization(), sameInstance(this.organization));
-        assertThat(actual.getRole(), sameInstance(this.role));
-        assertThat(actual.getCapability(), sameInstance(this.capability));
+        assertThat(actual.getName(), is(equalTo(new PersonName(this.entity.getName()))));
+        assertThat(actual.getOrganization(), is(equalTo(new Organization("organizationCode", "organizationName"))));
+        assertThat(actual.getRole().getRank(), is(equalTo("roleRank")));
+        assertThat(actual.getCapability().getRank(), sameInstance(CapabilityRank.AS));
+        assertThat(actual.getWorkTimes().getWorkOverTime(1234).isPresent(), is(false));
 
         // 振る舞いの検証
         verify(mockDao, mockOrganizationDao, mockRoleDao, mockCapabilityDao);
     }
 
-    private Employee createEntity(String no, String organization, String role, String capability) {
-        Employee entity = new Employee();
+    private EmployeeRecord createEntity(String no, String organization, String role, String capability) {
+        EmployeeRecord entity = new EmployeeRecord();
         entity.setNo(Integer.valueOf(no));
+        entity.setBirthday(Date.valueOf(LocalDate.ofEpochDay(0)));
+        entity.setJoinDate(Date.valueOf(LocalDate.ofEpochDay(0)));
         entity.setOrganization(organization);
         entity.setRoleRank(role);
         entity.setCapabilityRank(capability);

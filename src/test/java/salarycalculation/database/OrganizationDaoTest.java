@@ -10,7 +10,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import salarycalculation.entity.Organization;
+import salarycalculation.entity.OrganizationRecord;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**
@@ -35,7 +35,7 @@ public class OrganizationDaoTest {
 
     @Test
     public void 組織コードに一致した組織を取得できること() {
-        Organization actual = testee.get("ODG1");
+        OrganizationRecord actual = testee.get("ODG1");
         assertThat(actual.getCode(), is("ODG1"));
         assertThat(actual.getName(), is("開発部1グループ"));
     }
@@ -43,7 +43,7 @@ public class OrganizationDaoTest {
     @Test
     public void 存在しない組織コードを指定した場合に例外が送出されること() {
         expect.expect(RecordNotFoundException.class);
-        expect.expect(isClass(Organization.class));
+        expect.expect(isClass(OrganizationRecord.class));
         expect.expect(isKey("XX99"));
 
         testee.get("XX99");
