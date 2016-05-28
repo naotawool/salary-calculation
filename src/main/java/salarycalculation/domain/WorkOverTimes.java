@@ -1,16 +1,19 @@
 package salarycalculation.domain;
 
+import static java.util.stream.Collectors.*;
+
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
-import salarycalculation.utils.BaseValueObject;
-
-public class WorkOverTimes extends BaseValueObject {
+public class WorkOverTimes {
 
     private final Map<Integer, WorkOverTime> yearMonthAttendanceTime;
 
-    public WorkOverTimes(Map<Integer, WorkOverTime> yearMonthAttendanceTime) {
-        this.yearMonthAttendanceTime = yearMonthAttendanceTime;
+    public WorkOverTimes(List<WorkOverTime> workOverTimes) {
+        this.yearMonthAttendanceTime = workOverTimes.stream()
+                .collect(toMap(e -> e.getId().getWorkYearMonth(), Function.identity()));
     }
 
     public Optional<WorkOverTime> getWorkOverTime(int yyyymm) {

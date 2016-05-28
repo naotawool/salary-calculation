@@ -5,13 +5,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import salarycalculation.entity.EmployeeRecord;
-import salarycalculation.entity.WorkRecord;
 import salarycalculation.utils.Money;
 
 /**
@@ -114,17 +113,15 @@ public class EmployeeDomainTest_Mockito {
         entity.setWorkOverTime1hAmount(Money.from(10));
         entity.setCapability(Capability.normal(CapabilityRank.AS, Money.ZERO));
 
+        WorkOverTimes workOverTimes = new WorkOverTimes(Arrays.asList(WorkOverTime.builder(201504, 101)
+                .holidayLateNightOverTime(BigDecimal.valueOf(40L))
+                .workOverTime(BigDecimal.valueOf(10L))
+                .lateNightOverTime(BigDecimal.valueOf(20L))
+                .holidayWorkTime(BigDecimal.valueOf(30L))
+                .build()));
+
         // Work 情報を設定
-        entity.setWorkTimes(new WorkOverTimes(new HashMap<Integer, WorkOverTime>() {
-            {
-                put(201504, WorkOverTime.builder(201504)
-                        .holidayLateNightOverTime(BigDecimal.valueOf(40L))
-                        .workOverTime(BigDecimal.valueOf(10L))
-                        .lateNightOverTime(BigDecimal.valueOf(20L))
-                        .holidayWorkTime(BigDecimal.valueOf(30L))
-                        .build());
-            }
-        }));
+        entity.setWorkTimes(workOverTimes);
 
         setUpSpy(entity);
 

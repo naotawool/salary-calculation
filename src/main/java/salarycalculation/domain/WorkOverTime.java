@@ -2,14 +2,17 @@ package salarycalculation.domain;
 
 import java.math.BigDecimal;
 
-import salarycalculation.utils.BaseValueObject;
+import salarycalculation.utils.BaseEntity;
 
-public class WorkOverTime extends BaseValueObject {
+public class WorkOverTime extends BaseEntity<WorkOverTimeId> {
 
     public static class Builder {
 
         /** 稼動年月 */
         private final int workYearMonth;
+
+        /** 社員No */
+        private int employeeNo;
 
         /** 時間外勤務時間 */
         private WorkingOverUnit workOverTime;
@@ -23,8 +26,9 @@ public class WorkOverTime extends BaseValueObject {
         /** 休日深夜勤務時間 */
         private WorkingOverUnit holidayLateNightOverTime;
 
-        private Builder(int workYearMonth) {
+        private Builder(int workYearMonth, int employeeNo) {
             this.workYearMonth = workYearMonth;
+            this.employeeNo = employeeNo;
         }
 
         public Builder workOverTime(BigDecimal lateNightOverTime) {
@@ -52,6 +56,7 @@ public class WorkOverTime extends BaseValueObject {
 
             return new WorkOverTime(
                     workYearMonth,
+                    employeeNo,
                     workOverTime,
                     lateNightOverTime,
                     holidayWorkTime,
@@ -60,8 +65,7 @@ public class WorkOverTime extends BaseValueObject {
 
     }
 
-    /** 稼動年月 */
-    private final int workYearMonth;
+    private final WorkOverTimeId id;
 
     /** 時間外勤務時間 */
     private final WorkingOverUnit workOverTime;
@@ -84,22 +88,19 @@ public class WorkOverTime extends BaseValueObject {
      * @param holidayWorkTime
      * @param holidayLateNightOverTime
      */
-    private WorkOverTime(int workYearMonth, WorkingOverUnit workOverTime, WorkingOverUnit lateNightOverTime,
+    private WorkOverTime(int workYearMonth, int employeeNo, WorkingOverUnit workOverTime,
+            WorkingOverUnit lateNightOverTime,
             WorkingOverUnit holidayWorkTime, WorkingOverUnit holidayLateNightOverTime) {
         super();
-        this.workYearMonth = workYearMonth;
+        this.id = new WorkOverTimeId(employeeNo, workYearMonth);
         this.workOverTime = workOverTime;
         this.lateNightOverTime = lateNightOverTime;
         this.holidayWorkTime = holidayWorkTime;
         this.holidayLateNightOverTime = holidayLateNightOverTime;
     }
 
-    public static Builder builder(int workYearMonth) {
-        return new Builder(workYearMonth);
-    }
-
-    public int getWorkYearMonth() {
-        return workYearMonth;
+    public static Builder builder(int workYearMonth, int employeeNo) {
+        return new Builder(workYearMonth, employeeNo);
     }
 
     public WorkingOverUnit getWorkOverTime() {
@@ -125,6 +126,11 @@ public class WorkOverTime extends BaseValueObject {
                 .add(this.holidayWorkTime.getWorkingTime())
                 .add(this.lateNightOverTime.getWorkingTime());
 
+    }
+
+    @Override
+    public WorkOverTimeId getId() {
+        return this.id;
     }
 
 }

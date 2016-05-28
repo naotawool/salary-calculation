@@ -2,7 +2,6 @@ package salarycalculation.database.repository;
 
 import static java.util.stream.Collectors.*;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +68,7 @@ public class EmployeeRepositoryDao implements EmployeeRepository {
 
         // Domain を準備
         Employee entity = transformer.createFromRecord(employee, organization,
-                Collections.emptyList(),
+                Optional.empty(),
                 Optional.empty(),
                 Optional.empty());
 

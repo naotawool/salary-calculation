@@ -1,12 +1,6 @@
 package salarycalculation.database.repository;
 
-import static java.util.stream.Collectors.*;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.OrganizationDao;
@@ -18,13 +12,12 @@ import salarycalculation.domain.CapabilityRank;
 import salarycalculation.domain.Employee;
 import salarycalculation.domain.Organization;
 import salarycalculation.domain.Role;
-import salarycalculation.domain.WorkOverTime;
 import salarycalculation.domain.WorkOverTimes;
+import salarycalculation.domain.WorkRepository;
 import salarycalculation.entity.CapabilityRecord;
 import salarycalculation.entity.EmployeeRecord;
 import salarycalculation.entity.OrganizationRecord;
 import salarycalculation.entity.RoleRecord;
-import salarycalculation.entity.WorkRecord;
 import salarycalculation.utils.Money;
 import salarycalculation.utils.PersonName;
 
@@ -42,11 +35,13 @@ public class EmployeeTransformer {
     private CapabilityDao capabilityDao;
     private WorkDao workDao;
 
+    private WorkRepository workRepository;
+
     public EmployeeTransformer() {
         this.organizationDao = new OrganizationDao();
         this.roleDao = new RoleDao();
         this.capabilityDao = new CapabilityDao();
-        this.workDao = new WorkDao();
+        this.workRepository = new WorkRepositoryDao();
     }
 
     /**
@@ -69,9 +64,9 @@ public class EmployeeTransformer {
         //       ex2. DomainServiceに処理を移す => 現実的な落とし所かも
         //       ex3. WorkRepositoryを作りEntityにWorkRepositoryを関数の引数に渡して取得する、
         //       EntityにRepositoryを渡すと依存が分かりづらくなるからなんとも。。。
-        List<WorkRecord> workRecord = workDao.findAll(employeeRecord.getNo());
+        Optional<WorkOverTimes> works = workRepository.findByEmployeeId(employeeRecord.getNo());
 
-        return createFromRecord(employeeRecord, organization, workRecord, Optional.ofNullable(role),
+        return createFromRecord(employeeRecord, organization, works, Optional.ofNullable(role),
                 Optional.ofNullable(capability));
 
     }
@@ -86,16 +81,11 @@ public class EmployeeTransformer {
      * @return 従業員エンティティ
      */
     public Employee createFromRecord(EmployeeRecord employeeRecord, OrganizationRecord organizationRecord,
-            List<WorkRecord> workRecords,
+            Optional<WorkOverTimes> works,
             Optional<RoleRecord> roleRecordOpt,
             Optional<CapabilityRecord> capabilityRecordOpt) {
 
         Employee entity = new Employee(employeeRecord.getNo());
-
-        Map<Integer, WorkOverTime> yearMonthAttendanceTime = workRecords.size() > 0 ? workRecords.stream()
-                .map(this::convertWorkOverTime)
-                .collect(toMap(e -> Integer.valueOf(e.getWorkYearMonth()), Function.identity()))
-                : Collections.emptyMap();
 
         entity.setName(new PersonName(employeeRecord.getName()));
         entity.setBirthDay(BusinessDate.of(employeeRecord.getBirthday()));
@@ -122,7 +112,9 @@ public class EmployeeTransformer {
 
         entity.setWorkOverTime1hAmount(Money.from(employeeRecord.getWorkOverTime1hAmount()));
 
-        entity.setWorkTimes(new WorkOverTimes(yearMonthAttendanceTime));
+        if (works.isPresent()) {
+            entity.setWorkTimes(works.get());
+        }
         return entity;
     }
 
@@ -142,19 +134,4 @@ public class EmployeeTransformer {
         this.workDao = workDao;
     }
 
-    /**
-     * 勤怠レコードを変換する
-     *
-     * @param record 勤怠の一レコード
-     * @return 時間外勤務時間
-     */
-    private WorkOverTime convertWorkOverTime(WorkRecord record) {
-
-        return WorkOverTime.builder(record.getWorkYearMonth())
-                .holidayLateNightOverTime(record.getHolidayLateNightOverTime())
-                .holidayWorkTime(record.getHolidayWorkTime())
-                .lateNightOverTime(record.getLateNightOverTime())
-                .workOverTime(record.getWorkOverTime())
-                .build();
-    }
 }

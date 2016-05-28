@@ -3,6 +3,7 @@ package salarycalculation.domain;
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.sameInstance;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.*;
@@ -199,7 +200,7 @@ public class EmployeeRepositoryTest_EasyMock {
         assertThat(actual.getOrganization(), is(equalTo(new Organization("organizationCode", "organizationName"))));
         assertThat(actual.getRole().getRank(), is(equalTo("roleRank")));
         assertThat(actual.getCapability().getRank(), sameInstance(CapabilityRank.AS));
-        assertThat(actual.getWorkTimes().getWorkOverTime(1234).isPresent(), is(false));
+        assertThat(actual.getWorkTimes(), is(nullValue()));
 
         // 振る舞いの検証
         verify(mockDao, mockOrganizationDao, mockRoleDao, mockCapabilityDao);
@@ -298,7 +299,7 @@ public class EmployeeRepositoryTest_EasyMock {
         assertThat(actual.getOrganization(), is(equalTo(new Organization("organizationCode", "organizationName"))));
         assertThat(actual.getRole().getRank(), is(equalTo("roleRank")));
         assertThat(actual.getCapability().getRank(), sameInstance(CapabilityRank.AS));
-        assertThat(actual.getWorkTimes().getWorkOverTime(1234).isPresent(), is(false));
+        assertThat(actual.getWorkTimes(), is(nullValue()));
 
         // 振る舞いの検証
         verify(mockDao, mockOrganizationDao, mockRoleDao, mockCapabilityDao);
