@@ -5,13 +5,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import salarycalculation.database.WorkDao;
 import salarycalculation.entity.EmployeeRecord;
-import salarycalculation.entity.RoleRecord;
 import salarycalculation.entity.WorkRecord;
 import salarycalculation.utils.Money;
 
@@ -96,12 +95,12 @@ public class EmployeeDomainTest_Mockito {
         testee.setCapability(capability);
 
         // 諸手当取得の振る舞いを定義
-        doReturn(30).when(testee).getAllowance();
+        doReturn(Money.from(30)).when(testee).getAllowance();
         // 基準外給与取得の振る舞いを定義
-        doReturn(20).when(testee).getOvertimeAmount(201504);
+        doReturn(Money.from(20)).when(testee).getOvertimeAmount(201504);
 
         // 実行
-        assertThat(testee.getTotalSalary(201504), is((60 + 40 + 30 + 20)));
+        assertThat(testee.getTotalSalary(201504), is((Money.from(60 + 40 + 30 + 20))));
 
         // 検証
         verify(testee).getAllowance();
@@ -115,14 +114,19 @@ public class EmployeeDomainTest_Mockito {
         entity.setWorkOverTime1hAmount(Money.from(10));
         entity.setCapability(Capability.normal(CapabilityRank.AS, Money.ZERO));
 
-        setUpSpy(entity);
-
         // Work 情報を設定
-        WorkRecord work = new WorkRecord();
-        work.setWorkOverTime(BigDecimal.valueOf(10L));
-        work.setLateNightOverTime(BigDecimal.valueOf(20L));
-        work.setHolidayWorkTime(BigDecimal.valueOf(30L));
-        work.setHolidayLateNightOverTime(BigDecimal.valueOf(40L));
+        entity.setWorkTimes(new WorkOverTimes(new HashMap<Integer, WorkOverTime>() {
+            {
+                put(201504, WorkOverTime.builder(201504)
+                        .holidayLateNightOverTime(BigDecimal.valueOf(40L))
+                        .workOverTime(BigDecimal.valueOf(10L))
+                        .lateNightOverTime(BigDecimal.valueOf(20L))
+                        .holidayWorkTime(BigDecimal.valueOf(30L))
+                        .build());
+            }
+        }));
+
+        setUpSpy(entity);
 
         // 期待値を求める
         int expected = (10) * 10;

@@ -1,14 +1,12 @@
 package salarycalculation.database;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.collection.IsEmptyCollection.empty;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static salarycalculation.matchers.EmployeeAssertion.isEqualToName;
-import static salarycalculation.matchers.EmployeeAssertion.isEqualToNo;
-import static salarycalculation.matchers.OrderEmployee.orderNos;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKey;
+import static org.hamcrest.collection.IsCollectionWithSize.*;
+import static org.hamcrest.collection.IsEmptyCollection.*;
+import static org.hamcrest.core.Is.*;
+import static org.junit.Assert.*;
+import static salarycalculation.matchers.EmployeeAssertion.*;
+import static salarycalculation.matchers.OrderEmployee.*;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.*;
 
 import java.util.List;
 

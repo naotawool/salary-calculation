@@ -18,7 +18,7 @@ public class Employees {
     }
 
     /**
-     * 指定年月の全社員の手取り額の平均を取得する。
+     * 指定年月の手取り額の平均を取得する。
      *
      * @param yearMonth 算出対象の年月 (e.g. 201504)
      * @return 全社員の手取り額平均

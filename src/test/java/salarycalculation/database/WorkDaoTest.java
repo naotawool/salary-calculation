@@ -1,9 +1,8 @@
 package salarycalculation.database;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKeys;
+import static org.hamcrest.core.Is.*;
+import static org.junit.Assert.*;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.*;
 
 import java.math.BigDecimal;
 

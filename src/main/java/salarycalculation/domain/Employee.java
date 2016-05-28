@@ -37,10 +37,11 @@ public class Employee extends BaseEntity<Integer> {
         }
 
         public WorkOverTimeSalaryCalculator bind(BigDecimal workTime, double rate) {
-            this.totalMoney = totalMoney
-                    .add(Money.from(workTime
-                            .multiply(BigDecimal.valueOf(rate)
-                                    .multiply(workOverTime1hAmount.getAmount()))));
+
+            BigDecimal raw = BigDecimal.valueOf(workOverTime1hAmount.getAmount().intValue() * rate);
+            BigDecimal totalMoney = raw.multiply(workTime);
+            this.totalMoney = this.totalMoney.add(Money.from(totalMoney));
+
             return this;
         }
 
@@ -212,6 +213,7 @@ public class Employee extends BaseEntity<Integer> {
         // マネージャ職は残業代なし
         if (capability.isManager()) {
             return Money.ZERO;
+
         }
 
         // 稼動情報を取得

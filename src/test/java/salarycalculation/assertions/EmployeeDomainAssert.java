@@ -6,7 +6,6 @@ import salarycalculation.domain.Capability;
 import salarycalculation.domain.Employee;
 import salarycalculation.domain.Organization;
 import salarycalculation.domain.Role;
-import salarycalculation.utils.PersonName;
 
 /**
  * {@link Employee}の検証を行うためのカスタム Assertion クラス。

@@ -1,8 +1,8 @@
 package salarycalculation.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.collection.IsIterableContainingInOrder.*;
+import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.assertThat;
 import static salarycalculation.assertions.MyProjectAssertions.assertThat;
 
@@ -15,7 +15,6 @@ import org.junit.experimental.theories.DataPoint;
 
 import salarycalculation.assertions.MyProjectSoftAssertions;
 import salarycalculation.database.repository.EmployeeRepositoryDao;
-import salarycalculation.entity.EmployeeRecord;
 import salarycalculation.utils.PersonName;
 
 /**

@@ -1,8 +1,8 @@
 package salarycalculation.domain;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static salarycalculation.matchers.OrderEmployeeDomain.orderNos;
+import static org.hamcrest.core.Is.*;
+import static org.junit.Assert.*;
+import static salarycalculation.matchers.OrderEmployeeDomain.*;
 
 import java.util.List;
 

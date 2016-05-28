@@ -19,6 +19,14 @@ public abstract class BaseEntity<T> implements Entity<T> {
         @SuppressWarnings("unchecked")
         Entity<T> other = (Entity<T>) obj;
 
+        if (this.getId() == null && other.getId() == null) {
+            return true;
+        }
+
+        if (this.getId() == null) {
+            return false;
+        }
+
         return this.getId().equals(other.getId());
     }
 

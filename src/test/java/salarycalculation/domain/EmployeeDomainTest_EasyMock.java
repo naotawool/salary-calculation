@@ -1,11 +1,8 @@
 package salarycalculation.domain;
 
-import static org.easymock.EasyMock.createMockBuilder;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.easymock.EasyMock.*;
+import static org.hamcrest.core.Is.*;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 

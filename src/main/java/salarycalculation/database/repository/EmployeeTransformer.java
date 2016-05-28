@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.OrganizationDao;
@@ -117,7 +116,7 @@ public class EmployeeTransformer {
         entity.setCommuteAmount(Money.from(employeeRecord.getCommuteAmount()));
         entity.setEmployeePensionAmount(Money.from(employeeRecord.getEmployeePensionAmount()));
         entity.setHealthInsuranceAmount(Money.from(employeeRecord.getHealthInsuranceAmount()));
-        entity.setIncomeTaxAmount(Money.from(employeeRecord.getHealthInsuranceAmount()));
+        entity.setIncomeTaxAmount(Money.from(employeeRecord.getIncomeTaxAmount()));
         entity.setInhabitantTaxAmount(Money.from(employeeRecord.getInhabitantTaxAmount()));
         entity.setRentAmount(Money.from(employeeRecord.getRentAmount()));
 
@@ -155,7 +154,7 @@ public class EmployeeTransformer {
                 .holidayLateNightOverTime(record.getHolidayLateNightOverTime())
                 .holidayWorkTime(record.getHolidayWorkTime())
                 .lateNightOverTime(record.getLateNightOverTime())
-                .workOverTime(record.getLateNightOverTime())
+                .workOverTime(record.getWorkOverTime())
                 .build();
     }
 }

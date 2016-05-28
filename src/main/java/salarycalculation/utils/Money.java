@@ -17,7 +17,7 @@ public class Money extends BaseValueObject {
     }
 
     public static Money from(BigDecimal amount) {
-        return new Money(amount);
+        return new Money(amount.setScale(0, BigDecimal.ROUND_DOWN));
     }
 
     private Money(BigDecimal amount) {
