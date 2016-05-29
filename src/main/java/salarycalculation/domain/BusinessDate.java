@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
+import salarycalculation.utils.BaseValueObject;
 import salarycalculation.utils.LocalDates;
 
 /**
@@ -13,7 +14,7 @@ import salarycalculation.utils.LocalDates;
  *
  * @author naotake
  */
-public class BusinessDate {
+public class BusinessDate extends BaseValueObject {
 
     private final LocalDate calendar;
 
