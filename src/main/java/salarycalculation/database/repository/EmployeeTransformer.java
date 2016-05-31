@@ -5,7 +5,6 @@ import java.util.Optional;
 import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.OrganizationDao;
 import salarycalculation.database.RoleDao;
-import salarycalculation.database.WorkDao;
 import salarycalculation.domain.employee.BusinessDate;
 import salarycalculation.domain.employee.Capability;
 import salarycalculation.domain.employee.CapabilityRank;
@@ -33,8 +32,6 @@ public class EmployeeTransformer {
     private OrganizationDao organizationDao;
     private RoleDao roleDao;
     private CapabilityDao capabilityDao;
-    private WorkDao workDao;
-
     private WorkRepository workRepository;
 
     public EmployeeTransformer() {
@@ -128,10 +125,6 @@ public class EmployeeTransformer {
 
     public void setOrganizationDao(OrganizationDao organizationDao) {
         this.organizationDao = organizationDao;
-    }
-
-    public void setWorkDao(WorkDao workDao) {
-        this.workDao = workDao;
     }
 
 }

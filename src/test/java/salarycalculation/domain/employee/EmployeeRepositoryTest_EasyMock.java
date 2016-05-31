@@ -70,7 +70,6 @@ public class EmployeeRepositoryTest_EasyMock {
         transformer.setRoleDao(mockRoleDao);
         transformer.setCapabilityDao(mockCapabilityDao);
         transformer.setOrganizationDao(mockOrganizationDao);
-        transformer.setWorkDao(mockWorkDao);
 
         testee = new EmployeeRepositoryDao();
         testee.setDao(mockDao);
