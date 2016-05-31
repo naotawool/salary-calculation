@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.work;
 
 import java.math.BigDecimal;
 
@@ -16,19 +16,19 @@ public class WorkOverTimeSalaryCalculator {
 
     private Money totalMoney;
 
-    public WorkOverTimeSalaryCalculator(Money workOverTime1hAmount) {
+    private WorkOverTimeSalaryCalculator(Money workOverTime1hAmount) {
         this.workOverTime1hAmount = workOverTime1hAmount;
         this.totalMoney = Money.ZERO;
     }
 
-    public WorkOverTimeSalaryCalculator bind(WorkingOverUnit workingTimes) {
+    public WorkOverTimeSalaryCalculator append(WorkingOverUnit workingTimes) {
         this.bind(workingTimes.getWorkingTime(), workingTimes.getWorkingTimeType().getRate());
         return this;
     }
 
     public WorkOverTimeSalaryCalculator bind(BigDecimal workTime, double rate) {
 
-        BigDecimal raw = BigDecimal.valueOf(workOverTime1hAmount.getAmount().intValue() * rate);
+        BigDecimal raw = BigDecimal.valueOf(workOverTime1hAmount.value().intValue() * rate);
         BigDecimal totalMoney = raw.multiply(workTime);
         this.totalMoney = this.totalMoney.add(Money.from(totalMoney));
 

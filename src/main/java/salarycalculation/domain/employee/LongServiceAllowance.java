@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import java.util.Arrays;
 import java.util.function.Predicate;

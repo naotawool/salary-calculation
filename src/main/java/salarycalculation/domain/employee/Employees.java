@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class Employees {
     public int getAverageTakeHome(int yearMonth) {
 
         return (int) employees.stream()
-                .mapToInt(e -> e.getTakeHomeAmount(yearMonth).getAmount().intValue())
+                .mapToInt(e -> e.getTakeHomeAmount(yearMonth).value().intValue())
                 .average()
                 .getAsDouble();
     }
@@ -57,7 +57,7 @@ public class Employees {
     // @UT
     public int getSumTotalSalary(int yearMonth) {
         return employees.stream()
-                .mapToInt(e -> e.getTotalSalary(yearMonth).getAmount().intValue())
+                .mapToInt(e -> e.getTotalSalary(yearMonth).value().intValue())
                 .sum();
     }
 

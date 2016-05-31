@@ -10,9 +10,10 @@ import java.util.stream.Stream;
 
 import salarycalculation.database.EmployeeDao;
 import salarycalculation.database.OrganizationDao;
-import salarycalculation.domain.Employee;
-import salarycalculation.domain.EmployeeRepository;
-import salarycalculation.domain.Employees;
+import salarycalculation.domain.employee.BusinessDate;
+import salarycalculation.domain.employee.Employee;
+import salarycalculation.domain.employee.EmployeeRepository;
+import salarycalculation.domain.employee.Employees;
 import salarycalculation.entity.EmployeeRecord;
 import salarycalculation.entity.OrganizationRecord;
 
@@ -118,7 +119,7 @@ public class EmployeeRepositoryDao implements EmployeeRepository {
     private Comparator<Employee> compareAnnualTotalSalaryPlan(boolean ascending) {
 
         Comparator<Employee> comparator = (o1, o2) -> o1.getAnnualTotalSalaryPlan()
-                .minus(o2.getAnnualTotalSalaryPlan()).getAmount().intValue();
+                .minus(o2.getAnnualTotalSalaryPlan()).value().intValue();
 
         if (ascending) {
             return comparator;
@@ -139,9 +140,11 @@ public class EmployeeRepositoryDao implements EmployeeRepository {
     @Override
     public Employee getByDurationMonth(boolean selectMax) {
 
+        BusinessDate now = BusinessDate.now();
+
         BinaryOperator<Employee> accumulator = selectMax
-                ? (a, b) -> a.calculateAttendanceMonth() >= b.calculateAttendanceMonth() ? a : b
-                : (a, b) -> a.calculateAttendanceMonth() <= b.calculateAttendanceMonth() ? a : b;
+                ? (a, b) -> a.calculateAttendanceMonth(now) >= b.calculateAttendanceMonth(now) ? a : b
+                : (a, b) -> a.calculateAttendanceMonth(now) <= b.calculateAttendanceMonth(now) ? a : b;
 
         return findAllAsStream().reduce(accumulator).get();
 

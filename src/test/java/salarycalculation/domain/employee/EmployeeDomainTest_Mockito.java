@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
@@ -10,6 +10,8 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import salarycalculation.domain.work.WorkOverTime;
+import salarycalculation.domain.work.WorkOverTimes;
 import salarycalculation.entity.EmployeeRecord;
 import salarycalculation.utils.Money;
 
@@ -32,33 +34,35 @@ public class EmployeeDomainTest_Mockito {
 
     @Test
     public void 入社年数を取得できること() {
+        BusinessDate now = BusinessDate.now();
         // 振る舞いを定義
-        when(testee.calculateAttendanceMonth()).thenReturn(12, 24, 36);
-        when(testee.getDurationYear()).thenCallRealMethod();
+        when(testee.calculateAttendanceMonth(now)).thenReturn(12, 24, 36);
+        when(testee.getDurationYear(now)).thenCallRealMethod();
 
         // 実行
-        assertThat(testee.getDurationYear(), is(1)); // Month: 12
-        assertThat(testee.getDurationYear(), is(2)); // Month: 24
-        assertThat(testee.getDurationYear(), is(3)); // Month: 36
+        assertThat(testee.getDurationYear(now), is(1)); // Month: 12
+        assertThat(testee.getDurationYear(now), is(2)); // Month: 24
+        assertThat(testee.getDurationYear(now), is(3)); // Month: 36
 
         // 検証
-        verify(testee, times(3)).calculateAttendanceMonth();
+        verify(testee, times(3)).calculateAttendanceMonth(now);
     }
 
     @Test
     public void spyを使用して入社年数を取得できること() {
+        BusinessDate now = BusinessDate.now();
         setUpSpy();
 
         // 振る舞いを定義
-        doReturn(12).doReturn(24).doReturn(36).when(testee).calculateAttendanceMonth();
+        doReturn(12).doReturn(24).doReturn(36).when(testee).calculateAttendanceMonth(now);
 
         // 実行
-        assertThat(testee.getDurationYear(), is(1)); // Month: 12
-        assertThat(testee.getDurationYear(), is(2)); // Month: 24
-        assertThat(testee.getDurationYear(), is(3)); // Month: 36
+        assertThat(testee.getDurationYear(now), is(1)); // Month: 12
+        assertThat(testee.getDurationYear(now), is(2)); // Month: 24
+        assertThat(testee.getDurationYear(now), is(3)); // Month: 36
 
         // 検証
-        verify(testee, times(3)).calculateAttendanceMonth();
+        verify(testee, times(3)).calculateAttendanceMonth(now);
     }
 
     @Test
@@ -93,8 +97,10 @@ public class EmployeeDomainTest_Mockito {
         testee.setRole(role);
         testee.setCapability(capability);
 
+        BusinessDate now = BusinessDate.of(2015, 4, 1);
+
         // 諸手当取得の振る舞いを定義
-        doReturn(Money.from(30)).when(testee).getAllowance();
+        doReturn(Money.from(30)).when(testee).getAllowance(now);
         // 基準外給与取得の振る舞いを定義
         doReturn(Money.from(20)).when(testee).getOvertimeAmount(201504);
 
@@ -102,7 +108,7 @@ public class EmployeeDomainTest_Mockito {
         assertThat(testee.getTotalSalary(201504), is((Money.from(60 + 40 + 30 + 20))));
 
         // 検証
-        verify(testee).getAllowance();
+        verify(testee).getAllowance(now);
         verify(testee).getOvertimeAmount(201504);
     }
 

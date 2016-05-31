@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import salarycalculation.utils.BaseValueObject;
 import salarycalculation.utils.Money;

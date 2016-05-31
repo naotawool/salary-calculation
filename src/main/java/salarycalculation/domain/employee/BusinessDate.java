@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -59,7 +59,7 @@ public class BusinessDate extends BaseValueObject {
     }
 
     public static BusinessDate of(Calendar now) {
-        return of(new Date(now.getTimeInMillis()));
+        return of(now.getTime());
     }
 
     public static BusinessDate of(LocalDate date) {

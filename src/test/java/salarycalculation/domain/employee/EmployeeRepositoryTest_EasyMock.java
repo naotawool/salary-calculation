@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import static org.easymock.EasyMock.*;
 import static org.hamcrest.CoreMatchers.sameInstance;

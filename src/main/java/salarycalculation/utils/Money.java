@@ -10,7 +10,7 @@ public class Money extends BaseValueObject {
 
     public static final Money ZERO = new Money(BigDecimal.ZERO);
 
-    private final BigDecimal amount;
+    private final BigDecimal value;
 
     public static Money from(long amount) {
         return from(BigDecimal.valueOf(amount));
@@ -22,24 +22,24 @@ public class Money extends BaseValueObject {
 
     private Money(BigDecimal amount) {
         Objects.requireNonNull(amount);
-        this.amount = amount;
+        this.value = amount;
     }
 
     public Money add(Money money) {
-        return new Money(amount.add(money.amount));
+        return new Money(value.add(money.value));
     }
 
     public Money multiply(double rate) {
-        return Money.from(amount.multiply(BigDecimal.valueOf(rate)));
+        return Money.from(value.multiply(BigDecimal.valueOf(rate)));
     }
 
     public Money minus(Money money) {
 
-        return Money.from(amount.subtract(money.amount));
+        return Money.from(value.subtract(money.value));
     }
 
-    public BigDecimal getAmount() {
-        return this.amount;
+    public BigDecimal value() {
+        return this.value;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Money extends BaseValueObject {
     }
 
     public boolean isGraterThan(Money assumption) {
-        return this.amount.compareTo(assumption.amount) > 0;
+        return this.value.compareTo(assumption.value) > 0;
     }
 
 }

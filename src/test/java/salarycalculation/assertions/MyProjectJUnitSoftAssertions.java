@@ -2,7 +2,7 @@ package salarycalculation.assertions;
 
 import org.assertj.core.api.JUnitSoftAssertions;
 
-import salarycalculation.domain.Employee;
+import salarycalculation.domain.employee.Employee;
 
 /**
  * プロジェクト用に拡張した{@link JUnitSoftAssertions}のエントリポイント。

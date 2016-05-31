@@ -2,10 +2,10 @@ package salarycalculation.assertions;
 
 import org.assertj.core.api.AbstractAssert;
 
-import salarycalculation.domain.Capability;
-import salarycalculation.domain.Employee;
-import salarycalculation.domain.Organization;
-import salarycalculation.domain.Role;
+import salarycalculation.domain.employee.Capability;
+import salarycalculation.domain.employee.Employee;
+import salarycalculation.domain.employee.Organization;
+import salarycalculation.domain.employee.Role;
 
 /**
  * {@link Employee}の検証を行うためのカスタム Assertion クラス。

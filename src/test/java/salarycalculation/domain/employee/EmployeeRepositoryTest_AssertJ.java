@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.collection.IsIterableContainingInOrder.*;

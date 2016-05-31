@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;

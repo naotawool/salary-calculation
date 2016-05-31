@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.work;
 
 public enum WorkingTimeType {
     NORMAL(1), WORK_OVER(1), LATE_NIGHT_OVER(1.1), HOLIDAY_WORK(1.2), HOLIDAY_LATE_NIGHT_OVER(1.3);

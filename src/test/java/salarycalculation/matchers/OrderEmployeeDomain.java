@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import salarycalculation.domain.Employee;
+import salarycalculation.domain.employee.Employee;
 
 /**
  * {@link Employee}一覧の並び順を検証する Matcher。

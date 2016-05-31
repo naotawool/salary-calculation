@@ -2,7 +2,7 @@ package salarycalculation.assertions;
 
 import org.assertj.core.api.Assertions;
 
-import salarycalculation.domain.Employee;
+import salarycalculation.domain.employee.Employee;
 
 public class MyProjectAssertions extends Assertions {
 

@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 /**
  * リポジトリインタフェース.DIPを適用するためI/Fを作成.

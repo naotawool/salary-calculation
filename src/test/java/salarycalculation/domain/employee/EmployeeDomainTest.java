@@ -1,9 +1,7 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-
-import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,12 +23,12 @@ public class EmployeeDomainTest {
 
         @Test
         public void 通常の手当を取得できること() {
-            setUpNowCalendar(2017, 2, 28);
             testee.setCommuteAmount(Money.from(2500));
             testee.setRentAmount(Money.from(20000));
 
+            BusinessDate now = BusinessDate.of(2017, 2, 28);
             // 通勤手当と住宅手当の合計だけ
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(2500).add(Money.from(20000)))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(2500).add(Money.from(20000)))));
         }
     }
 
@@ -38,28 +36,29 @@ public class EmployeeDomainTest {
 
         @Test
         public void 諸手当を_3000_取得できること() {
-            setUpNowCalendar(2017, 3, 31);
+            BusinessDate now = BusinessDate.of(2017, 3, 31);
 
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(3000))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(3000))));
         }
 
         @Test
         public void PL_の場合_諸手当を_13000_取得できること() {
-            setUpNowCalendar(2017, 3, 31);
+
+            BusinessDate now = BusinessDate.of(2017, 3, 31);
             testee.setCapability(Capability.pl(Money.ZERO));
 
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(3000).add(Money.from(10000)))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(3000).add(Money.from(10000)))));
         }
 
         @Test
         public void PM_の場合_諸手当を_33000_取得できること() {
-            setUpNowCalendar(2017, 3, 31);
+            BusinessDate now = BusinessDate.of(2017, 3, 31);
             testee.setCapability(Capability.pm(Money.ZERO));
 
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(3000).add(Money.from(30000)))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(3000).add(Money.from(30000)))));
         }
     }
 
@@ -67,28 +66,28 @@ public class EmployeeDomainTest {
 
         @Test
         public void 諸手当を_5000_取得できること2() {
-            setUpNowCalendar(2019, 3, 31);
 
+            BusinessDate now = BusinessDate.of(2019, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(5000))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(5000))));
         }
 
         @Test
         public void PL_の場合_諸手当を_15000_取得できること() {
-            setUpNowCalendar(2019, 3, 31);
             testee.setCapability(Capability.pl(Money.ZERO));
 
+            BusinessDate now = BusinessDate.of(2019,3,31);
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(5000).add(Money.from(10000)))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(5000).add(Money.from(10000)))));
         }
 
         @Test
         public void PM_の場合_諸手当を_35000_取得できること() {
-            setUpNowCalendar(2019, 3, 31);
             testee.setCapability(Capability.pm(Money.ZERO));
 
+            BusinessDate now = BusinessDate.of(2019, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(5000).add(Money.from(30000)))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(5000).add(Money.from(30000)))));
         }
     }
 
@@ -96,28 +95,28 @@ public class EmployeeDomainTest {
 
         @Test
         public void 諸手当を_10000_取得できること2() {
-            setUpNowCalendar(2024, 3, 31);
 
+            BusinessDate now = BusinessDate.of(2024, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(10000))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(10000))));
         }
 
         @Test
         public void PL_の場合_諸手当を_20000_取得できること() {
-            setUpNowCalendar(2024, 3, 31);
             testee.setCapability(Capability.pl(Money.ZERO));
 
+            BusinessDate now = BusinessDate.of(2024, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(10000 + 10000))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(10000 + 10000))));
         }
 
         @Test
         public void PM_の場合_諸手当を_40000_取得できること() {
-            setUpNowCalendar(2024, 3, 31);
             testee.setCapability(Capability.pm(Money.ZERO));
 
+            BusinessDate now = BusinessDate.of(2024, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(30000 + 10000))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(30000 + 10000))));
         }
     }
 
@@ -125,28 +124,28 @@ public class EmployeeDomainTest {
 
         @Test
         public void 諸手当を_20000_取得できること2() {
-            setUpNowCalendar(2034, 3, 31);
 
+            BusinessDate now = BusinessDate.of(2034, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(20000))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(20000))));
         }
 
         @Test
         public void PL_の場合_諸手当を_30000_取得できること() {
-            setUpNowCalendar(2034, 3, 31);
             testee.setCapability(Capability.pl(Money.ZERO));
 
+            BusinessDate now = BusinessDate.of(2034, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(10000 + 20000))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(10000 + 20000))));
         }
 
         @Test
         public void PM_の場合_諸手当を_50000_取得できること() {
-            setUpNowCalendar(2034, 3, 31);
             testee.setCapability(Capability.pm(Money.ZERO));
 
+            BusinessDate now = BusinessDate.of(2034, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(), is(equalTo(Money.from(30000 + 20000))));
+            assertThat(testee.getAllowance(now), is(equalTo(Money.from(30000 + 20000))));
         }
     }
 
@@ -225,21 +224,6 @@ public class EmployeeDomainTest {
 
         }
 
-        /**
-         * {@link BusinessDate}経由で現在日時を特定日に設定する。
-         *
-         * @param year 年
-         * @param month 月
-         * @param day 日
-         */
-        public void setUpNowCalendar(int year, int month, int day) {
-            // 現在日
-            Calendar now = Calendar.getInstance();
-            now.set(year, (month - 1), day);
-            BusinessDate businessDate = BusinessDate.of(now);
-
-            testee.setNow(businessDate);
-        }
     }
 
 }

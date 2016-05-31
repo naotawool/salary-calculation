@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.work;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

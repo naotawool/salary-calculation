@@ -1,7 +1,10 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import java.util.Optional;
 
+import salarycalculation.domain.work.WorkOverTime;
+import salarycalculation.domain.work.WorkOverTimeSalaryCalculator;
+import salarycalculation.domain.work.WorkOverTimes;
 import salarycalculation.utils.BaseEntity;
 import salarycalculation.utils.Money;
 import salarycalculation.utils.PersonName;
@@ -56,11 +59,8 @@ public class Employee extends BaseEntity<Integer> {
 
     private WorkOverTimes workOverTimes;
 
-    private BusinessDate now;
-
     public Employee(int employeeNo) {
         this.employeeNo = employeeNo;
-        this.now = BusinessDate.now();
     }
 
     /**
@@ -70,8 +70,8 @@ public class Employee extends BaseEntity<Integer> {
      * @return 勤続年数
      */
     // @UT
-    public int getDurationYear() {
-        int durationMonth = calculateAttendanceMonth();
+    public int getDurationYear(BusinessDate targetDate) {
+        int durationMonth = calculateAttendanceMonth(targetDate);
         return (durationMonth / 12);
     }
 
@@ -94,9 +94,8 @@ public class Employee extends BaseEntity<Integer> {
      * @return 勤続月数
      */
     // @UT
-    public int calculateAttendanceMonth() {
-        //TODO 副作用があるので検討する
-        int periodByMonth = joinDate.calculatePeriodByMonth(now);
+    public int calculateAttendanceMonth(BusinessDate targetDate) {
+        int periodByMonth = joinDate.calculatePeriodByMonth(targetDate);
         // 勤続月数は二つの業務日付の差から１を足したもの
         return periodByMonth + 1;
     }
@@ -137,7 +136,7 @@ public class Employee extends BaseEntity<Integer> {
     public Money getTotalSalary(int workYearMonth) {
         return role.getAmount()
                 .add(capability.getAmount())
-                .add(getAllowance())
+                .add(getAllowance(BusinessDate.of(workYearMonth / 100, workYearMonth % 100, 1)))
                 .add(getOvertimeAmount(workYearMonth));
     }
 
@@ -146,14 +145,14 @@ public class Employee extends BaseEntity<Integer> {
      *
      * @return 諸手当
      */
-    public Money getAllowance() {
+    public Money getAllowance(BusinessDate targetDate) {
         // 諸手当を求める
 
         Money totalAllowance = commuteAmount
                 .add(rentAmount)
                 .add(capability.getSeparatedAllowance())
                 // 勤続手当の取得
-                .add(LongServiceAllowance.targetAllowanance(calculateAttendanceMonth()).allowance());
+                .add(LongServiceAllowance.targetAllowanance(calculateAttendanceMonth(targetDate)).allowance());
 
         return totalAllowance;
 
@@ -179,13 +178,13 @@ public class Employee extends BaseEntity<Integer> {
 
         return workOverTimeOpt.map(workOverTime -> WorkOverTimeSalaryCalculator.create(amountOverTimePerHour)
                 // 時間外手当
-                .bind(workOverTime.getWorkOverTime())
+                .append(workOverTime.getWorkOverTime())
                 // 深夜手当
-                .bind(workOverTime.getLateNightOverTime())
+                .append(workOverTime.getLateNightOverTime())
                 // 休日手当
-                .bind(workOverTime.getHolidayWorkTime())
+                .append(workOverTime.getHolidayWorkTime())
                 // 休日深夜手当
-                .bind(workOverTime.getHolidayLateNightOverTime())
+                .append(workOverTime.getHolidayLateNightOverTime())
                 .calculate())
                 // 取得できなかった時は０円
                 .orElse(Money.ZERO);
@@ -255,14 +254,6 @@ public class Employee extends BaseEntity<Integer> {
 
     public void setCapability(Capability capability) {
         this.capability = capability;
-    }
-
-    public BusinessDate getNow() {
-        return now;
-    }
-
-    public void setNow(BusinessDate now) {
-        this.now = now;
     }
 
     public void setJoinDate(BusinessDate joinDate) {

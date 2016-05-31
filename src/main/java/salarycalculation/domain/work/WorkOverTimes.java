@@ -1,4 +1,4 @@
-package salarycalculation.domain;
+package salarycalculation.domain.work;
 
 import static java.util.stream.Collectors.*;
 
