@@ -14,7 +14,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
-import salarycalculation.entity.RoleRecord;
+import salarycalculation.database.model.RoleRecord;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**

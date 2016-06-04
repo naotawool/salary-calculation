@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import salarycalculation.entity.EmployeeRecord;
+import salarycalculation.database.model.EmployeeRecord;
 
 /**
  * {@link EmployeeRecord}に対する検証をまとめたカスタム Matcher。

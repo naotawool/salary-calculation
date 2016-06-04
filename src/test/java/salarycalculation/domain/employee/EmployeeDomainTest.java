@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import salarycalculation.entity.EmployeeRecord;
+import salarycalculation.database.model.EmployeeRecord;
 import salarycalculation.utils.Money;
 
 /**

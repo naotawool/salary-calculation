@@ -68,16 +68,16 @@ public class WorkOverTime extends BaseEntity<WorkOverTimeId> {
     private final WorkOverTimeId id;
 
     /** 時間外勤務時間 */
-    private final WorkingOverUnit workOverTime;
+    private WorkingOverUnit workOverTime;
 
     /** 深夜勤務時間 */
-    private final WorkingOverUnit lateNightOverTime;
+    private WorkingOverUnit lateNightOverTime;
 
     /** 休日勤務時間 */
-    private final WorkingOverUnit holidayWorkTime;
+    private WorkingOverUnit holidayWorkTime;
 
     /** 休日深夜勤務時間 */
-    private final WorkingOverUnit holidayLateNightOverTime;
+    private WorkingOverUnit holidayLateNightOverTime;
 
     /**
      * use builder.
@@ -120,12 +120,10 @@ public class WorkOverTime extends BaseEntity<WorkOverTimeId> {
     }
 
     public BigDecimal getTotalWorkOverTime() {
-
         return this.workOverTime.getWorkingTime()
                 .add(this.holidayLateNightOverTime.getWorkingTime())
                 .add(this.holidayWorkTime.getWorkingTime())
                 .add(this.lateNightOverTime.getWorkingTime());
-
     }
 
     @Override

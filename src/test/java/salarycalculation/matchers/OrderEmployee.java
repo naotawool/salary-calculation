@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import salarycalculation.entity.EmployeeRecord;
+import salarycalculation.database.model.EmployeeRecord;
 
 /**
  * {@link EmployeeRecord}一覧の並び順を検証する Matcher。

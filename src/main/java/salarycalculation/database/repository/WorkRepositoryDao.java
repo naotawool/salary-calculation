@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 import salarycalculation.database.WorkDao;
+import salarycalculation.database.model.WorkRecord;
 import salarycalculation.domain.work.WorkOverTime;
 import salarycalculation.domain.work.WorkOverTimes;
 import salarycalculation.domain.work.WorkRepository;
-import salarycalculation.entity.WorkRecord;
 
 public class WorkRepositoryDao implements WorkRepository {
 

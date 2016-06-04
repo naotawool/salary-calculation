@@ -1,9 +1,9 @@
 package salarycalculation.database.repository;
 
 import salarycalculation.database.OrganizationDao;
+import salarycalculation.database.model.OrganizationRecord;
 import salarycalculation.domain.organization.Organization;
 import salarycalculation.domain.organization.OrganizationRepository;
-import salarycalculation.entity.OrganizationRecord;
 
 /**
  * 組織リポジトリの実装.

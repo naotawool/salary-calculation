@@ -4,6 +4,9 @@ import java.util.Optional;
 
 import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.RoleDao;
+import salarycalculation.database.model.CapabilityRecord;
+import salarycalculation.database.model.EmployeeRecord;
+import salarycalculation.database.model.RoleRecord;
 import salarycalculation.domain.employee.BusinessDate;
 import salarycalculation.domain.employee.Capability;
 import salarycalculation.domain.employee.CapabilityRank;
@@ -13,9 +16,6 @@ import salarycalculation.domain.organization.Organization;
 import salarycalculation.domain.organization.OrganizationRepository;
 import salarycalculation.domain.work.WorkOverTimes;
 import salarycalculation.domain.work.WorkRepository;
-import salarycalculation.entity.CapabilityRecord;
-import salarycalculation.entity.EmployeeRecord;
-import salarycalculation.entity.RoleRecord;
 import salarycalculation.utils.Money;
 import salarycalculation.utils.PersonName;
 

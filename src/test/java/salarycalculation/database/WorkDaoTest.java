@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import salarycalculation.entity.WorkRecord;
+import salarycalculation.database.model.WorkRecord;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**

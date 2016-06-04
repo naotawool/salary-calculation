@@ -10,9 +10,9 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import salarycalculation.database.model.EmployeeRecord;
 import salarycalculation.domain.work.WorkOverTime;
 import salarycalculation.domain.work.WorkOverTimes;
-import salarycalculation.entity.EmployeeRecord;
 import salarycalculation.utils.Money;
 
 /**

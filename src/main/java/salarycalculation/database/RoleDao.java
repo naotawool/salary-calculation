@@ -9,7 +9,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.lang.StringUtils;
 
-import salarycalculation.entity.RoleRecord;
+import salarycalculation.database.model.RoleRecord;
 import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.exception.RuntimeSQLException;
 

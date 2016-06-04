@@ -22,14 +22,14 @@ import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.EmployeeDao;
 import salarycalculation.database.RoleDao;
 import salarycalculation.database.WorkDao;
+import salarycalculation.database.model.CapabilityRecord;
+import salarycalculation.database.model.EmployeeRecord;
+import salarycalculation.database.model.OrganizationRecord;
+import salarycalculation.database.model.RoleRecord;
 import salarycalculation.database.repository.EmployeeRepositoryDao;
 import salarycalculation.database.repository.EmployeeTransformer;
 import salarycalculation.domain.organization.Organization;
 import salarycalculation.domain.organization.OrganizationRepository;
-import salarycalculation.entity.CapabilityRecord;
-import salarycalculation.entity.EmployeeRecord;
-import salarycalculation.entity.OrganizationRecord;
-import salarycalculation.entity.RoleRecord;
 import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.utils.PersonName;
 

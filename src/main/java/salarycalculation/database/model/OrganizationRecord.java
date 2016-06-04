@@ -1,4 +1,4 @@
-package salarycalculation.entity;
+package salarycalculation.database.model;
 
 /**
  * 組織を現す Entity。

@@ -9,13 +9,13 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Stream;
 
 import salarycalculation.database.EmployeeDao;
+import salarycalculation.database.model.EmployeeRecord;
 import salarycalculation.domain.employee.BusinessDate;
 import salarycalculation.domain.employee.Employee;
 import salarycalculation.domain.employee.EmployeeRepository;
 import salarycalculation.domain.employee.Employees;
 import salarycalculation.domain.organization.Organization;
 import salarycalculation.domain.organization.OrganizationRepository;
-import salarycalculation.entity.EmployeeRecord;
 
 /**
  * 社員情報リポジトリ。

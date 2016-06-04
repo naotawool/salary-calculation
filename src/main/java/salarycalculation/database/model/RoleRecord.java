@@ -1,4 +1,4 @@
-package salarycalculation.entity;
+package salarycalculation.database.model;
 
 /**
  * 役割等級を表す Entity。

@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import salarycalculation.entity.OrganizationRecord;
+import salarycalculation.database.model.OrganizationRecord;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**

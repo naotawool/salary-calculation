@@ -1,4 +1,4 @@
-package salarycalculation.entity;
+package salarycalculation.database.model;
 
 import java.sql.Date;
 
