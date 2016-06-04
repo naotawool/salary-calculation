@@ -6,8 +6,15 @@ import java.util.Objects;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+/**
+ * お金を表すVO。円とかの通貨単位もつといい感じになる予定。
+ *
+ * @author MASAYUKI
+ *
+ */
 public class Money extends BaseValueObject {
 
+    /** 0円 */
     public static final Money ZERO = new Money(BigDecimal.ZERO);
 
     private final BigDecimal value;
@@ -47,8 +54,9 @@ public class Money extends BaseValueObject {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 
-    public boolean isGraterThan(Money assumption) {
-        return this.value.compareTo(assumption.value) > 0;
+    public boolean isGraterThan(Money target) {
+
+        return this.value.compareTo(target.value) > 0;
     }
 
 }

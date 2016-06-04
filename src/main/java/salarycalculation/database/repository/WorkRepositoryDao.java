@@ -2,7 +2,6 @@ package salarycalculation.database.repository;
 
 import static java.util.stream.Collectors.*;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +26,9 @@ public class WorkRepositoryDao implements WorkRepository {
         if (workRecords.isEmpty()) {
             return Optional.empty();
         }
-        List<WorkOverTime> workOverTimeList = workRecords.size() > 0 ? workRecords.stream()
+        List<WorkOverTime> workOverTimeList = workRecords.stream()
                 .map(this::convertWorkOverTime)
-                .collect(toList()) : Collections.emptyList();
+                .collect(toList());
 
         WorkOverTimes workOverTimes = new WorkOverTimes(workOverTimeList);
         return Optional.of(workOverTimes);
