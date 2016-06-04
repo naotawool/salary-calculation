@@ -19,10 +19,11 @@ import org.mockito.MockitoAnnotations;
 
 import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.EmployeeDao;
-import salarycalculation.database.OrganizationDao;
 import salarycalculation.database.RoleDao;
 import salarycalculation.database.repository.EmployeeRepositoryDao;
 import salarycalculation.database.repository.EmployeeTransformer;
+import salarycalculation.domain.organization.Organization;
+import salarycalculation.domain.organization.OrganizationRepository;
 import salarycalculation.entity.CapabilityRecord;
 import salarycalculation.entity.EmployeeRecord;
 import salarycalculation.entity.OrganizationRecord;
@@ -46,14 +47,14 @@ public class EmployeeRepositoryTest_Mockito {
     @Mock
     private EmployeeDao mockDao;
     @Mock
-    private OrganizationDao mockOrganizationDao;
+    private OrganizationRepository mockOrganizationRepository;
     @Mock
     private RoleDao mockRoleDao;
     @Mock
     private CapabilityDao mockCapabilityDao;
 
     private EmployeeRecord entity;
-    private OrganizationRecord organization;
+    private Organization organization;
     private RoleRecord role;
     private CapabilityRecord capability;
 
@@ -64,7 +65,7 @@ public class EmployeeRepositoryTest_Mockito {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        organization = new OrganizationRecord();
+        organization = new Organization("code", "name");
         role = new RoleRecord();
         capability = new CapabilityRecord();
         testee.setTransFormer(this.transformer);
@@ -146,13 +147,12 @@ public class EmployeeRepositoryTest_Mockito {
 
         this.entity = createEntity(no, organization, null, null);
 
-        OrganizationRecord record = new OrganizationRecord();
-        record.setCode(organization);
+        Organization record = new Organization(organization, "");
         this.organization = record;
 
         // 振る舞いを定義
         when(mockDao.get(no)).thenReturn(this.entity);
-        when(mockOrganizationDao.get(organization)).thenReturn(this.organization);
+        when(mockOrganizationRepository.find(organization)).thenReturn(this.organization);
 
         // 実行
         @SuppressWarnings("deprecation")
@@ -164,7 +164,7 @@ public class EmployeeRepositoryTest_Mockito {
 
         // 振る舞いの検証
         verify(mockDao).get(no);
-        verify(mockOrganizationDao).get(organization);
+        verify(mockOrganizationRepository).find(organization);
     }
 
     @Test
@@ -176,8 +176,7 @@ public class EmployeeRepositoryTest_Mockito {
 
         this.entity = createEntity(no, organization, role, capability);
 
-        OrganizationRecord record = new OrganizationRecord();
-        record.setCode(organization);
+        Organization record = new Organization(organization, "");
         this.organization = record;
 
         RoleRecord roleRecord = new RoleRecord();
@@ -190,7 +189,7 @@ public class EmployeeRepositoryTest_Mockito {
 
         // 振る舞いを定義
         when(mockDao.get(no)).thenReturn(this.entity);
-        when(mockOrganizationDao.get(organization)).thenReturn(this.organization);
+        when(mockOrganizationRepository.find(organization)).thenReturn(this.organization);
         when(mockRoleDao.get(role)).thenReturn(this.role);
         when(mockCapabilityDao.get(capability)).thenReturn(this.capability);
 
@@ -205,7 +204,7 @@ public class EmployeeRepositoryTest_Mockito {
 
         // 振る舞いの検証
         verify(mockDao).get(no);
-        verify(mockOrganizationDao).get(organization);
+        verify(mockOrganizationRepository).find(organization);
         verify(mockRoleDao).get(role);
         verify(mockCapabilityDao).get(capability);
     }
@@ -220,7 +219,7 @@ public class EmployeeRepositoryTest_Mockito {
 
         // 振る舞いを定義
         when(mockDao.get(no)).thenReturn(this.entity);
-        when(mockOrganizationDao.get(organization)).thenThrow(expectException);
+        when(mockOrganizationRepository.find(organization)).thenThrow(expectException);
 
         // 期待する例外内容
         expected.expect(RecordNotFoundException.class);
@@ -232,7 +231,7 @@ public class EmployeeRepositoryTest_Mockito {
             testee.get(no);
         } finally {
             verify(mockDao).get(no);
-            verify(mockOrganizationDao).get(organization);
+            verify(mockOrganizationRepository).find(organization);
         }
     }
 
