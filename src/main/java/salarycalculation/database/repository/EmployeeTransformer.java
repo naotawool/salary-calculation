@@ -3,19 +3,18 @@ package salarycalculation.database.repository;
 import java.util.Optional;
 
 import salarycalculation.database.CapabilityDao;
-import salarycalculation.database.OrganizationDao;
 import salarycalculation.database.RoleDao;
 import salarycalculation.domain.employee.BusinessDate;
 import salarycalculation.domain.employee.Capability;
 import salarycalculation.domain.employee.CapabilityRank;
 import salarycalculation.domain.employee.Employee;
-import salarycalculation.domain.employee.Organization;
 import salarycalculation.domain.employee.Role;
+import salarycalculation.domain.organization.Organization;
+import salarycalculation.domain.organization.OrganizationRepository;
 import salarycalculation.domain.work.WorkOverTimes;
 import salarycalculation.domain.work.WorkRepository;
 import salarycalculation.entity.CapabilityRecord;
 import salarycalculation.entity.EmployeeRecord;
-import salarycalculation.entity.OrganizationRecord;
 import salarycalculation.entity.RoleRecord;
 import salarycalculation.utils.Money;
 import salarycalculation.utils.PersonName;
@@ -29,13 +28,13 @@ import salarycalculation.utils.PersonName;
  */
 public class EmployeeTransformer {
 
-    private OrganizationDao organizationDao;
+    private OrganizationRepository organizationRepository;
     private RoleDao roleDao;
     private CapabilityDao capabilityDao;
     private WorkRepository workRepository;
 
     public EmployeeTransformer() {
-        this.organizationDao = new OrganizationDao();
+        this.organizationRepository = new OrganizationRepositoryDao();
         this.roleDao = new RoleDao();
         this.capabilityDao = new CapabilityDao();
         this.workRepository = new WorkRepositoryDao();
@@ -50,7 +49,7 @@ public class EmployeeTransformer {
     public Employee transformToEntity(EmployeeRecord employeeRecord) {
 
         // 所属する組織情報を取得
-        OrganizationRecord organization = organizationDao.get(employeeRecord.getOrganization());
+        Organization organization = organizationRepository.find(employeeRecord.getOrganization());
 
         // 各等級情報を取得
         RoleRecord role = roleDao.get(employeeRecord.getRoleRank());
@@ -72,12 +71,12 @@ public class EmployeeTransformer {
      * DBレコードからEntityを生成する
      *
      * @param employeeRecord 従業員レコード
-     * @param organizationRecord 組織レコード（オプション）
+     * @param organization 組織レコード（オプション）
      * @param roleRecordOpt 役割等級（オプション）
      * @param capabilityRecordOpt 能力等級レコード（オプション）
      * @return 従業員エンティティ
      */
-    public Employee createFromRecord(EmployeeRecord employeeRecord, OrganizationRecord organizationRecord,
+    Employee createFromRecord(EmployeeRecord employeeRecord, Organization organization,
             Optional<WorkOverTimes> works,
             Optional<RoleRecord> roleRecordOpt,
             Optional<CapabilityRecord> capabilityRecordOpt) {
@@ -87,7 +86,7 @@ public class EmployeeTransformer {
         entity.setName(new PersonName(employeeRecord.getName()));
         entity.setBirthDay(BusinessDate.of(employeeRecord.getBirthday()));
         entity.setJoinDate(BusinessDate.of(employeeRecord.getJoinDate()));
-        entity.setOrganization(new Organization(organizationRecord.getCode(), organizationRecord.getName()));
+        entity.setOrganization(organization);
 
         Optional<Capability> capabilityOpt = capabilityRecordOpt
                 .map(e -> Capability.normal(CapabilityRank.valueOf(e.getRank()), Money.from(e.getAmount())));
@@ -123,8 +122,8 @@ public class EmployeeTransformer {
         this.capabilityDao = capabilityDao;
     }
 
-    public void setOrganizationDao(OrganizationDao organizationDao) {
-        this.organizationDao = organizationDao;
+    public void setOrganizationRepository(OrganizationRepository organizationRepository) {
+        this.organizationRepository = organizationRepository;
     }
 
 }

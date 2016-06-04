@@ -9,13 +9,13 @@ import java.util.function.BinaryOperator;
 import java.util.stream.Stream;
 
 import salarycalculation.database.EmployeeDao;
-import salarycalculation.database.OrganizationDao;
 import salarycalculation.domain.employee.BusinessDate;
 import salarycalculation.domain.employee.Employee;
 import salarycalculation.domain.employee.EmployeeRepository;
 import salarycalculation.domain.employee.Employees;
+import salarycalculation.domain.organization.Organization;
+import salarycalculation.domain.organization.OrganizationRepository;
 import salarycalculation.entity.EmployeeRecord;
-import salarycalculation.entity.OrganizationRecord;
 
 /**
  * 社員情報リポジトリ。
@@ -24,13 +24,13 @@ import salarycalculation.entity.OrganizationRecord;
  */
 public class EmployeeRepositoryDao implements EmployeeRepository {
 
-    private OrganizationDao organizationDao;
+    private OrganizationRepository organizationRepository;
     private EmployeeDao dao;
     private EmployeeTransformer transformer;
 
     public EmployeeRepositoryDao() {
         this.dao = new EmployeeDao();
-        this.organizationDao = new OrganizationDao();
+        this.organizationRepository = new OrganizationRepositoryDao();
         this.transformer = new EmployeeTransformer();
     }
 
@@ -65,7 +65,7 @@ public class EmployeeRepositoryDao implements EmployeeRepository {
         EmployeeRecord employee = dao.get(no);
 
         // 所属する組織情報を取得
-        OrganizationRecord organization = organizationDao.get(employee.getOrganization());
+        Organization organization = organizationRepository.find(employee.getOrganization());
 
         // Domain を準備
         Employee entity = transformer.createFromRecord(employee, organization,
@@ -159,8 +159,8 @@ public class EmployeeRepositoryDao implements EmployeeRepository {
         this.dao = dao;
     }
 
-    public void setOrganizationDao(OrganizationDao organizationDao) {
-        this.organizationDao = organizationDao;
+    public void setOrganizationDao(OrganizationRepository organizationDao) {
+        this.organizationRepository = organizationDao;
     }
 
     public void setTransFormer(EmployeeTransformer transformer) {

@@ -2,6 +2,7 @@ package salarycalculation.domain.employee;
 
 import java.util.Optional;
 
+import salarycalculation.domain.organization.Organization;
 import salarycalculation.domain.work.WorkOverTime;
 import salarycalculation.domain.work.WorkOverTimeSalaryCalculator;
 import salarycalculation.domain.work.WorkOverTimes;

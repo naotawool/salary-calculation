@@ -4,8 +4,8 @@ import org.assertj.core.api.AbstractAssert;
 
 import salarycalculation.domain.employee.Capability;
 import salarycalculation.domain.employee.Employee;
-import salarycalculation.domain.employee.Organization;
 import salarycalculation.domain.employee.Role;
+import salarycalculation.domain.organization.Organization;
 
 /**
  * {@link Employee}の検証を行うためのカスタム Assertion クラス。

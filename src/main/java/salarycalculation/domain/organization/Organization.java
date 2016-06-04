@@ -1,4 +1,4 @@
-package salarycalculation.domain.employee;
+package salarycalculation.domain.organization;
 
 import org.apache.commons.lang.StringUtils;
 
