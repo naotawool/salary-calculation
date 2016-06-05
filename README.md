@@ -1,5 +1,8 @@
 # 給与計算
 
+master [![Build Status](https://travis-ci.org/naotawool/salary-calculation.svg?branch=master)](https://travis-ci.org/naotawool/salary-calculation)
+develop [![Build Status](https://travis-ci.org/naotawool/salary-calculation.svg?branch=develop)](https://travis-ci.org/naotawool/salary-calculation)
+
 ## 給与計算の基本構造
 
 __差引支給額__ = __総支給額__ - __控除額__
