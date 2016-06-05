@@ -58,6 +58,7 @@ public class Employee extends BaseEntity<Integer> {
     /** 1時間当たりの時間外手当金額 */
     private Money amountOverTimePerHour;
 
+    /** 時間外労働 */
     private WorkOverTimes workOverTimes;
 
     public Employee(int employeeNo) {
@@ -65,9 +66,10 @@ public class Employee extends BaseEntity<Integer> {
     }
 
     /**
-     * 入社年月日を基に勤続年数を取得する。<br />
+     * 入社年月日を基に基準日に対する勤続年数を取得する。<br />
      * 勤続年数が 1年未満の場合は 0 を返す。
      *
+     * @param 基準日
      * @return 勤続年数
      */
     // @UT
@@ -135,25 +137,29 @@ public class Employee extends BaseEntity<Integer> {
      */
     // @UT
     public Money getTotalSalary(int workYearMonth) {
+        int targetWorkYear = workYearMonth / 100;
+        int targetWorkMonth = workYearMonth % 100;
         return role.getAmount()
                 .add(capability.getAmount())
-                .add(getAllowance(BusinessDate.of(workYearMonth / 100, workYearMonth % 100, 1)))
+                // 該当年月の１日の諸手当を追加する
+                .add(getAllowance(BusinessDate.of(targetWorkYear, targetWorkMonth, 1)))
                 .add(getOvertimeAmount(workYearMonth));
     }
 
     /**
-     * 現在時点での諸手当を取得する。
+     * 基準日に対する諸手当を取得する。
      *
+     * @param 基準日
      * @return 諸手当
      */
     public Money getAllowance(BusinessDate targetDate) {
+        int attendanceMonth = calculateAttendanceMonth(targetDate);
         // 諸手当を求める
-
         Money totalAllowance = commuteAmount
                 .add(rentAmount)
                 .add(capability.getSeparatedAllowance())
                 // 勤続手当の取得
-                .add(LongServiceAllowance.targetAllowanance(calculateAttendanceMonth(targetDate)).allowance());
+                .add(LongServiceAllowance.targetAllowanance(attendanceMonth).allowance());
 
         return totalAllowance;
 
@@ -213,6 +219,11 @@ public class Employee extends BaseEntity<Integer> {
         return calculateSaralyPerMonth().multiply(12);
     }
 
+    /**
+     * 一ヶ月あたりの給与を算出する。
+     *
+     * @return 一ヶ月あたりの給与
+     */
     private Money calculateSaralyPerMonth() {
         // 基本給を求める
         return role.getAmount()

@@ -3,6 +3,11 @@ package salarycalculation.domain.employee;
 import salarycalculation.utils.BaseValueObject;
 import salarycalculation.utils.Money;
 
+/**
+ * ロール VO。
+ * @author MASAYUKI
+ *
+ */
 public class Role extends BaseValueObject {
 
     /** 等級 */
