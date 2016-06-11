@@ -9,7 +9,7 @@ import org.apache.commons.dbutils.ResultSetHandler;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.lang.StringUtils;
 
-import salarycalculation.entity.Role;
+import salarycalculation.database.model.RoleRecord;
 import salarycalculation.exception.RecordNotFoundException;
 import salarycalculation.exception.RuntimeSQLException;
 
@@ -37,13 +37,13 @@ public class RoleDao {
      * @param rank 等級
      * @return 役割等級
      */
-    public Role get(String rank) {
+    public RoleRecord get(String rank) {
         verify(rank);
 
-        ResultSetHandler<Role> rsHandler = new BeanHandler<Role>(Role.class);
+        ResultSetHandler<RoleRecord> rsHandler = new BeanHandler<RoleRecord>(RoleRecord.class);
         QueryRunner runner = new QueryRunner();
 
-        Role result = null;
+        RoleRecord result = null;
         try {
             result = runner.query(connection, "select * from role where rank = '" + rank + "'",
                     rsHandler);
@@ -52,7 +52,7 @@ public class RoleDao {
         }
 
         if (result == null) {
-            throw new RecordNotFoundException(Role.class, rank);
+            throw new RecordNotFoundException(RoleRecord.class, rank);
         }
 
         return result;

@@ -4,14 +4,14 @@ import org.apache.commons.lang.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import salarycalculation.entity.Employee;
+import salarycalculation.database.model.EmployeeRecord;
 
 /**
- * {@link Employee}に対する検証をまとめたカスタム Matcher。
+ * {@link EmployeeRecord}に対する検証をまとめたカスタム Matcher。
  *
  * @author naotake
  */
-public class EmployeeAssertion extends TypeSafeMatcher<Employee> {
+public class EmployeeAssertion extends TypeSafeMatcher<EmployeeRecord> {
 
     private Assertions assertions;
     private Object expected;
@@ -22,7 +22,7 @@ public class EmployeeAssertion extends TypeSafeMatcher<Employee> {
     }
 
     @Override
-    protected boolean matchesSafely(Employee actual) {
+    protected boolean matchesSafely(EmployeeRecord actual) {
         return assertions.equals(actual, this.expected);
     }
 
@@ -32,12 +32,12 @@ public class EmployeeAssertion extends TypeSafeMatcher<Employee> {
     }
 
     @Override
-    protected void describeMismatchSafely(Employee actual, Description mismatchDescription) {
+    protected void describeMismatchSafely(EmployeeRecord actual, Description mismatchDescription) {
         mismatchDescription.appendValue(assertions + " is " + assertions.resolveActual(actual));
     }
 
     /**
-     * {@link Employee}の社員番号を検証する Matcher を生成する。
+     * {@link EmployeeRecord}の社員番号を検証する Matcher を生成する。
      *
      * @param expected 期待する社員番号
      * @return {@link EmployeeAssertion}
@@ -47,7 +47,7 @@ public class EmployeeAssertion extends TypeSafeMatcher<Employee> {
     }
 
     /**
-     * {@link Employee}の社員名を検証する Matcher を生成する。
+     * {@link EmployeeRecord}の社員名を検証する Matcher を生成する。
      *
      * @param expected 期待する社員名
      * @return {@link EmployeeAssertion}
@@ -68,12 +68,12 @@ public class EmployeeAssertion extends TypeSafeMatcher<Employee> {
          */
         NO("No") {
             @Override
-            boolean equals(Employee actual, Object expected) {
+            boolean equals(EmployeeRecord actual, Object expected) {
                 return actual.getNo() == (int) expected;
             }
 
             @Override
-            Object resolveActual(Employee actual) {
+            Object resolveActual(EmployeeRecord actual) {
                 return actual.getNo();
             }
         },
@@ -83,12 +83,12 @@ public class EmployeeAssertion extends TypeSafeMatcher<Employee> {
          */
         NAME("Name") {
             @Override
-            boolean equals(Employee actual, Object expected) {
+            boolean equals(EmployeeRecord actual, Object expected) {
                 return StringUtils.equals(actual.getName(), (String) expected);
             }
 
             @Override
-            Object resolveActual(Employee actual) {
+            Object resolveActual(EmployeeRecord actual) {
                 return actual.getName();
             }
         };
@@ -99,9 +99,9 @@ public class EmployeeAssertion extends TypeSafeMatcher<Employee> {
             this.fieldName = fieldName;
         }
 
-        abstract boolean equals(Employee actual, Object expected);
+        abstract boolean equals(EmployeeRecord actual, Object expected);
 
-        abstract Object resolveActual(Employee actual);
+        abstract Object resolveActual(EmployeeRecord actual);
 
         public String toString() {
             return fieldName;

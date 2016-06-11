@@ -1,8 +1,8 @@
 package salarycalculation.matchers;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;

@@ -1,11 +1,11 @@
-package salarycalculation.entity;
+package salarycalculation.database.model;
 
 /**
  * 能力等級を表す Entity。
  *
  * @author naotake
  */
-public class Capability {
+public class CapabilityRecord {
 
     /** 等級 */
     private String rank;

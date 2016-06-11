@@ -1,11 +1,11 @@
-package salarycalculation.entity;
+package salarycalculation.database.model;
 
 /**
  * 組織を現す Entity。
  *
  * @author naotake
  */
-public class Organization {
+public class OrganizationRecord {
 
     /** 組織コード */
     private String code;

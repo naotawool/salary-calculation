@@ -1,10 +1,8 @@
 package salarycalculation.database;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.hamcrest.core.Is.is;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKey;
+import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.core.Is.*;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.*;
 
 import java.util.Arrays;
 
@@ -16,7 +14,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
-import salarycalculation.entity.Role;
+import salarycalculation.database.model.RoleRecord;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**
@@ -71,7 +69,7 @@ public class RoleDaoTest {
         @Test
         public void 存在しない等級を指定した場合に例外が送出されること() {
             expect.expect(RecordNotFoundException.class);
-            expect.expect(isClass(Role.class));
+            expect.expect(isClass(RoleRecord.class));
             expect.expect(isKey("XX"));
 
             testee.get("XX");
@@ -152,7 +150,7 @@ public class RoleDaoTest {
 
             public boolean matches(Throwable actual) {
                 RecordNotFoundException casted = RecordNotFoundException.class.cast(actual);
-                return (casted.getTargetClass() == Role.class);
+                return (casted.getTargetClass() == RoleRecord.class);
             }
         };
 

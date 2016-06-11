@@ -1,8 +1,8 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static salarycalculation.matchers.OrderEmployeeDomain.orderNos;
+import static org.hamcrest.core.Is.*;
+import static org.junit.Assert.*;
+import static salarycalculation.matchers.OrderEmployeeDomain.*;
 
 import java.util.List;
 
@@ -12,6 +12,8 @@ import org.junit.experimental.theories.DataPoint;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
+
+import salarycalculation.database.repository.EmployeeRepositoryDao;
 
 /**
  * {@link EmployeeRepository}に対するテストクラス。
@@ -37,22 +39,22 @@ public class EmployeeRepositoryTest {
      */
     @Before
     public void setUp() {
-        testee = new EmployeeRepository();
+        testee = new EmployeeRepositoryDao();
     }
 
     @Theory
     public void 社員番号を基に情報を取得できること(Fixture fixture) {
-        EmployeeDomain actual = testee.get(fixture.no);
-        assertThat(actual.getNo(), is(fixture.expectedNo));
-        assertThat(actual.getEntity().getName(), is(fixture.expectedName));
+        Employee actual = testee.get(fixture.no);
+        assertThat(actual.getId(), is(fixture.expectedNo));
+        assertThat(actual.getName().getFullName(), is(fixture.expectedName));
         assertThat(actual.getRole().getRank(), is(fixture.expectedRoleRank));
-        assertThat(actual.getCapability().getRank(), is(fixture.expectedCapabilityRank));
+        assertThat(actual.getCapability().getRank().name(), is(fixture.expectedCapabilityRank));
         assertThat(actual.getOrganization().getName(), is(fixture.expectedOrganizationName));
     }
 
     @Test
     public void 社員一覧を取得できること() {
-        List<EmployeeDomain> actuals = testee.findAll();
+        List<Employee> actuals = testee.findAll().getEmployees();
 
         assertThat(actuals.size(), is(4));
         assertThat(actuals, orderNos(1, 2, 3, 4));
@@ -60,7 +62,7 @@ public class EmployeeRepositoryTest {
 
     @Test
     public void 社員一覧を想定年収の昇順に取得できること() {
-        List<EmployeeDomain> actuals = testee.findAllOrderByAnnualSalary(true);
+        List<Employee> actuals = testee.findAllOrderByAnnualSalary(true).getEmployees();
 
         assertThat(actuals.size(), is(4));
         assertThat(actuals, orderNos(4, 1, 2, 3));
@@ -68,38 +70,38 @@ public class EmployeeRepositoryTest {
 
     @Test
     public void 社員一覧を想定年収の降順に取得できること() {
-        List<EmployeeDomain> actuals = testee.findAllOrderByAnnualSalary(false);
+        List<Employee> actuals = testee.findAllOrderByAnnualSalary(false).getEmployees();
 
         assertThat(actuals.size(), is(4));
         assertThat(actuals, orderNos(3, 2, 1, 4));
     }
 
     @Test
+    public void 勤続月数の最大最小の社員情報を取得できること() {
+        // 最大
+        Employee actual = testee.getByDurationMonth(true);
+        assertThat(actual.getId(), is(3));
+
+        // 最小
+        actual = testee.getByDurationMonth(false);
+        assertThat(actual.getId(), is(4));
+    }
+
+    @Test
     public void 指定年月の全社員の給与総支給額を取得できること() {
-        assertThat(testee.getSumTotalSalary(201504), is(1965412));
+        assertThat(testee.findAll().getSumTotalSalary(201504), is(1965412));
     }
 
     @Test
     public void 指定年月の全社員の手取り額平均を取得できること() {
-        assertThat(testee.getAverageTakeHome(201504), is(458387));
+        assertThat(testee.findAll().getAverageTakeHome(201504), is(458387));
     }
 
     @Test
     public void 指定した額を超える想定年収の社員数を取得できること() {
-        assertThat(testee.getCountByOverAnnualSalary(4000000), is(3));
+        assertThat(testee.findAll().getCountByOverAnnualSalary(4000000), is(3));
 
-        assertThat(testee.getCountByOverAnnualSalary(5000000), is(2));
-    }
-
-    @Test
-    public void 勤続月数の最大最小の社員情報を取得できること() {
-        // 最大
-        EmployeeDomain actual = testee.getByDurationMonth(true);
-        assertThat(actual.getNo(), is(3));
-
-        // 最小
-        actual = testee.getByDurationMonth(false);
-        assertThat(actual.getNo(), is(4));
+        assertThat(testee.findAll().getCountByOverAnnualSalary(5000000), is(2));
     }
 
     static class Fixture {

@@ -1,8 +1,8 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.collection.IsIterableContainingInOrder.*;
+import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.assertThat;
 import static salarycalculation.assertions.MyProjectAssertions.assertThat;
 
@@ -14,7 +14,8 @@ import org.junit.Test;
 import org.junit.experimental.theories.DataPoint;
 
 import salarycalculation.assertions.MyProjectSoftAssertions;
-import salarycalculation.entity.Employee;
+import salarycalculation.database.repository.EmployeeRepositoryDao;
+import salarycalculation.utils.PersonName;
 
 /**
  * {@link EmployeeRepository}に対する AssertJ を使ったテストクラス。
@@ -33,7 +34,7 @@ public class EmployeeRepositoryTest_AssertJ {
      */
     @Before
     public void setUp() {
-        testee = new EmployeeRepository();
+        testee = new EmployeeRepositoryDao();
     }
 
     /**
@@ -42,19 +43,19 @@ public class EmployeeRepositoryTest_AssertJ {
     @Test
     public void 社員一覧を社員番号の昇順に取得できること() {
         // 実行
-        List<EmployeeDomain> actuals = testee.findAll();
+        List<Employee> actuals = testee.findAll().getEmployees();
 
         // 社員番号を取り出す
-        List<Integer> actualNos = actuals.stream().map(s -> s.getNo()).collect(Collectors.toList());
+        List<Integer> actualNos = actuals.stream().map(Employee::getId).collect(Collectors.toList());
 
         // JUnit4 での検証
         assertThat(actualNos.size(), is(4));
         assertThat(actualNos, contains(1, 2, 3, 4));
 
         // AssertJ style
-        assertThat(actuals).extracting(EmployeeDomain::getNo)
-                           .hasSize(4)
-                           .containsSequence(1, 2, 3, 4);
+        assertThat(actuals).extracting(Employee::getId)
+                .hasSize(4)
+                .containsSequence(1, 2, 3, 4);
     }
 
     /**
@@ -63,19 +64,20 @@ public class EmployeeRepositoryTest_AssertJ {
     @Test
     public void 社員一覧を想定年収の昇順に社員名を取得できること() {
         // 実行
-        List<EmployeeDomain> actuals = testee.findAllOrderByAnnualSalary(true);
+        List<Employee> actuals = testee.findAllOrderByAnnualSalary(true).getEmployees();
 
         // 社員番号を取り出す
-        List<String> actualNames = actuals.stream().map(s -> s.getEntity().getName()).collect(Collectors.toList());
+        List<String> actualNames = actuals.stream().map(Employee::getName).map(PersonName::getFullName)
+                .collect(Collectors.toList());
 
         // JUnit4 での検証
         assertThat(actualNames.size(), is(4));
         assertThat(actualNames, contains("東京 次郎", "愛媛 蜜柑", "大阪 太郎", "埼玉 花子"));
 
         // AssertJ style
-        assertThat(actuals).extracting(EmployeeDomain::getEntity).extracting(Employee::getName)
-                           .hasSize(4)
-                           .containsSequence("東京 次郎", "愛媛 蜜柑", "大阪 太郎", "埼玉 花子");
+        assertThat(actuals).extracting(Employee::getName).extracting(PersonName::getFullName)
+                .hasSize(4)
+                .containsSequence("東京 次郎", "愛媛 蜜柑", "大阪 太郎", "埼玉 花子");
     }
 
     /**
@@ -84,19 +86,19 @@ public class EmployeeRepositoryTest_AssertJ {
     @Test
     public void 社員番号を基に情報を取得できること() {
         // 社員番号[1]の場合
-        EmployeeDomain actual = testee.get(fixture.no);
+        Employee actual = testee.get(fixture.no);
 
-        assertThat(actual.getNo(), is(fixture.expectedNo));
-        assertThat(actual.getEntity().getName(), is(fixture.expectedName));
+        assertThat(actual.getId(), is(fixture.expectedNo));
+        assertThat(actual.getName().getFullName(), is(fixture.expectedName));
         assertThat(actual.getRole().getRank(), is(fixture.expectedRoleRank));
-        assertThat(actual.getCapability().getRank(), is(fixture.expectedCapabilityRank));
+        assertThat(actual.getCapability().getRank().name(), is(fixture.expectedCapabilityRank));
         assertThat(actual.getOrganization().getName(), is(fixture.expectedOrganizationName));
 
         // AssertJ style
         assertThat(actual).hasNo(fixture.expectedNo).hasName(fixture.expectedName)
-                          .hasRoleRank(fixture.expectedRoleRank)
-                          .hasCapabilityRank(fixture.expectedCapabilityRank)
-                          .hasOrganizationRank(fixture.expectedOrganizationName);
+                .hasRoleRank(fixture.expectedRoleRank)
+                .hasCapabilityRank(fixture.expectedCapabilityRank)
+                .hasOrganizationRank(fixture.expectedOrganizationName);
     }
 
     /**
@@ -105,15 +107,15 @@ public class EmployeeRepositoryTest_AssertJ {
     @Test
     public void SoftAssertionsを使って社員番号を基に情報を取得できること() {
         // 社員番号[1]の場合
-        EmployeeDomain actual = testee.get(fixture.no);
+        Employee actual = testee.get(fixture.no);
 
         // AssertJ style
         MyProjectSoftAssertions softly = new MyProjectSoftAssertions();
 
         softly.assertThat(actual).hasNo(fixture.expectedNo).hasName(fixture.expectedName)
-              .hasRoleRank(fixture.expectedRoleRank)
-              .hasCapabilityRank(fixture.expectedCapabilityRank)
-              .hasOrganizationRank(fixture.expectedOrganizationName);
+                .hasRoleRank(fixture.expectedRoleRank)
+                .hasCapabilityRank(fixture.expectedCapabilityRank)
+                .hasOrganizationRank(fixture.expectedOrganizationName);
 
         softly.assertAll();
     }
@@ -134,7 +136,7 @@ public class EmployeeRepositoryTest_AssertJ {
         String expectedOrganizationName;
 
         public Fixture(String no, int expectedNo, String expectedName, String expectedRoleRank,
-                       String expectedCapabilityRank, String expectedOrganizationName) {
+                String expectedCapabilityRank, String expectedOrganizationName) {
             this.no = no;
             this.expectedNo = expectedNo;
             this.expectedName = expectedName;

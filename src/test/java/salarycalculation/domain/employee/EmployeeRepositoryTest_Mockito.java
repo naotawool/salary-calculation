@@ -1,14 +1,13 @@
-package salarycalculation.domain;
+package salarycalculation.domain.employee;
 
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKey;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.*;
+
+import java.sql.Date;
+import java.time.LocalDate;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -20,12 +19,15 @@ import org.mockito.MockitoAnnotations;
 
 import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.EmployeeDao;
-import salarycalculation.database.OrganizationDao;
 import salarycalculation.database.RoleDao;
-import salarycalculation.entity.Capability;
-import salarycalculation.entity.Employee;
-import salarycalculation.entity.Organization;
-import salarycalculation.entity.Role;
+import salarycalculation.database.model.CapabilityRecord;
+import salarycalculation.database.model.EmployeeRecord;
+import salarycalculation.database.model.OrganizationRecord;
+import salarycalculation.database.model.RoleRecord;
+import salarycalculation.database.repository.EmployeeRepositoryDao;
+import salarycalculation.database.repository.EmployeeTransformer;
+import salarycalculation.domain.organization.Organization;
+import salarycalculation.domain.organization.OrganizationRepository;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**
@@ -39,20 +41,22 @@ public class EmployeeRepositoryTest_Mockito {
     public ExpectedException expected = ExpectedException.none();
 
     @InjectMocks
-    private EmployeeRepository testee;
+    private EmployeeRepositoryDao testee;
+    @InjectMocks
+    private EmployeeTransformer transformer;
     @Mock
     private EmployeeDao mockDao;
     @Mock
-    private OrganizationDao mockOrganizationDao;
+    private OrganizationRepository mockOrganizationRepository;
     @Mock
     private RoleDao mockRoleDao;
     @Mock
     private CapabilityDao mockCapabilityDao;
 
-    private Employee entity;
+    private EmployeeRecord entity;
     private Organization organization;
-    private Role role;
-    private Capability capability;
+    private RoleRecord role;
+    private CapabilityRecord capability;
 
     /**
      * 事前処理。
@@ -61,9 +65,10 @@ public class EmployeeRepositoryTest_Mockito {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        organization = new Organization();
-        role = new Role();
-        capability = new Capability();
+        organization = new Organization("code", "name");
+        role = new RoleRecord();
+        capability = new CapabilityRecord();
+        testee.setTransFormer(this.transformer);
     }
 
     @Test
@@ -142,20 +147,24 @@ public class EmployeeRepositoryTest_Mockito {
 
         this.entity = createEntity(no, organization, null, null);
 
+        Organization record = new Organization(organization, "");
+        this.organization = record;
+
         // 振る舞いを定義
         when(mockDao.get(no)).thenReturn(this.entity);
-        when(mockOrganizationDao.get(organization)).thenReturn(this.organization);
+        when(mockOrganizationRepository.find(organization)).thenReturn(this.organization);
 
         // 実行
-        EmployeeDomain actual = testee.getSimple(no);
+        @SuppressWarnings("deprecation")
+        Employee actual = testee.getSimple(no);
 
         // 検証
-        assertThat(actual.getEntity(), sameInstance(this.entity));
-        assertThat(actual.getOrganization(), sameInstance(this.organization));
+        assertThat(actual.getName().getFullName(), is(equalTo(this.entity.getName())));
+        assertThat(actual.getOrganization().getId(), is(equalTo(organization)));
 
         // 振る舞いの検証
         verify(mockDao).get(no);
-        verify(mockOrganizationDao).get(organization);
+        verify(mockOrganizationRepository).find(organization);
     }
 
     @Test
@@ -163,28 +172,39 @@ public class EmployeeRepositoryTest_Mockito {
         String no = "101";
         String organization = "ORGANIZATION2";
         String role = "ROLE3";
-        String capability = "CAPABILITY4";
+        String capability = CapabilityRank.AS.name();
 
         this.entity = createEntity(no, organization, role, capability);
 
+        Organization record = new Organization(organization, "");
+        this.organization = record;
+
+        RoleRecord roleRecord = new RoleRecord();
+        roleRecord.setRank(role);
+        this.role = roleRecord;
+
+        CapabilityRecord capabilityRecord = new CapabilityRecord();
+        capabilityRecord.setRank(capability);
+        this.capability = capabilityRecord;
+
         // 振る舞いを定義
         when(mockDao.get(no)).thenReturn(this.entity);
-        when(mockOrganizationDao.get(organization)).thenReturn(this.organization);
+        when(mockOrganizationRepository.find(organization)).thenReturn(this.organization);
         when(mockRoleDao.get(role)).thenReturn(this.role);
         when(mockCapabilityDao.get(capability)).thenReturn(this.capability);
 
         // 実行
-        EmployeeDomain actual = testee.get(no);
+        Employee actual = testee.get(no);
 
         // 検証
-        assertThat(actual.getEntity(), sameInstance(this.entity));
-        assertThat(actual.getOrganization(), sameInstance(this.organization));
-        assertThat(actual.getRole(), sameInstance(this.role));
-        assertThat(actual.getCapability(), sameInstance(this.capability));
+        assertThat(actual.getName().getFullName(), is(equalTo(this.entity.getName())));
+        assertThat(actual.getOrganization().getId(), is(equalTo(organization)));
+        assertThat(actual.getRole().getRank(), is(equalTo(role)));
+        assertThat(actual.getCapability().getRank(), is(CapabilityRank.AS));
 
         // 振る舞いの検証
         verify(mockDao).get(no);
-        verify(mockOrganizationDao).get(organization);
+        verify(mockOrganizationRepository).find(organization);
         verify(mockRoleDao).get(role);
         verify(mockCapabilityDao).get(capability);
     }
@@ -195,15 +215,15 @@ public class EmployeeRepositoryTest_Mockito {
         String organization = "ORGANIZATION2";
 
         this.entity = createEntity(no, organization, "", "");
-        RecordNotFoundException expectException = createException(Organization.class, organization);
+        RecordNotFoundException expectException = createException(OrganizationRecord.class, organization);
 
         // 振る舞いを定義
         when(mockDao.get(no)).thenReturn(this.entity);
-        when(mockOrganizationDao.get(organization)).thenThrow(expectException);
+        when(mockOrganizationRepository.find(organization)).thenThrow(expectException);
 
         // 期待する例外内容
         expected.expect(RecordNotFoundException.class);
-        expected.expect(isClass(Organization.class));
+        expected.expect(isClass(OrganizationRecord.class));
         expected.expect(isKey(organization));
 
         // 実行
@@ -211,13 +231,15 @@ public class EmployeeRepositoryTest_Mockito {
             testee.get(no);
         } finally {
             verify(mockDao).get(no);
-            verify(mockOrganizationDao).get(organization);
+            verify(mockOrganizationRepository).find(organization);
         }
     }
 
-    private Employee createEntity(String no, String organization, String role, String capability) {
-        Employee entity = new Employee();
+    private EmployeeRecord createEntity(String no, String organization, String role, String capability) {
+        EmployeeRecord entity = new EmployeeRecord();
         entity.setNo(Integer.valueOf(no));
+        entity.setBirthday(Date.valueOf(LocalDate.ofEpochDay(0)));
+        entity.setJoinDate(Date.valueOf(LocalDate.ofEpochDay(0)));
         entity.setOrganization(organization);
         entity.setRoleRank(role);
         entity.setCapabilityRank(capability);

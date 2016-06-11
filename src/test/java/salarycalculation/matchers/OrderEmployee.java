@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import salarycalculation.entity.Employee;
+import salarycalculation.database.model.EmployeeRecord;
 
 /**
- * {@link Employee}一覧の並び順を検証する Matcher。
+ * {@link EmployeeRecord}一覧の並び順を検証する Matcher。
  *
  * @author naotake
  */
-public class OrderEmployee extends TypeSafeMatcher<List<Employee>> {
+public class OrderEmployee extends TypeSafeMatcher<List<EmployeeRecord>> {
 
     private List<Integer> expected;
 
@@ -23,11 +23,11 @@ public class OrderEmployee extends TypeSafeMatcher<List<Employee>> {
     }
 
     @Override
-    public boolean matchesSafely(List<Employee> actuals) {
+    public boolean matchesSafely(List<EmployeeRecord> actuals) {
         return selectEmployeeNos(actuals).equals(expected);
     }
 
-    private List<Integer> selectEmployeeNos(List<Employee> actuals) {
+    private List<Integer> selectEmployeeNos(List<EmployeeRecord> actuals) {
         return actuals.stream().map(s -> s.getNo()).collect(Collectors.toList());
     }
 
@@ -37,13 +37,13 @@ public class OrderEmployee extends TypeSafeMatcher<List<Employee>> {
     }
 
     @Override
-    protected void describeMismatchSafely(List<Employee> actuals, Description mismatchDescription) {
+    protected void describeMismatchSafely(List<EmployeeRecord> actuals, Description mismatchDescription) {
         mismatchDescription.appendValue(selectEmployeeNos(actuals));
     }
 
     /**
-     * {@link Employee}一覧の並び順を検証する Matcher を生成する。<br />
-     * 指定された社員番号の順番に、{@link Employee} 一覧がソートされていることを検証する。
+     * {@link EmployeeRecord}一覧の並び順を検証する Matcher を生成する。<br />
+     * 指定された社員番号の順番に、{@link EmployeeRecord} 一覧がソートされていることを検証する。
      *
      * @param employeeNos 期待する社員番号の一覧
      * @return {@link OrderEmployee}
