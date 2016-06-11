@@ -5,11 +5,18 @@ import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.closeTo;
+import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyString;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
 
@@ -54,8 +61,8 @@ public class AssertjLearningTest {
 
         // AssertJ style
         assertThat(actual1).isSameAs(actual1)
-                .isNotSameAs(actual2).isNotEqualTo(actual2)
-                .isEqualByComparingTo(actual2);
+                           .isNotSameAs(actual2).isNotEqualTo(actual2)
+                           .isEqualByComparingTo(actual2);
     }
 
     @Test
@@ -93,7 +100,7 @@ public class AssertjLearningTest {
 
         // AssertJ style
         assertThat(actual.age).isBetween(20, 29)
-                .isGreaterThanOrEqualTo(20).isLessThan(30);
+                              .isGreaterThanOrEqualTo(20).isLessThan(30);
     }
 
     @Test
@@ -105,7 +112,7 @@ public class AssertjLearningTest {
 
         // AssertJ style
         assertThat(actual.birthday).hasYear(1987).hasMonth(7).hasDayOfMonth(18)
-                .hasSameTimeAs("1987-07-18");
+                                   .hasSameTimeAs("1987-07-18");
     }
 
     @Test
@@ -118,8 +125,8 @@ public class AssertjLearningTest {
 
         // AssertJ style
         assertThat(actuals).hasSize(3).isNotEmpty()
-                .contains("大阪府", "沖縄県")
-                .doesNotContain("東京都");
+                           .contains("大阪府", "沖縄県")
+                           .doesNotContain("東京都");
     }
 
     private static Learning fixture() {
