@@ -1,9 +1,8 @@
 package salarycalculation.database;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKeys;
+import static org.hamcrest.core.Is.*;
+import static org.junit.Assert.*;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.*;
 
 import java.math.BigDecimal;
 
@@ -12,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import salarycalculation.entity.Work;
+import salarycalculation.database.model.WorkRecord;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**
@@ -37,7 +36,7 @@ public class WorkDaoTest {
 
     @Test
     public void 該当社員の稼動情報を取得できること() {
-        Work actual = testee.getByYearMonth(1, 201504);
+        WorkRecord actual = testee.getByYearMonth(1, 201504);
 
         assertThat(actual.getEmployeeNo(), is(1));
         assertThat(actual.getWorkYearMonth(), is(201504));
@@ -47,7 +46,7 @@ public class WorkDaoTest {
     @Test
     public void 存在しない稼動情報を指定した場合に例外が送出されること() {
         expect.expect(RecordNotFoundException.class);
-        expect.expect(isClass(Work.class));
+        expect.expect(isClass(WorkRecord.class));
         expect.expect(isKeys(99, 209912));
 
         testee.getByYearMonth(99, 209912);
