@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
+import lombok.ToString;
 import salarycalculation.utils.BaseValueObject;
 import salarycalculation.utils.LocalDates;
 
@@ -14,6 +15,7 @@ import salarycalculation.utils.LocalDates;
  *
  * @author naotake
  */
+@ToString
 public class BusinessDate extends BaseValueObject {
 
     private final LocalDate calendar;
@@ -69,5 +71,4 @@ public class BusinessDate extends BaseValueObject {
     public static BusinessDate of(int year, int month, int dayOfMonth) {
         return of(LocalDate.of(year, month, dayOfMonth));
     }
-
 }

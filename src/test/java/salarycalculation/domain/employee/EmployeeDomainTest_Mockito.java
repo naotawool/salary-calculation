@@ -116,7 +116,7 @@ public class EmployeeDomainTest_Mockito {
     public void 社員の残業代を取得できること() {
         // 時間外手当を設定
         Employee entity = new Employee(101);
-        entity.setWorkOverTime1hAmount(Money.from(10));
+        entity.setAmountOverTimePerHour(Money.from(10));
         entity.setCapability(Capability.normal(CapabilityRank.AS, Money.ZERO));
 
         WorkOverTimes workOverTimes = new WorkOverTimes(Arrays.asList(WorkOverTime.builder(201504, 101)

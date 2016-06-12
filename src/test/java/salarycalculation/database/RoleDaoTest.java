@@ -1,8 +1,10 @@
 package salarycalculation.database;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.hamcrest.core.Is.*;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.hamcrest.core.Is.is;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKey;
 
 import java.util.Arrays;
 
@@ -165,7 +167,7 @@ public class RoleDaoTest {
 
             public boolean matches(Throwable actual) {
                 RecordNotFoundException casted = RecordNotFoundException.class.cast(actual);
-                return Arrays.equals(casted.getKey(), expects);
+                return Arrays.equals(casted.getKeys(), expects);
             }
         }
     }

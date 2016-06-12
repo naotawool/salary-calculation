@@ -1,8 +1,8 @@
 package salarycalculation.matchers;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -47,15 +47,15 @@ public class RecordNotFoundExceptionMatcher extends TypeSafeMatcher<RecordNotFou
 
     private void assertKey(RecordNotFoundException actual) {
         if (expectKey != null) {
-            assertThat(actual.getKey().length, is(1));
-            assertThat(actual.getKey()[0], is(expectKey));
+            assertThat(actual.getKeys().length, is(1));
+            assertThat(actual.getKeys()[0], is(expectKey));
         }
     }
 
     private void assertKeys(RecordNotFoundException actual) {
         if (expectKeys != null) {
-            assertThat(actual.getKey().length, is(expectKeys.length));
-            assertThat(actual.getKey(), is(expectKeys));
+            assertThat(actual.getKeys().length, is(expectKeys.length));
+            assertThat(actual.getKeys(), is(expectKeys));
         }
     }
 
