@@ -1,8 +1,12 @@
 package salarycalculation.domain.employee;
 
+import lombok.Getter;
+import lombok.ToString;
 import salarycalculation.utils.BaseValueObject;
 import salarycalculation.utils.Money;
 
+@Getter
+@ToString
 public class Capability extends BaseValueObject {
 
     /** 等級 */
@@ -27,14 +31,6 @@ public class Capability extends BaseValueObject {
 
     public static Capability normal(CapabilityRank rank, Money amount) {
         return new Capability(rank, amount);
-    }
-
-    public Money getAmount() {
-        return amount;
-    }
-
-    public CapabilityRank getRank() {
-        return rank;
     }
 
     public Money getSeparatedAllowance() {

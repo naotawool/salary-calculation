@@ -23,7 +23,6 @@ public class Employees {
      * @param yearMonth 算出対象の年月 (e.g. 201504)
      * @return 全社員の手取り額平均
      */
-    // @UT
     public int getAverageTakeHome(int yearMonth) {
 
         return (int) employees.stream()
@@ -38,7 +37,6 @@ public class Employees {
      * @param condition 視定額
      * @return 該当する社員数
      */
-    // @UT
     public int getCountByOverAnnualSalary(int condition) {
         Money assumption = Money.from(condition);
         return (int) employees.stream()
@@ -54,7 +52,6 @@ public class Employees {
      * @param yearMonth 算出対象の年月 (e.g. 201504)
      * @return 全社員の総支給額合計
      */
-    // @UT
     public int getSumTotalSalary(int yearMonth) {
         return employees.stream()
                 .mapToInt(e -> e.getTotalSalary(yearMonth).value().intValue())

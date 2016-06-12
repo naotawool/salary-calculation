@@ -1,6 +1,6 @@
 package salarycalculation.database.repository;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Comparator;
 import java.util.List;
@@ -40,7 +40,6 @@ public class EmployeeRepositoryDao implements EmployeeRepository {
      * @param no 社員番号
      * @return 社員情報
      */
-    // @UT
     @Override
     public Employee get(String no) {
         EmployeeRecord employee = dao.get(no);
@@ -82,7 +81,6 @@ public class EmployeeRepositoryDao implements EmployeeRepository {
      *
      * @return 社員情報一覧
      */
-    // @UT
     @Override
     public Employees findAll() {
         return new Employees(findAllAsStream()
@@ -96,7 +94,6 @@ public class EmployeeRepositoryDao implements EmployeeRepository {
      * @param ascending 想定年収の昇順（低い順）なら true
      * @return 社員情報一覧
      */
-    // @UT
     @Override
     public Employees findAllOrderByAnnualSalary(final boolean ascending) {
         // 並び替え
@@ -136,7 +133,6 @@ public class EmployeeRepositoryDao implements EmployeeRepository {
      * @param selectMax 最大を求める場合は true
      * @return 社員情報
      */
-    // @UT
     @Override
     public Employee getByDurationMonth(boolean selectMax) {
 

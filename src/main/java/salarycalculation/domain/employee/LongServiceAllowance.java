@@ -3,14 +3,16 @@ package salarycalculation.domain.employee;
 import java.util.Arrays;
 import java.util.function.Predicate;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import salarycalculation.utils.Money;
 
 /**
- * 勤続手当のEnum
+ * 勤続手当の種類を表す列挙型。
  *
  * @author MASAYUKI
- *
  */
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum LongServiceAllowance {
     /** ３年手当 */
     THREE(3, Money.from(3000)),
@@ -23,23 +25,18 @@ public enum LongServiceAllowance {
     /** 無し */
     NONE(0, Money.ZERO);
 
-    /** 手当額 */
-    private final Money allowance;
-
     /** 勤続年数 */
     private final int attendanceYear;
 
-    private LongServiceAllowance(int attendaceYear, Money allowance) {
-        this.allowance = allowance;
-        this.attendanceYear = attendaceYear;
-    }
+    /** 手当額 */
+    private final Money allowance;
 
     public Money allowance() {
         return allowance;
     }
 
     /**
-     * 勤続月数が手当がもらえる月数だった場合は勤続手当を返却する
+     * 勤続月数が手当がもらえる月数だった場合は勤続手当を返却する。
      *
      * @param attendanceMonth 勤続月数
      * @return 勤続手当がもらえる月数だったら該当する勤続手当、そうでない場合はEmpty
@@ -52,9 +49,8 @@ public enum LongServiceAllowance {
         Predicate<LongServiceAllowance> isJustFirstMonth = e -> attendanceMonth % 12 == 0;
 
         return Arrays.stream(values())
-                .filter(isCorrespondingYear.and(isJustFirstMonth))
-                .findFirst()
-                .orElse(LongServiceAllowance.NONE);
+                     .filter(isCorrespondingYear.and(isJustFirstMonth))
+                     .findFirst()
+                     .orElse(LongServiceAllowance.NONE);
     }
-
 }

@@ -3,15 +3,15 @@ package salarycalculation.utils;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
+import lombok.ToString;
 
 /**
- * お金を表すVO。円とかの通貨単位もつといい感じになる予定。
+ * お金を表すVO。<br />
+ * 円とかの通貨単位もつといい感じになる予定。
  *
  * @author MASAYUKI
- *
  */
+@ToString
 public class Money extends BaseValueObject {
 
     /** 0円 */
@@ -41,7 +41,6 @@ public class Money extends BaseValueObject {
     }
 
     public Money minus(Money money) {
-
         return Money.from(value.subtract(money.value));
     }
 
@@ -49,14 +48,7 @@ public class Money extends BaseValueObject {
         return this.value;
     }
 
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-    }
-
     public boolean isGraterThan(Money target) {
-
         return this.value.compareTo(target.value) > 0;
     }
-
 }

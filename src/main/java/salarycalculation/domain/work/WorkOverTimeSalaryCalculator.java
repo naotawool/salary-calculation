@@ -5,10 +5,9 @@ import java.math.BigDecimal;
 import salarycalculation.utils.Money;
 
 /**
- * 時間外給与を計算するヘルパー
+ * 時間外給与を計算するヘルパー。
  *
  * @author MASAYUKI
- *
  */
 public class WorkOverTimeSalaryCalculator {
 

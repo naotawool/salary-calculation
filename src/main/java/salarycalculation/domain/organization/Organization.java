@@ -2,28 +2,23 @@ package salarycalculation.domain.organization;
 
 import org.apache.commons.lang.StringUtils;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import salarycalculation.utils.BaseEntity;
 
+@AllArgsConstructor
 public class Organization extends BaseEntity<String> {
 
     /** 組織コード */
-    private String code;
+    private final String code;
 
     /** 組織名 */
-    private String name;
-
-    public Organization(String code, String name) {
-        this.code = code;
-        this.name = name;
-    }
+    @Getter
+    private final String name;
 
     @Override
     public String getId() {
         return code;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public boolean equalsName(String name) {
