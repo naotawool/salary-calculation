@@ -48,3 +48,9 @@ __控除額__ = 健康保険 + 厚生年金 + 所得税 + 住民税
 1. プロジェクト -> 右クリック -> プロパティ -> Java コード・スタイル -> フォーマッター
 2. インポート -> assertj-eclipse-extend-formatter.xml を選択 -> アクティブなプロファイルが「assertj」になっていることを確認 -> 適用
 
+----
+
+# Start dropwizard application
+
+`java -jar salary-calculation.jar server salary-calculation.yml`
+
