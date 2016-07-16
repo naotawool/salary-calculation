@@ -20,7 +20,7 @@ import salarycalculation.utils.Money;
  *
  * @author naotake
  */
-public class EmployeeDomainTest_Mockito {
+public class EmployeeTest_Mockito {
 
     private Employee testee;
 
