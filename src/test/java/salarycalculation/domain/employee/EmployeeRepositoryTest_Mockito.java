@@ -1,10 +1,14 @@
 package salarycalculation.domain.employee;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.*;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
+import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKey;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -13,9 +17,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.EmployeeDao;
@@ -35,6 +40,7 @@ import salarycalculation.exception.RecordNotFoundException;
  *
  * @author naotake
  */
+@RunWith(MockitoJUnitRunner.class)
 public class EmployeeRepositoryTest_Mockito {
 
     @Rule
@@ -63,12 +69,10 @@ public class EmployeeRepositoryTest_Mockito {
      */
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
-
         organization = new Organization("code", "name");
         role = new RoleRecord();
         capability = new CapabilityRecord();
-        testee.setTransFormer(this.transformer);
+        testee.setTransFormer(transformer);
     }
 
     @Test

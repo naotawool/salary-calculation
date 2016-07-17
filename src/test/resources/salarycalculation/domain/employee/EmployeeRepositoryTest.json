@@ -1,0 +1,102 @@
+{
+    "employee": [
+        {
+            "no": 1,
+            "name": "愛媛 蜜柑",
+            "organization": "DEV2",
+            "birthday": "1987-07-18",
+            "joinDate": "2013-04-01",
+            "roleRank": "A3",
+            "capabilityRank": "SE",
+            "commuteAmount": 8900,
+            "rentAmount": 32000,
+            "healthInsuranceAmount": 6432,
+            "employeePensionAmount": 12000,
+            "incomeTaxAmount": 3200,
+            "inhabitantTaxAmount": 8900,
+            "workOverTime1hAmount": 1250
+        },
+        {
+            "no": 2,
+            "name": "大阪 太郎",
+            "organization": "DEV1",
+            "birthday": "1988-09-30",
+            "joinDate": "2010-08-01",
+            "roleRank": "C4",
+            "capabilityRank": "PL",
+            "commuteAmount": 3320,
+            "rentAmount": 50000,
+            "healthInsuranceAmount": 3200,
+            "employeePensionAmount": 13000,
+            "incomeTaxAmount": 4000,
+            "inhabitantTaxAmount": 10300,
+            "workOverTime1hAmount": 1570
+        },
+        {
+            "no": 3,
+            "name": "埼玉 花子",
+            "organization": "DEV1",
+            "birthday": "1982-08-06",
+            "joinDate": "2008-04-01",
+            "roleRank": "M2",
+            "capabilityRank": "PM",
+            "commuteAmount": 13000,
+            "rentAmount": 12000,
+            "healthInsuranceAmount": 9811,
+            "employeePensionAmount": 13500,
+            "incomeTaxAmount": 5230,
+            "inhabitantTaxAmount": 7300,
+            "workOverTime1hAmount": 1830
+        },
+        {
+            "no": 4,
+            "name": "東京 次郎",
+            "organization": "DEV3",
+            "birthday": "1983-10-10",
+            "joinDate": "2014-12-01",
+            "roleRank": "A1",
+            "capabilityRank": "AS",
+            "commuteAmount": 5910,
+            "rentAmount": 40000,
+            "healthInsuranceAmount": 5391,
+            "employeePensionAmount": 11500,
+            "incomeTaxAmount": 2900,
+            "inhabitantTaxAmount": 15200,
+            "workOverTime1hAmount": 1110
+        }
+    ],
+    "work": [
+        {
+            "employeeNo": 1,
+            "workYearMonth": 201504,
+            "workOverTime": 10,
+            "lateNightOverTime": 0,
+            "holidayWorkTime": 13.5,
+            "holidayLateNightOverTime": 3.5
+        },
+        {
+            "employeeNo": 2,
+            "workYearMonth": 201504,
+            "workOverTime": 5.5,
+            "lateNightOverTime": 0,
+            "holidayWorkTime": 0,
+            "holidayLateNightOverTime": 0
+        },
+        {
+            "employeeNo": 3,
+            "workYearMonth": 201504,
+            "workOverTime": 29,
+            "lateNightOverTime": 11,
+            "holidayWorkTime": 13.5,
+            "holidayLateNightOverTime": 10.5
+        },
+        {
+            "employeeNo": 4,
+            "workYearMonth": 201504,
+            "workOverTime": 13.5,
+            "lateNightOverTime": 3,
+            "holidayWorkTime": 13.5,
+            "holidayLateNightOverTime": 5
+        }
+    ]
+}
