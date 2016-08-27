@@ -7,15 +7,11 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-
 /**
  * 日付APIのユーティリティ.
  *
  * @author MASAYUKI
  */
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LocalDates {
 
     public static Date toDate(LocalDateTime localDateTime) {

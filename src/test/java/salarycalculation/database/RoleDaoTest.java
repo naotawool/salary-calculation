@@ -140,7 +140,7 @@ public class RoleDaoTest implements RoleSetupSupport {
 
         public boolean matches(Throwable actual) {
             RecordNotFoundException casted = RecordNotFoundException.class.cast(actual);
-            return Arrays.equals(casted.getKeys(), expects);
+            return Arrays.equals(casted.getKey(), expects);
         }
     }
 }
