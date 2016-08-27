@@ -2,7 +2,6 @@ package salarycalculation.database.repository;
 
 import java.util.Optional;
 
-import lombok.Setter;
 import salarycalculation.database.CapabilityDao;
 import salarycalculation.database.RoleDao;
 import salarycalculation.database.model.CapabilityRecord;
@@ -26,7 +25,6 @@ import salarycalculation.utils.PersonName;
  *
  * @author MASAYUKI
  */
-@Setter
 public class EmployeeTransformer {
 
     private OrganizationRepository organizationRepository;
@@ -45,7 +43,7 @@ public class EmployeeTransformer {
      * 従業員レコードをEntityに変換する。
      *
      * @param employeeRecord
-     * @return {@link Employee}
+     * @return
      */
     public Employee transformToEntity(EmployeeRecord employeeRecord) {
 
@@ -107,11 +105,27 @@ public class EmployeeTransformer {
         entity.setInhabitantTaxAmount(Money.from(employeeRecord.getInhabitantTaxAmount()));
         entity.setRentAmount(Money.from(employeeRecord.getRentAmount()));
 
-        entity.setAmountOverTimePerHour(Money.from(employeeRecord.getWorkOverTime1hAmount()));
+        entity.setWorkOverTime1hAmount(Money.from(employeeRecord.getWorkOverTime1hAmount()));
 
         if (works.isPresent()) {
             entity.setWorkTimes(works.get());
         }
         return entity;
+    }
+
+    public void setRoleDao(RoleDao roleDao) {
+        this.roleDao = roleDao;
+    }
+
+    public void setCapabilityDao(CapabilityDao capabilityDao) {
+        this.capabilityDao = capabilityDao;
+    }
+
+    public void setOrganizationRepository(OrganizationRepository organizationRepository) {
+        this.organizationRepository = organizationRepository;
+    }
+
+    public void setWorkRepository(WorkRepository workRepository) {
+        this.workRepository = workRepository;
     }
 }

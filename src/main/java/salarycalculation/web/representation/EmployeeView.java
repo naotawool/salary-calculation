@@ -1,9 +1,10 @@
 package salarycalculation.web.representation;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Getter;
-import lombok.ToString;
 import salarycalculation.utils.PersonName;
 
 /**
@@ -11,8 +12,6 @@ import salarycalculation.utils.PersonName;
  *
  * @author naotake
  */
-@Getter
-@ToString
 public class EmployeeView {
 
     private final Integer no;
@@ -23,5 +22,18 @@ public class EmployeeView {
     public EmployeeView(Integer no, PersonName name) {
         this.no = no;
         this.name = name.getFullName();
+    }
+
+    public Integer getNo() {
+        return no;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }
