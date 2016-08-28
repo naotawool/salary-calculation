@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 group = 'salary-calculation'
-version = '2.0.1-SNAPSHOT'
+version = '2.1.0'
 
 description = """salary-calculation"""
 
