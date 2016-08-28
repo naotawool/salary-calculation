@@ -2,8 +2,6 @@ package salarycalculation.domain.employee;
 
 import java.util.Optional;
 
-import lombok.Getter;
-import lombok.Setter;
 import salarycalculation.domain.organization.Organization;
 import salarycalculation.domain.work.WorkOverTime;
 import salarycalculation.domain.work.WorkOverTimeSalaryCalculator;
@@ -18,8 +16,6 @@ import salarycalculation.utils.PersonName;
  * @author naotake
  * @author MASAYUKI
  */
-@Getter
-@Setter
 public class Employee extends BaseEntity<Integer> {
 
     private final Integer employeeNo;
@@ -64,7 +60,7 @@ public class Employee extends BaseEntity<Integer> {
     private Money amountOverTimePerHour;
 
     /** 時間外労働 */
-    private WorkOverTimes workTimes;
+    private WorkOverTimes workOverTimes;
 
     public Employee(int employeeNo) {
         this.employeeNo = employeeNo;
@@ -77,6 +73,7 @@ public class Employee extends BaseEntity<Integer> {
      * @param 基準日
      * @return 勤続年数
      */
+    // @UT
     public int getDurationYear(BusinessDate targetDate) {
         int durationMonth = calculateAttendanceMonth(targetDate);
         return (durationMonth / 12);
@@ -100,6 +97,7 @@ public class Employee extends BaseEntity<Integer> {
      *
      * @return 勤続月数
      */
+    // @UT
     public int calculateAttendanceMonth(BusinessDate targetDate) {
         int periodByMonth = joinDate.calculatePeriodByMonth(targetDate);
         // 勤続月数は二つの業務日付の差から１を足したもの
@@ -112,6 +110,7 @@ public class Employee extends BaseEntity<Integer> {
      * @param workYearMonth 稼動年月 (e.g. 201504)
      * @return 給料の手取り額
      */
+    // @UT
     public Money getTakeHomeAmount(int workYearMonth) {
         // 総支給額を求める
         Money totalSalary = getTotalSalary(workYearMonth);
@@ -137,10 +136,12 @@ public class Employee extends BaseEntity<Integer> {
      * @param workYearMonth 稼動年月 (e.g. 201504)
      * @return 給料の総支給額
      */
+    // @UT
     public Money getTotalSalary(int workYearMonth) {
         int targetWorkYear = workYearMonth / 100;
         int targetWorkMonth = workYearMonth % 100;
-        return baseSalary()
+        return role.getAmount()
+                .add(capability.getAmount())
                 // 該当年月の１日の諸手当を追加する
                 .add(getAllowance(BusinessDate.of(targetWorkYear, targetWorkMonth, 1)))
                 .add(getOvertimeAmount(workYearMonth));
@@ -162,6 +163,7 @@ public class Employee extends BaseEntity<Integer> {
                 .add(LongServiceAllowance.targetAllowanance(attendanceMonth).allowance());
 
         return totalAllowance;
+
     }
 
     /**
@@ -170,6 +172,7 @@ public class Employee extends BaseEntity<Integer> {
      * @param workYearMonth 稼動年月 (e.g. 201504)
      * @return 残業代
      */
+    // @UT
     public Money getOvertimeAmount(int workYearMonth) {
 
         // マネージャ職は残業代なし
@@ -179,7 +182,7 @@ public class Employee extends BaseEntity<Integer> {
         }
 
         // 稼動情報を取得
-        Optional<WorkOverTime> workOverTimeOpt = workTimes.getWorkOverTime(workYearMonth);
+        Optional<WorkOverTime> workOverTimeOpt = workOverTimes.getWorkOverTime(workYearMonth);
 
         return workOverTimeOpt.map(workOverTime -> WorkOverTimeSalaryCalculator.create(amountOverTimePerHour)
                 // 時間外手当
@@ -211,6 +214,7 @@ public class Employee extends BaseEntity<Integer> {
      *
      * @return 想定年収
      */
+    // @UT
     public Money getAnnualTotalSalaryPlan() {
         // 想定年収を求める
         return calculateSaralyPerMonth().multiply(12);
@@ -223,17 +227,129 @@ public class Employee extends BaseEntity<Integer> {
      */
     private Money calculateSaralyPerMonth() {
         // 基本給を求める
-        return baseSalary()
+        return role.getAmount()
+                // 能力手当を足す
+                .add(capability.getAmount())
                 // 別途手当を足す
                 .add(capability.getSeparatedAllowance());
-    }
 
-    private Money baseSalary() {
-        return role.getAmount().add(capability.getAmount());
     }
 
     @Override
     public Integer getId() {
         return this.employeeNo;
+    }
+
+    public PersonName getName() {
+        return this.name;
+    }
+
+    public Role getRole() {
+        return this.role;
+    }
+
+    public Capability getCapability() {
+        return this.capability;
+    }
+
+    public Organization getOrganization() {
+        return this.organization;
+    }
+
+    public void setCommuteAmount(Money commuteAmount) {
+        this.commuteAmount = commuteAmount;
+
+    }
+
+    public void setRentAmount(Money rentAmount) {
+        this.rentAmount = rentAmount;
+    }
+
+    public void setCapability(Capability capability) {
+        this.capability = capability;
+    }
+
+    public void setJoinDate(BusinessDate joinDate) {
+        this.joinDate = joinDate;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public BusinessDate getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(BusinessDate birthDay) {
+        this.birthDay = birthDay;
+    }
+
+    public Money getHealthInsuranceAmount() {
+        return healthInsuranceAmount;
+    }
+
+    public void setHealthInsuranceAmount(Money healthInsuranceAmount) {
+        this.healthInsuranceAmount = healthInsuranceAmount;
+    }
+
+    public Money getEmployeePensionAmount() {
+        return employeePensionAmount;
+    }
+
+    public void setEmployeePensionAmount(Money employeePensionAmount) {
+        this.employeePensionAmount = employeePensionAmount;
+    }
+
+    public Money getIncomeTaxAmount() {
+        return incomeTaxAmount;
+    }
+
+    public void setIncomeTaxAmount(Money incomeTaxAmount) {
+        this.incomeTaxAmount = incomeTaxAmount;
+    }
+
+    public Money getInhabitantTaxAmount() {
+        return inhabitantTaxAmount;
+    }
+
+    public void setInhabitantTaxAmount(Money inhabitantTaxAmount) {
+        this.inhabitantTaxAmount = inhabitantTaxAmount;
+    }
+
+    public Money getWorkOverTime1hAmount() {
+        return amountOverTimePerHour;
+    }
+
+    public void setWorkOverTime1hAmount(Money workOverTime1hAmount) {
+        this.amountOverTimePerHour = workOverTime1hAmount;
+    }
+
+    public WorkOverTimes getWorkTimes() {
+        return workOverTimes;
+    }
+
+    public void setWorkTimes(WorkOverTimes workTimes) {
+        this.workOverTimes = workTimes;
+    }
+
+    public BusinessDate getJoinDate() {
+        return joinDate;
+    }
+
+    public Money getCommuteAmount() {
+        return commuteAmount;
+    }
+
+    public Money getRentAmount() {
+        return rentAmount;
+    }
+
+    public void setName(PersonName name) {
+        this.name = name;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }

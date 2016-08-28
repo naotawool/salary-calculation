@@ -1,25 +1,23 @@
 package salarycalculation.domain.employee;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
-import salarycalculation.database.model.EmployeeRecord;
 import salarycalculation.utils.Money;
 
 /**
- * {@link EmployeeRecord}に対するテストクラス。
+ * {@link Employee}に対するテストクラス。
  *
  * @author naotake
  */
 @RunWith(Enclosed.class)
-public class EmployeeDomainTest {
+public class EmployeeTest {
 
-    public static class 入社3年未満の場合 extends EmployeeDomainTestBase {
+    public static class 入社3年未満の場合 extends EmployeeTestBase {
 
         @Test
         public void 通常の手当を取得できること() {
@@ -28,18 +26,18 @@ public class EmployeeDomainTest {
 
             BusinessDate now = BusinessDate.of(2017, 2, 28);
             // 通勤手当と住宅手当の合計だけ
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(2500).add(Money.from(20000)))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(2500 + 20000));
         }
     }
 
-    public static class 入社丸3年目の場合 extends EmployeeDomainTestBase {
+    public static class 入社丸3年目の場合 extends EmployeeTestBase {
 
         @Test
         public void 諸手当を_3000_取得できること() {
             BusinessDate now = BusinessDate.of(2017, 3, 31);
 
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(3000))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(3000));
         }
 
         @Test
@@ -49,7 +47,7 @@ public class EmployeeDomainTest {
             testee.setCapability(Capability.pl(Money.ZERO));
 
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(3000).add(Money.from(10000)))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(3000 + 10000));
         }
 
         @Test
@@ -58,27 +56,27 @@ public class EmployeeDomainTest {
             testee.setCapability(Capability.pm(Money.ZERO));
 
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(3000).add(Money.from(30000)))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(3000 + 30000));
         }
     }
 
-    public static class 入社丸5年目の場合 extends EmployeeDomainTestBase {
+    public static class 入社丸5年目の場合 extends EmployeeTestBase {
 
         @Test
         public void 諸手当を_5000_取得できること2() {
 
             BusinessDate now = BusinessDate.of(2019, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(5000))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(5000));
         }
 
         @Test
         public void PL_の場合_諸手当を_15000_取得できること() {
             testee.setCapability(Capability.pl(Money.ZERO));
 
-            BusinessDate now = BusinessDate.of(2019,3,31);
+            BusinessDate now = BusinessDate.of(2019, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(5000).add(Money.from(10000)))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(5000 + 10000));
         }
 
         @Test
@@ -87,18 +85,18 @@ public class EmployeeDomainTest {
 
             BusinessDate now = BusinessDate.of(2019, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(5000).add(Money.from(30000)))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(5000 + 30000));
         }
     }
 
-    public static class 入社丸10年目の場合 extends EmployeeDomainTestBase {
+    public static class 入社丸10年目の場合 extends EmployeeTestBase {
 
         @Test
         public void 諸手当を_10000_取得できること2() {
 
             BusinessDate now = BusinessDate.of(2024, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(10000))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(10000));
         }
 
         @Test
@@ -107,7 +105,7 @@ public class EmployeeDomainTest {
 
             BusinessDate now = BusinessDate.of(2024, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(10000 + 10000))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(10000 + 10000));
         }
 
         @Test
@@ -116,18 +114,18 @@ public class EmployeeDomainTest {
 
             BusinessDate now = BusinessDate.of(2024, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(30000 + 10000))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(30000 + 10000));
         }
     }
 
-    public static class 入社丸20年目の場合 extends EmployeeDomainTestBase {
+    public static class 入社丸20年目の場合 extends EmployeeTestBase {
 
         @Test
         public void 諸手当を_20000_取得できること2() {
 
             BusinessDate now = BusinessDate.of(2034, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(20000))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(20000));
         }
 
         @Test
@@ -136,7 +134,7 @@ public class EmployeeDomainTest {
 
             BusinessDate now = BusinessDate.of(2034, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(10000 + 20000))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(10000 + 20000));
         }
 
         @Test
@@ -145,11 +143,11 @@ public class EmployeeDomainTest {
 
             BusinessDate now = BusinessDate.of(2034, 3, 31);
             // 諸手当
-            assertThat(testee.getAllowance(now), is(equalTo(Money.from(30000 + 20000))));
+            assertThat(testee.getAllowance(now)).isEqualTo(Money.from(30000 + 20000));
         }
     }
 
-    public static class PLの場合 extends EmployeeDomainTestBase {
+    public static class PLの場合 extends EmployeeTestBase {
 
         /**
          * 事前処理。
@@ -163,16 +161,16 @@ public class EmployeeDomainTest {
 
         @Test
         public void 残業代を0で取得できること() {
-            assertThat(testee.getOvertimeAmount(201504), is(Money.ZERO));
+            assertThat(testee.getOvertimeAmount(201504)).isEqualTo(Money.ZERO);
         }
 
         @Test
         public void 想定年収を取得できること() {
-            assertThat(testee.getAnnualTotalSalaryPlan(), is(equalTo(Money.from(10000).multiply(12))));
+            assertThat(testee.getAnnualTotalSalaryPlan()).isEqualTo(Money.from(10000 * 12));
         }
     }
 
-    public static class PMの場合 extends EmployeeDomainTestBase {
+    public static class PMの場合 extends EmployeeTestBase {
 
         /**
          * 事前処理。
@@ -186,16 +184,16 @@ public class EmployeeDomainTest {
 
         @Test
         public void 残業代を0で取得できること() {
-            assertThat(testee.getOvertimeAmount(201504), is(Money.ZERO));
+            assertThat(testee.getOvertimeAmount(201504)).isEqualTo(Money.ZERO);
         }
 
         @Test
         public void 想定年収を取得できること() {
-            assertThat(testee.getAnnualTotalSalaryPlan(), is(equalTo(Money.from(30000).multiply(12))));
+            assertThat(testee.getAnnualTotalSalaryPlan()).isEqualTo(Money.from(30000 * 12));
         }
     }
 
-    private static class EmployeeDomainTestBase {
+    private static class EmployeeTestBase {
 
         protected Employee testee;
 
@@ -221,9 +219,6 @@ public class EmployeeDomainTest {
 
             // 住宅手当
             testee.setRentAmount(Money.ZERO);
-
         }
-
     }
-
 }

@@ -2,9 +2,6 @@ package salarycalculation.domain.work;
 
 import java.math.BigDecimal;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
 import salarycalculation.utils.BaseValueObject;
 
 /**
@@ -12,9 +9,6 @@ import salarycalculation.utils.BaseValueObject;
  *
  * @author MASAYUKI
  */
-@AllArgsConstructor
-@Getter
-@ToString
 public class WorkingOverUnit extends BaseValueObject {
 
     /** 時間外労働時間 */
@@ -22,4 +16,17 @@ public class WorkingOverUnit extends BaseValueObject {
 
     /** 時間外労働のタイプ */
     private final WorkingTimeType workingTimeType;
+
+    public WorkingOverUnit(BigDecimal workingTime, WorkingTimeType workingTimeType) {
+        this.workingTime = workingTime;
+        this.workingTimeType = workingTimeType;
+    }
+
+    public BigDecimal getWorkingTime() {
+        return workingTime;
+    }
+
+    public WorkingTimeType getWorkingTimeType() {
+        return workingTimeType;
+    }
 }

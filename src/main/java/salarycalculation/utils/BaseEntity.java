@@ -1,10 +1,9 @@
 package salarycalculation.utils;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-import lombok.ToString;
-
-@ToString
 public abstract class BaseEntity<T> implements Entity<T> {
 
     @Override
@@ -34,5 +33,10 @@ public abstract class BaseEntity<T> implements Entity<T> {
     @Override
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this.getId());
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
     }
 }

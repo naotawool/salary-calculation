@@ -1,22 +1,26 @@
 package salarycalculation.database;
 
+import static com.ninja_squad.dbsetup.Operations.deleteAllFrom;
+import static com.ninja_squad.dbsetup.Operations.sequenceOf;
+import static com.ninja_squad.dbsetup.destination.DriverManagerDestination.with;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.hamcrest.core.Is.is;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isClass;
-import static salarycalculation.matchers.RecordNotFoundExceptionMatcher.isKey;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.Arrays;
 
 import org.assertj.core.api.Condition;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
+import org.mockito.internal.util.reflection.Whitebox;
+
+import com.ninja_squad.dbsetup.DbSetup;
+import com.ninja_squad.dbsetup.DbSetupTracker;
+import com.ninja_squad.dbsetup.operation.Operation;
 
 import salarycalculation.database.model.RoleRecord;
+import salarycalculation.dbsetup.RoleSetupSupport;
 import salarycalculation.exception.RecordNotFoundException;
 
 /**
@@ -24,151 +28,119 @@ import salarycalculation.exception.RecordNotFoundException;
  *
  * @author naotake
  */
-@RunWith(Enclosed.class)
-public class RoleDaoTest {
+public class RoleDaoTest implements RoleSetupSupport {
 
-    public static class JUnit4を使った場合 {
+    private RoleDao testee;
+    private static DbSetupTracker dbSetupTracker = new DbSetupTracker();
 
-        private RoleDao testee;
+    /**
+     * 事前処理。
+     */
+    @Before
+    public void setUp() throws Exception {
+        testee = new RoleDao();
 
-        @Rule
-        public ExpectedException expect = ExpectedException.none();
+        String url = "jdbc:h2:./data/salary_calculation_test";
+        Connection connection = DriverManager.getConnection(url, "sa", "");
+        Whitebox.setInternalState(testee, "connection", connection);
 
-        /**
-         * 事前処理。
-         */
-        @Before
-        public void setUp() {
-            testee = new RoleDao();
-        }
+        // 事前データの準備
+        Operation truncate = deleteAllFrom("work", "employee", "role", "capability", "organization");
+        Operation role = roleInsert();
 
-        @Test(expected = NullPointerException.class)
-        public void 引数が_null_の場合_NullPointerException_が発生すること() {
-            testee.get(null);
-        }
-
-        @Test(expected = NullPointerException.class)
-        public void 引数が空文字の場合_NullPointerException_が発生すること() {
-            testee.get("");
-        }
-
-        @Test
-        public void 引数が2桁より少ない場合_IllegalArgumentException_が発生すること() {
-            expect.expect(IllegalArgumentException.class);
-            expect.expectMessage(is("等級は 2 桁で指定してください[1]"));
-
-            testee.get("A");
-        }
-
-        @Test
-        public void 引数が2桁より大きい場合_IllegalArgumentException_が発生すること() {
-            expect.expect(IllegalArgumentException.class);
-            expect.expectMessage(is("等級は 2 桁で指定してください[3]"));
-
-            testee.get("123");
-        }
-
-        @Test
-        public void 存在しない等級を指定した場合に例外が送出されること() {
-            expect.expect(RecordNotFoundException.class);
-            expect.expect(isClass(RoleRecord.class));
-            expect.expect(isKey("XX"));
-
-            testee.get("XX");
-        }
+        // 事前データ投入
+        dbSetupTracker.launchIfNecessary(new DbSetup(with("jdbc:h2:./data/salary_calculation_test", "sa", ""),
+                                                     sequenceOf(truncate, role)));
     }
 
-    public static class AssertJを使った場合 {
+    @Test
+    public void 引数が_null_の場合_NullPointerException_が発生すること() {
+        dbSetupTracker.skipNextLaunch();
 
-        private RoleDao testee;
+        // when
+        Throwable thrown = catchThrowable(() -> {
+            testee.get(null);
+        });
 
-        /**
-         * 事前処理。
-         */
-        @Before
-        public void setUp() {
-            testee = new RoleDao();
+        // expect
+        assertThat(thrown).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    public void 引数が空文字の場合_NullPointerException_が発生すること() {
+        dbSetupTracker.skipNextLaunch();
+
+        // when
+        Throwable thrown = catchThrowable(() -> {
+            testee.get("");
+        });
+
+        // expect
+        assertThat(thrown).isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    public void 引数が2桁より少ない場合_IllegalArgumentException_が発生すること() {
+        dbSetupTracker.skipNextLaunch();
+
+        // when
+        Throwable thrown = catchThrowable(() -> {
+            testee.get("A");
+        });
+
+        // expect
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class)
+                          .hasMessage("等級は 2 桁で指定してください[1]");
+    }
+
+    @Test
+    public void 引数が2桁より大きい場合_IllegalArgumentException_が発生すること() {
+        dbSetupTracker.skipNextLaunch();
+
+        // when
+        Throwable thrown = catchThrowable(() -> {
+            testee.get("123");
+        });
+
+        // expect
+        assertThat(thrown).isInstanceOf(IllegalArgumentException.class)
+                          .hasMessage("等級は 2 桁で指定してください[3]");
+    }
+
+    @Test
+    public void 存在しない等級を指定した場合に例外が送出されること() {
+        dbSetupTracker.skipNextLaunch();
+
+        // when
+        Throwable thrown = catchThrowable(() -> {
+            testee.get("XX");
+        });
+
+        // expect
+        final TargetKeys keysXX = new TargetKeys("XX");
+        assertThat(thrown).isInstanceOf(RecordNotFoundException.class).is(targetRole).is(keysXX);
+    }
+
+    private final Condition<Throwable> targetRole = new Condition<Throwable>("target class") {
+
+        public boolean matches(Throwable actual) {
+            RecordNotFoundException casted = RecordNotFoundException.class.cast(actual);
+            return (casted.getTargetClass() == RoleRecord.class);
+        }
+    };
+
+    private static final class TargetKeys extends Condition<Throwable> {
+
+        private final Object[] expects;
+
+        public TargetKeys(Object... expects) {
+            // as(Arrays.toString(expects));
+            this.expects = expects;
         }
 
-        @Test
-        public void 引数が_null_の場合_NullPointerException_が発生すること() {
-            // when
-            Throwable thrown = catchThrowable(() -> {
-                testee.get(null);
-            });
-
-            // expect
-            assertThat(thrown).isInstanceOf(NullPointerException.class);
-        }
-
-        @Test
-        public void 引数が空文字の場合_NullPointerException_が発生すること() {
-            // when
-            Throwable thrown = catchThrowable(() -> {
-                testee.get("");
-            });
-
-            // expect
-            assertThat(thrown).isInstanceOf(NullPointerException.class);
-        }
-
-        @Test
-        public void 引数が2桁より少ない場合_IllegalArgumentException_が発生すること() {
-            // when
-            Throwable thrown = catchThrowable(() -> {
-                testee.get("A");
-            });
-
-            // expect
-            assertThat(thrown).isInstanceOf(IllegalArgumentException.class)
-                              .hasMessage("等級は 2 桁で指定してください[1]");
-        }
-
-        @Test
-        public void 引数が2桁より大きい場合_IllegalArgumentException_が発生すること() {
-            // when
-            Throwable thrown = catchThrowable(() -> {
-                testee.get("123");
-            });
-
-            // expect
-            assertThat(thrown).isInstanceOf(IllegalArgumentException.class)
-                              .hasMessage("等級は 2 桁で指定してください[3]");
-        }
-
-        @Test
-        public void 存在しない等級を指定した場合に例外が送出されること() {
-            // when
-            Throwable thrown = catchThrowable(() -> {
-                testee.get("XX");
-            });
-
-            // expect
-            final TargetKeys keysXX = new TargetKeys("XX");
-            assertThat(thrown).isInstanceOf(RecordNotFoundException.class).is(targetRole).is(keysXX);
-        }
-
-        private final Condition<Throwable> targetRole = new Condition<Throwable>("target class") {
-
-            public boolean matches(Throwable actual) {
-                RecordNotFoundException casted = RecordNotFoundException.class.cast(actual);
-                return (casted.getTargetClass() == RoleRecord.class);
-            }
-        };
-
-        private static final class TargetKeys extends Condition<Throwable> {
-
-            private final Object[] expects;
-
-            public TargetKeys(Object... expects) {
-                as(Arrays.toString(expects));
-                this.expects = expects;
-            }
-
-            public boolean matches(Throwable actual) {
-                RecordNotFoundException casted = RecordNotFoundException.class.cast(actual);
-                return Arrays.equals(casted.getKeys(), expects);
-            }
+        public boolean matches(Throwable actual) {
+            RecordNotFoundException casted = RecordNotFoundException.class.cast(actual);
+            return Arrays.equals(casted.getKey(), expects);
         }
     }
 }

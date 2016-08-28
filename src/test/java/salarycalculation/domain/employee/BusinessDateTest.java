@@ -5,14 +5,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import lombok.AllArgsConstructor;
-import lombok.ToString;
 
 /**
  * {@link BusinessDate}に対するテストクラス。
@@ -48,10 +48,18 @@ public class BusinessDateTest {
         return Arrays.asList(f1, f2, f3, f4, f5, f6);
     }
 
-    @AllArgsConstructor
-    @ToString
     private static final class Fixture {
+        public Fixture(BusinessDate target, int expect) {
+            this.target = target;
+            this.expect = expect;
+        }
+
         public BusinessDate target;
         public int expect;
+
+        @Override
+        public String toString() {
+            return ReflectionToStringBuilder.toString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+        }
     }
 }

@@ -1,8 +1,13 @@
 package salarycalculation.domain.employee;
 
-import static org.hamcrest.core.Is.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -20,7 +25,7 @@ import salarycalculation.utils.Money;
  *
  * @author naotake
  */
-public class EmployeeDomainTest_Mockito {
+public class EmployeeTest_Mockito {
 
     private Employee testee;
 
@@ -116,7 +121,7 @@ public class EmployeeDomainTest_Mockito {
     public void 社員の残業代を取得できること() {
         // 時間外手当を設定
         Employee entity = new Employee(101);
-        entity.setAmountOverTimePerHour(Money.from(10));
+        entity.setWorkOverTime1hAmount(Money.from(10));
         entity.setCapability(Capability.normal(CapabilityRank.AS, Money.ZERO));
 
         WorkOverTimes workOverTimes = new WorkOverTimes(Arrays.asList(WorkOverTime.builder(201504, 101)
