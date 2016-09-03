@@ -13,5 +13,10 @@ hs_err_pid*
 /.settings
 /.classpath
 /.project
+/.apt_generated
+/.gradle
+
 /target
 /data
+/build
+/bin/

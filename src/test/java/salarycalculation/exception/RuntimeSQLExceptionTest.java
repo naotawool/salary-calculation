@@ -1,6 +1,6 @@
 package salarycalculation.exception;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Rule;
 import org.junit.Test;

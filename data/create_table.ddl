@@ -1,20 +1,23 @@
 CREATE TABLE IF NOT EXISTS Role(
-    rank VARCHAR(2) PRIMARY KEY,
+    rank VARCHAR(2),
     amount int,
+    PRIMARY KEY(rank)
 );
 
 CREATE TABLE IF NOT EXISTS Capability(
-    rank VARCHAR(2) PRIMARY KEY,
+    rank VARCHAR(2),
     amount int,
+    PRIMARY KEY(rank)
 );
 
 CREATE TABLE IF NOT EXISTS Organization(
-    code VARCHAR(4) PRIMARY KEY,
+    code VARCHAR(4),
     name VARCHAR(255),
-)
+    PRIMARY KEY(code)
+);
 
 CREATE TABLE IF NOT EXISTS Employee(
-    no INT PRIMARY KEY,
+    no INT,
     name VARCHAR(255),
     organization VARCHAR(4) NOT NULL,
     birthday date,

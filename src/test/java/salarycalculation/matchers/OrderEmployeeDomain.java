@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import salarycalculation.domain.EmployeeDomain;
+import salarycalculation.domain.employee.Employee;
 
 /**
- * {@link EmployeeDomain}一覧の並び順を検証する Matcher。
+ * {@link Employee}一覧の並び順を検証する Matcher。
  *
  * @author naotake
  */
-public class OrderEmployeeDomain extends TypeSafeMatcher<List<EmployeeDomain>> {
+public class OrderEmployeeDomain extends TypeSafeMatcher<List<Employee>> {
 
     private List<Integer> expected;
 
@@ -23,12 +23,12 @@ public class OrderEmployeeDomain extends TypeSafeMatcher<List<EmployeeDomain>> {
     }
 
     @Override
-    public boolean matchesSafely(List<EmployeeDomain> actuals) {
+    public boolean matchesSafely(List<Employee> actuals) {
         return selectEmployeeNos(actuals).equals(expected);
     }
 
-    private List<Integer> selectEmployeeNos(List<EmployeeDomain> actuals) {
-        return actuals.stream().map(s -> s.getNo()).collect(Collectors.toList());
+    private List<Integer> selectEmployeeNos(List<Employee> actuals) {
+        return actuals.stream().map(Employee::getId).collect(Collectors.toList());
     }
 
     @Override
@@ -37,14 +37,14 @@ public class OrderEmployeeDomain extends TypeSafeMatcher<List<EmployeeDomain>> {
     }
 
     @Override
-    protected void describeMismatchSafely(List<EmployeeDomain> actuals,
+    protected void describeMismatchSafely(List<Employee> actuals,
             Description mismatchDescription) {
         mismatchDescription.appendValue(selectEmployeeNos(actuals));
     }
 
     /**
-     * {@link EmployeeDomain}一覧の並び順を検証する Matcher を生成する。<br />
-     * 指定された社員番号の順番に、{@link EmployeeDomain} 一覧がソートされていることを検証する。
+     * {@link Employee}一覧の並び順を検証する Matcher を生成する。<br />
+     * 指定された社員番号の順番に、{@link Employee} 一覧がソートされていることを検証する。
      *
      * @param employeeNos 期待する社員番号の一覧
      * @return {@link OrderEmployeeDomain}
