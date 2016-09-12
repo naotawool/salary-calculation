@@ -41,7 +41,7 @@ public class Amount {
      */
     public Amount subtract(Amount subtrahend) {
         long nontax = this.nontax - subtrahend.getNontax();
-        long tax = this.tax + subtrahend.getTax();
+        long tax = this.tax - subtrahend.getTax();
         return Amount.of(nontax, tax);
     }
 
@@ -90,7 +90,7 @@ public class Amount {
         }
 
         Amount target = Amount.class.cast(other);
-        return (this.nontax == target.getPretax() && this.tax == target.getTax());
+        return (this.nontax == target.getNontax() && this.tax == target.getTax());
     }
 
     @Override
