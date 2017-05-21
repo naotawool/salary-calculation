@@ -1,7 +1,7 @@
 node {
     // Git から Clone
     stage 'Clone'
-        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/feature/jacoco']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/naotawool/salary-calculation.git']]]
+        checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/develop']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/naotawool/salary-calculation.git']]]
 
     // ビルド
     stage 'Build'
