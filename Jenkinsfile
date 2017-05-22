@@ -13,4 +13,11 @@ node {
         findbugs canComputeNew: false, pattern: 'build/findbugsReports/main.xml'
         openTasks canComputeNew: false, high: 'TODO', normal: 'FIXME', pattern: 'src/main/java/**/*.java'
         jacoco()
+
+    // 人のチェック
+    stage 'Permit?'
+        input 'Ready to go?'
+
+    stage 'Deploy'
+        print 'Not Supported deploy :-('
 }
