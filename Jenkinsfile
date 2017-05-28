@@ -25,6 +25,10 @@ node {
         )
     }
 
+    // 成果物の保存
+    stage 'Archive artifacts'
+        archiveArtifacts 'build/libs/salary-calculation-*.jar'
+
     // 人のチェック
     stage 'Permit?'
         input 'Ready to go?'
