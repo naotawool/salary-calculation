@@ -5,7 +5,9 @@ node {
 
     // ビルド
     stage 'Build'
-        bat 'gradlew.bat clean build'
+        timestamps {
+            bat 'gradlew.bat clean build'
+        }
 
     // 各種結果収集
     stage('Results') {
