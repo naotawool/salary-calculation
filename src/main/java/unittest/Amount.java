@@ -48,12 +48,12 @@ public class Amount {
     /**
      * 金額の乗算を行う。
      *
-     * @param multiplicand 乗算額
+     * @param multiplicand 乗算数
      * @return 乗算結果
      */
-    public Amount multiply(Amount multiplicand) {
-        long nontax = this.nontax * multiplicand.getNontax();
-        long tax = this.tax * multiplicand.getTax();
+    public Amount multiply(int multiplicand) {
+        long nontax = this.nontax * multiplicand;
+        long tax = this.tax * multiplicand;
         return Amount.of(nontax, tax);
     }
 
