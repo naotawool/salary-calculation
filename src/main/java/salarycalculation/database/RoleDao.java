@@ -2,7 +2,7 @@ package salarycalculation.database;
 
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import salarycalculation.database.model.RoleRecord;
 import salarycalculation.exception.RecordNotFoundException;

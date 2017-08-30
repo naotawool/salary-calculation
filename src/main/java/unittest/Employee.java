@@ -12,15 +12,23 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class Employee {
 
+    /** 従業員番号。 */
     private final int no;
+
+    /** 氏名（名）。 */
     private String firstName;
+
+    /** 氏名（性）。 */
     private String lastName;
-    private final LocalDate birthday;
+
+    /** 生年月日。 */
+    private LocalDate birthday;
+
+    /** 所属部署。 */
     private Department department;
 
-    public Employee(int no, LocalDate birthday) {
+    public Employee(int no) {
         this.no = no;
-        this.birthday = birthday;
     }
 
     public int getNo() {
@@ -46,6 +54,10 @@ public class Employee {
 
     public LocalDate getBirthday() {
         return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
     public Department getDepartment() {

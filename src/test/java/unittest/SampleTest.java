@@ -1,6 +1,6 @@
 package unittest;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,5 +31,11 @@ public class SampleTest {
         assertThat(testee.subtract(5, 3)).isEqualTo(2);
         assertThat(testee.subtract(-40, -40)).isEqualTo(0);
         assertThat(testee.subtract(250, -500)).isEqualTo(750);
+    }
+
+    @Test
+    public void testEquals() throws Exception {
+        assertThat(testee.equals(123, 123)).isTrue();
+        assertThat(testee.equals(123, 456)).isFalse();
     }
 }

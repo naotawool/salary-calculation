@@ -14,4 +14,8 @@ public class Sample {
     public int subtract(Integer x, Integer y) {
         return x - y;
     }
+
+    public boolean equals(Integer x, Integer y) {
+        return x.equals(y);
+    }
 }

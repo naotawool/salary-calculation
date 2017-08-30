@@ -41,19 +41,19 @@ public class Amount {
      */
     public Amount subtract(Amount subtrahend) {
         long nontax = this.nontax - subtrahend.getNontax();
-        long tax = this.tax + subtrahend.getTax();
+        long tax = this.tax - subtrahend.getTax();
         return Amount.of(nontax, tax);
     }
 
     /**
      * 金額の乗算を行う。
      *
-     * @param multiplicand 乗算額
+     * @param multiplicand 乗算数
      * @return 乗算結果
      */
-    public Amount multiply(Amount multiplicand) {
-        long nontax = this.nontax * multiplicand.getNontax();
-        long tax = this.tax * multiplicand.getTax();
+    public Amount multiply(int multiplicand) {
+        long nontax = this.nontax * multiplicand;
+        long tax = this.tax * multiplicand;
         return Amount.of(nontax, tax);
     }
 
@@ -90,7 +90,7 @@ public class Amount {
         }
 
         Amount target = Amount.class.cast(other);
-        return (this.nontax == target.getPretax() && this.tax == target.getTax());
+        return (this.nontax == target.getNontax() && this.tax == target.getTax());
     }
 
     @Override
