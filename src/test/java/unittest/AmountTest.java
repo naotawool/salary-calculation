@@ -75,7 +75,7 @@ public class AmountTest {
 
     @Test
     public void equals_異なる型のインスタンスを指定した場合にfalseになること() throws Exception {
-        Sample target = new Sample();
+        Employee target = new Employee(0);
 
         // 実行
         assertThat(testee.equals(target)).isFalse();
