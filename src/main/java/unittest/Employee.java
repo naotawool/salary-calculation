@@ -1,8 +1,5 @@
 package unittest;
 
-import java.time.LocalDate;
-import java.time.Period;
-
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
@@ -12,15 +9,20 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class Employee {
 
+    /** 従業員番号。 */
     private final int no;
+
+    /** 氏名（名）。 */
     private String firstName;
+
+    /** 氏名（性）。 */
     private String lastName;
-    private final LocalDate birthday;
+
+    /** 所属部署。 */
     private Department department;
 
-    public Employee(int no, LocalDate birthday) {
+    public Employee(int no) {
         this.no = no;
-        this.birthday = birthday;
     }
 
     public int getNo() {
@@ -32,10 +34,6 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public String getName() {
-        return String.format("%s %s", firstName, lastName);
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -44,35 +42,12 @@ public class Employee {
         return lastName;
     }
 
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
     public Department getDepartment() {
         return department;
     }
 
     public void setDepartment(Department department) {
         this.department = department;
-    }
-
-    /**
-     * 現在日時点での年齢を計算する。
-     *
-     * @return 現在日時点での年齢
-     */
-    public int calcAge() {
-        return calcAge(LocalDate.now());
-    }
-
-    /**
-     * 基準日時点での年齢を計算する。
-     *
-     * @param base 年齢計算で使用する基準日
-     * @return 基準日時点での年齢
-     */
-    public int calcAge(LocalDate base) {
-        return Period.between(birthday, base).getYears();
     }
 
     /**
@@ -101,7 +76,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return String.format("[%05d]%s", no, getName());
+        return String.format("[%05d]%s", no, String.format("%s %s", firstName, lastName));
     }
 
     /**

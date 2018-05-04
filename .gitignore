@@ -20,3 +20,9 @@ hs_err_pid*
 /data
 /build
 /bin/
+
+# gradle wrapper
+!/gradle/wrapper/gradle-wrapper.jar
+
+# h2 Database
+*.db
