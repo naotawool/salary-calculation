@@ -4,9 +4,9 @@ apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 
 group = 'salary-calculation'
-version = '2.2.1'
+version = '2.2.2'
 
-description = """salary-calculation"""
+description = "salary-calculation"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
