@@ -1,6 +1,3 @@
-/**
- * Copyright©2017 SAISON AUTOMOBILE&FIRE INSURANCE CO.,LTD All Rights Reserved.
- */
 package unittest;
 
 import static org.assertj.core.api.Assertions.*;
