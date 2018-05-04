@@ -2,8 +2,6 @@ package unittest;
 
 import static org.assertj.core.api.Assertions.*;
 
-import java.time.LocalDate;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,22 +21,6 @@ public class EmployeeTest {
         testee = new Employee(123);
         testee.setName("オプスト", "太郎");
         testee.setDepartment(Department.DEVELOPMENT);
-    }
-
-    @Test
-    public void getName_期待する書式で氏名を取得できること() throws Exception {
-        testee.setName("田中", "太郎");
-
-        // 実行
-        assertThat(testee.getName()).isEqualTo("田中 太郎");
-    }
-
-    @Test
-    public void calcAge_指定日時点の年齢を取得できること() throws Exception {
-        testee.setBirthday(LocalDate.of(1987, 7, 18));
-
-        // 実行
-        assertThat(testee.calcAge(LocalDate.of(2017, 7, 18))).isEqualTo(30);
     }
 
     @Test
