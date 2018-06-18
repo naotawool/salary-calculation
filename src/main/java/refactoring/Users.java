@@ -3,6 +3,7 @@ package refactoring;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.function.Predicate;
 
 import refactoring.User.Gender;
 
@@ -14,27 +15,22 @@ public class Users {
         this.users = users;
     }
 
-    // TODO JavaDoc 書く
-    public long getManCount() {
-        long sum = 0;
-        for (User user : users) {
-            if (user.getGender() == Gender.MAN) {
-                sum = sum + 1;
-            }
-        }
-        return sum;
+    /**
+     * 男性ユーザの人数をカウントする。
+     *
+     * @return 男性ユーザの人数
+     */
+    public long countMan() {
+        return users.stream().filter(User::isMan).count();
     }
 
     // TODO JavaDoc 書く
     public long getTwentiesCount() {
-        long sum = 0;
-        for (User user : users) {
-            int year = Period.between(user.getBirthday(), LocalDate.now()).getYears();
-            if (year >= 20 && year < 30) {
-                sum = sum + 1;
-            }
-        }
-        return sum;
+        return users.stream().filter(getAgeCondition(20, 29)).count();
+    }
+
+    private Predicate<User> getAgeCondition(int min, int max) {
+        return t -> (20 <= t.getCurrentAge() && t.getCurrentAge() <= 29);
     }
 
     // TODO JavaDoc 書く

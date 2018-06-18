@@ -1,6 +1,7 @@
 package refactoring;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 public class User {
 
@@ -53,6 +54,14 @@ public class User {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public boolean isMan() {
+        return gender == Gender.MAN;
+    }
+
+    public int getCurrentAge() {
+        return Period.between(birthday, LocalDate.now()).getYears();
     }
 
     public static enum Gender {

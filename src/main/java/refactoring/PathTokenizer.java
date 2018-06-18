@@ -7,6 +7,9 @@ import org.apache.commons.lang3.math.NumberUtils;
  */
 public class PathTokenizer {
 
+    private static final String SECURE_PROTOCOL = "https";
+    private static final String URL_SEPARATOR = "/";
+
     /**
      * パスの末尾に含まれる ID を取得する。<br />
      * e.g. http://foo.bar/user/123 から 123 を抽出
@@ -15,8 +18,9 @@ public class PathTokenizer {
      * @return ID
      */
     public long getEntityId(String path) {
-        String[] splitted = path.split("/");
-        return Long.parseLong(splitted[splitted.length - 1]);
+        String[] tokens = splitPath(path);
+        String id = tokens[tokens.length - 1];
+        return Long.parseLong(id);
     }
 
     /**
@@ -26,8 +30,13 @@ public class PathTokenizer {
      * @return 末尾が<code>/</code>の場合は true
      */
     public boolean isListAccess(String path) {
-        String[] splitted = path.split("/");
-        return !(NumberUtils.isCreatable(splitted[splitted.length - 1]));
+        String[] tokens = splitPath(path);
+        String lastToken = tokens[tokens.length - 1];
+        return !(NumberUtils.isCreatable(lastToken));
+    }
+
+    private String[] splitPath(String path) {
+        return path.split(URL_SEPARATOR);
     }
 
     /**
@@ -37,6 +46,6 @@ public class PathTokenizer {
      * @return プロトコルが<code>https</code>の場合は true
      */
     public boolean isSecureAccess(String path) {
-        return path.startsWith("https");
+        return path.startsWith(SECURE_PROTOCOL);
     }
 }

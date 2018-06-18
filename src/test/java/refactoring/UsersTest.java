@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,8 +31,11 @@ public class UsersTest {
 
     @Test
     public void ユーザ一覧から男性の件数を取得できること() throws Exception {
-        long actual = testee.getManCount();
+        long actual = testee.countMan();
         assertThat(actual).isEqualTo(4);
+
+        testee = new Users(Collections.emptyList());
+        assertThat(testee.countMan()).isEqualTo(0);
     }
 
     @Test

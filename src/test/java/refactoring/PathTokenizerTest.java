@@ -5,8 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import refactoring.PathTokenizer;
-
 /**
  * {@link PathTokenizer}に対するテストクラス。
  */
@@ -50,5 +48,11 @@ public class PathTokenizerTest {
         path = "http://foo.bar/user/";
         actual = testee.isSecureAccess(path);
         assertThat(actual).isFalse();
+    }
+
+    @Test
+    public void スラッシュが含まれないパスの場合に空文字が返ってくること() throws Exception {
+        String path = "http://foo.bar/hoge";
+        assertThat(testee.getEntityId(path)).isEqualTo(0);
     }
 }
