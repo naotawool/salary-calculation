@@ -54,3 +54,4 @@ __控除額__ = 健康保険 + 厚生年金 + 所得税 + 住民税
 
 `java -jar salary-calculation.jar server salary-calculation.yml`
 
+
