@@ -8,9 +8,9 @@ version = '2.5.1-SNAPSHOT'
 
 description = "salary-calculation"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-def junit5MinorVersion = '3.1'
+sourceCompatibility = 11
+targetCompatibility = 11
+def junit5MinorVersion = '5.1'
 
 repositories {
      mavenCentral()
