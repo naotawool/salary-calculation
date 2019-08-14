@@ -1,6 +1,7 @@
 package salarycalculation.utils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -24,7 +25,7 @@ public class Money extends BaseValueObject {
     }
 
     public static Money from(BigDecimal amount) {
-        return new Money(amount.setScale(0, BigDecimal.ROUND_DOWN));
+        return new Money(amount.setScale(0, RoundingMode.DOWN));
     }
 
     private Money(BigDecimal amount) {

@@ -19,12 +19,13 @@ public class UsersTest {
 
     @Before
     public void before() throws Exception {
-        User user1 = new User(1, "John", LocalDate.of(1987, 7, 18), Gender.MAN);
-        User user2 = new User(2, "Kate", LocalDate.of(2001, 8, 14), Gender.WOMAN);
-        User user3 = new User(3, "Sam", LocalDate.of(1984, 11, 20), Gender.MAN);
-        User user4 = new User(4, "Penny", LocalDate.of(1994, 7, 3), Gender.WOMAN);
-        User user5 = new User(5, "Smith", LocalDate.of(1989, 1, 25), Gender.MAN);
-        User user6 = new User(6, "Ben", LocalDate.of(1991, 11, 20), Gender.MAN);
+
+        User user1 = new User(1, "John", LocalDate.now().minusYears(32), Gender.MAN);
+        User user2 = new User(2, "Kate", LocalDate.now().minusYears(19), Gender.WOMAN);
+        User user3 = new User(3, "Sam", LocalDate.now().minusYears(20), Gender.MAN);
+        User user4 = new User(4, "Penny", LocalDate.now().minusYears(24), Gender.WOMAN);
+        User user5 = new User(5, "Smith", LocalDate.now().minusYears(34), Gender.MAN);
+        User user6 = new User(6, "Ben", LocalDate.now().minusYears(29), Gender.MAN);
         testee = new Users(Arrays.asList(user1, user2, user3, user4, user5, user6));
     }
 
