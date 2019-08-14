@@ -1,7 +1,19 @@
+buildscript {
+  repositories {
+    maven {
+      url 'https://plugins.gradle.org/m2/'
+    }
+  }
+  dependencies {
+    classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:2.0.0'
+  }
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'findbugs'
 apply plugin: 'jacoco'
+apply plugin: 'com.github.spotbugs'
 
 group = 'salary-calculation'
 version = '2.5.1-SNAPSHOT'
@@ -13,7 +25,7 @@ targetCompatibility = 11
 def junit5MinorVersion = '5.1'
 
 repositories {
-     mavenCentral()
+    mavenCentral()
 }
 
 def defaultEncoding = 'UTF-8'
@@ -72,8 +84,8 @@ dependencies {
 
 }
 
-findbugs {
-    toolVersion = '3.0.1'
+spotbugs {
+    toolVersion = '3.1.1'
     sourceSets = [sourceSets.main]
     ignoreFailures = true
     reportsDir = file("$project.buildDir/findbugsReports")
@@ -82,7 +94,19 @@ findbugs {
 }
 
 jacoco {
-    toolVersion = "0.7.+"
+    toolVersion = "0.8.+"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+    }
+    // カバレッジレポートからテストクラスを除外
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/*Test.class'])
+        })
+    }
 }
 
 jar {
