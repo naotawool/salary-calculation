@@ -15,7 +15,7 @@ apply plugin: 'jacoco'
 apply plugin: 'com.github.spotbugs'
 
 group = 'salary-calculation'
-version = '2.5.1-SNAPSHOT'
+version = '2.6.0'
 
 description = "salary-calculation"
 
