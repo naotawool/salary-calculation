@@ -12,13 +12,9 @@ public class Amount {
     private final long nontax;
     private final long tax;
 
-    private Amount(long nontax, long tax) {
+    public Amount(long nontax, long tax) {
         this.nontax = nontax;
         this.tax = tax;
-    }
-
-    public static Amount of(long nontax, long tax) {
-        return new Amount(nontax, tax);
     }
 
     /**
@@ -30,7 +26,7 @@ public class Amount {
     public Amount add(Amount augend) {
         long nontax = this.nontax + augend.getNontax();
         long tax = this.tax + augend.getTax();
-        return Amount.of(nontax, tax);
+        return new Amount(nontax, tax);
     }
 
     /**
@@ -42,7 +38,7 @@ public class Amount {
     public Amount subtract(Amount subtrahend) {
         long nontax = this.nontax - subtrahend.getNontax();
         long tax = this.tax - subtrahend.getTax();
-        return Amount.of(nontax, tax);
+        return new Amount(nontax, tax);
     }
 
     /**
@@ -54,7 +50,7 @@ public class Amount {
     public Amount multiply(int multiplicand) {
         long nontax = this.nontax * multiplicand;
         long tax = this.tax * multiplicand;
-        return Amount.of(nontax, tax);
+        return new Amount(nontax, tax);
     }
 
     /**

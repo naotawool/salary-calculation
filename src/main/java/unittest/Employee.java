@@ -1,6 +1,6 @@
 package unittest;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import java.util.Objects;
 
 /**
  * 従業員を表すクラス。
@@ -13,25 +13,22 @@ public class Employee {
     private final int no;
 
     /** 氏名（名）。 */
-    private String firstName;
+    private final String firstName;
 
     /** 氏名（性）。 */
-    private String lastName;
+    private final String lastName;
 
     /** 所属部署。 */
     private Department department;
 
-    public Employee(int no) {
+    public Employee(int no, String firstName, String lastName) {
         this.no = no;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public int getNo() {
         return no;
-    }
-
-    public void setName(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     public String getFirstName() {
@@ -40,6 +37,10 @@ public class Employee {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
     public Department getDepartment() {
@@ -62,7 +63,7 @@ public class Employee {
 
     @Override
     public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
+        return Objects.hash(this);
     }
 
     @Override

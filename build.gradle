@@ -11,7 +11,6 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.spotbugs'
 
@@ -88,7 +87,7 @@ spotbugs {
     toolVersion = '3.1.1'
     sourceSets = [sourceSets.main]
     ignoreFailures = true
-    reportsDir = file("$project.buildDir/findbugsReports")
+    reportsDir = file("$project.buildDir/spotbugsReports")
     effort = 'max'
     reportLevel = 'high'
 }
@@ -103,7 +102,7 @@ jacocoTestReport {
     }
     // カバレッジレポートからテストクラスを除外
     afterEvaluate {
-        classDirectories = files(classDirectories.files.collect {
+        classDirectories.from = files(classDirectories.files.collect {
             fileTree(dir: it, exclude: ['**/*Test.class'])
         })
     }
